@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Display a list of items with a ListView</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Using ListView in Xamarin.Forms</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <h2>Goals</h2>
+        <p>
+            In this exerise, you will add a <code>ListView</code> to an existing application to display a data collection.
+        </p>
+        <p>
+            <a href="#" onclick="toggleBlock(this, 'whatis_listview', 'What is a ListView?', 'Hide'); return false;" class="uiitem">What is a ListView?</a>
+            <div class="wsblock" id="whatis_listview" style="display:none;">
+                <!-- Each item is in a div "wsitem" -->
+                <div class="wsitem">
+                    <!-- Give it a title and description -->
+                    <strong>What is a ListView?</strong><br />
+                    <p>
+                        The <a href="http://iosapi.xamarin.com/?link=T%3aXamarin.Forms.ListView">ListView</a> control displays a collection of data as a vertical set of rows. It utilizes the native control to render the data (<code>UITableView</code>,
+                        <code>ListView</code> and <code>ListBox</code>).
+                    </p>
+                    <p>
+                        You assign the data as an iterable (<code>IEnumerable</code>) sequence, typically a <code>List&lt;T></code> or <code>Array</code> to the <code>ItemsSource</code> property on the <code>ListView</code>.
+                    </p>
+                </div>
+            </div>
+        </p>
+
+        <h2>Assets</h2>
+        <p>
+            This exercise includes a starter project in the <strong>Part 01 Resources</strong> folder. Make sure you have this folder available before starting the exercise.</p>
+
+        <h2>Challenge</h2>
+        <p>
+            This exercise starts with an existing Xamarin.Forms application which displays a single flag and some interesting facts about it. 
+            The app currently allows you to navigate through the flags using up/down buttons on a toolbar.
+        </p>
+
+        <figure>
+            <img src="./res/images/app-start.png" alt="starting point for app" />
+            <figcaption>Fun Facts about Flags running on UWP</figcaption>
+        </figure>
+
+        <p>
+            You will replace the current details page with a new <code>ContentPage</code> that displays <em>all</em> of the available flags in a <code>ListView</code>.
+        </p>
+
+        <p>Here are the basic steps:</p>
+        <ol class="indent-large">
+            <li>Open and examine the starter solution.</li>
+            <li>Create a new <code>ContentPage</code> and set it as the startup page for the application.</li>
+            <li>Add a <code>ListView</code> to the new page and then display the flags from <code>FunFlactsViewModel.Flags</code> collection.</li>
+        </ol>
+
+        <h1>Steps</h1>
+        <h2>Open the Starter Solution</h2>
+        <ol>
+            <li>
+                Open the <strong>FunFlacts.sln</strong> (Fun Flag Facts) solution in the <strong>Part 01 Resources/Start</strong> folder.
+            </li>
+            <li>
+                Build and run the application. The app displays a single flag, allows you to edit the details of the flag, and lets you switch between the flags using toolbar buttons.
+            </li>
+            <li>
+                The solution contains several projects. The shared Xamarin.Forms UI is defined in the <b>FunFlacts</b> PCL, and there are head projects for iOS, Android and Windows.
+                There is also a <b>FlagData</b> project that contains the flag information.
+                Examine the classes we will work with:
+            </li>
+        </ol>
+
+        <table class="grid indent-large">
+            <tr>
+                <th>File</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><strong>App.cs</strong></td>
+                <td>Contains the <code>Application</code> class for our Xamarin.Forms application which defines the starting page for the application; this is currently the <code>FlagDetailsPage</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>FlagDetailsPage.xaml(.cs)</strong></td>
+                <td>Defines the UI and logic for our initial page.</td>
+            </tr>
+            <tr>
+                <td><strong>FunFlactsViewModel.cs</strong></td>
+                <td>
+                    This is in the <strong>FlagData</strong> project and contains the flag sample data. It exposes a collection property (<code>Flags</code>) which returns a <code>IList&lt;Flag&gt;</code>. A single instance of this object is
+                    registered with the Xamarin.Forms <code>DependencyService</code>.
+                </td>
+            </tr>
+            <tr>
+                <td><strong>Flag.cs</strong></td>
+                <td>
+                    This defines the data for a single flag. It implements <code>INotifyPropertyChanged</code> and provides several details about the flag.
+                </td>
+            </tr>
+        </table>
+
+        <h2>Create XAML Content Page</h2>
+        <p>
+            Here we will replace the current startup page with a new <code>ContentPage</code>.
+        </p>
+
+        <ol>
+            <li>
+                Add a new XAML <code>ContentPage</code> to the <strong>FunFlacts</strong> project. Name it <b>AllFlags</b>.
+            </li>
+
+            <li>
+                Open the <strong>AllFlags.xaml</strong> file and set the <code>Title</code> property to <strong>"Fun with Flags"</strong>.
+            </li>
+
+            <li>
+                Delete any existing UI from the XAML.
+            </li>
+
+            <li>
+                Open the <strong>App.xaml.cs</strong> file and go to the constructor.
+            </li>
+            <li>
+                Create an instance of your <b>AllFlags</b> content page.
+            </li>
+            <li>
+                Create a new <code>NavigationPage</code> (or resuse the existing code), passing in the <b>AllFlags</b> instance.
+            </li>
+            <li>
+                Assign the <code>NavigationPage</code> (containing the AllFlags page) to the <code>MainPage</code> property.
+            </li>
+            <li>
+                Build and run the app. It will display an empty page. We'll add a <code>ListView</code> to the page in the following steps.
+            </li>
+
+            <p class="indent-none"><a href="#" onclick="toggleCode(this,'allFlags');return false;" class="uiitem">Show Code</a>
+                <div class="indent-none" id="allFlags" style="display:none;">
+<pre class="prettyprint">public App() 
+{ 
+    DependencyService.Register<FunFlactsViewModel>();
+    
+    InitializeComponent(); 
+    MainPage = new NavigationPage(new AllFlags()); 
+}
+</pre>
+
+                </div>
+            </p>
+        </ol>
+
+        <h2>Add a ListView to the Page</h2>
+
+        <p>The ListView needs to be populated with data. There's a collection of Flag data defined in <code>FunFlactsViewModel</code> that we will load into the ListView.</p>
+
+
+        <ol>
+            <li>
+                Open <strong>AllFlags.xaml</strong>.
+            </li>
+            <li>
+                Add a <code>ListView</code> as the root tag in the <code>ContentPage</code>.
+            </li>
+
+            <p class="indent-none"><a href="#" onclick="toggleCode(this,'xamlListView');return false;" class="uiitem">Show Code</a>
+                <div class="indent-none" id="xamlListView" style="display:none;">
+<pre class="prettyprint"><?xml version="1.0" encoding="utf-8" ?>&lt;ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            Title="Fun with Flags"
+            x:Class="FunFlacts.AllFlags"&gt;
+
+    &lt;ListView&gt;
+    &lt;/ListView&gt;
+    
+&lt;/ContentPage&gt;
+</pre></div>
+            </p>
+
+            <li>
+                Load the <code>FunFlactsViewModel.Flags</code> into to the <code>ListView.ItemsSource</code> property. There are several ways to do this, there are examples below:
+                <ul class="indent-none" type="square">
+                    <li>
+                        Give the <code>ListView</code> a name and set the <code>ItemsSource</code> property in code behind. You can retrieve the <code>FunFlagsViewModel</code> instance using the <code>DependencyService.Get&lt;FunFlactsViewModel>()</code>                        method.
+                    </li>
+                    <p class="indent-none">
+                        <a href="#" onclick="toggleCode(this,'itemsSource1');return false;" class="uiitem">Show Code</a>
+                        <div class="indent-none" id="itemsSource1" style="display:none;">
+<pre class="prettyprint">flags.ItemsSource = DependencyService.Get<FunFlactsViewModel>().Flags;</pre>
+                        </div>
+                    </p>
+
+                    <li>
+                        Set the <code>BindingContext</code> for the <code>ContentPage</code> to the <code>FunFlactsViewModel</code> instance in code behind then use a <code>{Binding}</code> on the <code>ListView.ItemsSource</code> property to connect it to the <code>Flags</code> property.
+                    </li>
+
+                    <p class="indent-none">
+                        <a href="#" onclick="toggleCode(this,'itemsSource3');return false;" class="uiitem">Show Code</a>
+                        <div class="indent-none" id="itemsSource3" style="display:none;">
+<pre class="prettyprint">BindingContext = DependencyService.Get<FunFlactsViewModel>();</pre>
+<pre class="prettyprint">&lt;ListView ItemsSource="{Binding Flags}" /&gt;</pre>
+                        </div>
+                    </p>
+                </ul>
+            </li>
+            <li>
+                Run the application, it should now display a list of items. Notice that it's displaying the type name (<code>FlagData.Flag</code>) for each item. This is because the <code>ListView</code> uses the <code>ToString()</code> method by default.
+            </li>
+
+            <figure>
+                <img src="./res/images/listview-start.png" alt="App running on Android" />
+                <figcaption>ListView displaying Flags on Android</figcaption>
+            </figure>
+   
+            <li>
+                Open the <strong>Flag.cs</strong> file in the <strong>FlagData</strong> project and <code>override</code> the <code>ToString</code> method. Have the method return the <code>Country</code> property.
+            </li>
+
+            <li>
+                Run the application to the see the effect.
+            </li>
+
+            <figure>
+                <img src="./res/images/listview-tostring.png" alt="App running on iOS" />
+                <figcaption>Showing Country names on iOS</figcaption>
+            </figure>
+
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise, you learned how to display a collection in Xamarin.Forms. This is a fundamental operation that you will likely use in most applications that you build.
+        </p>
+
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+
+</html>

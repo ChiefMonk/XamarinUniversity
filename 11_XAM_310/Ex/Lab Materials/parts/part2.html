@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Keeping the UI and data in sync using Bindings</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Data Binding in Xamarin.Forms</header>
+
+    <section id="main">
+
+      <h1 id="page-title"></h1>
+      <h2>Duration</h2>
+      <p>15 minutes</p>
+        
+      <h2>Goals</h2>
+      <p>
+      This exercise will continue modifying the Flag Facts app. 
+      You will implement two-way binding support for user-changable controls. 
+      You will then modify the data in the code behind and see the changes reflected in the UI by implementing the <code>INotifyPropertyChanged</code> interface.
+      </p>
+
+      <h2>Assets</h2>
+      <p>
+      This exercise includes a completed project in the <strong>Part 02 Resources</strong> folder. If you need a starting point with all the bindings added, you can use the <b>Completed</b> project from the prior exercise.
+      </p>
+
+      <h2>Challenge</h2>
+      <p>
+      Xamarin.Forms automatically selects a binding mode (OneWay or TwoWay) based on the property you are binding. 
+      In all of the bindings we created in the prior exercise, the binding mode defaults to <code>TwoWay</code>. 
+      However, it can be ambiguous to determine without looking at the Xamarin.Forms documentation or source code so we recommend you always set the binding mode explicitly. 
+      </p>
+      <p>
+      This exercise shows how to use the <code>Binding.Mode</code> property by explicitly setting it to <code>TwoWay</code> for our editable bindings. 
+      You will add code to modify the <code>Flag</code> object independent of the UI to show that it does not work without one extra step: <code>INotifyPropertyChanged</code>.
+      </p>
+
+      <p>Here are the basic steps:</p>
+      <ol class="indent-large">
+        <li>Set the <code>Binding.Mode</code> property on each of our bindings so we explicitly request two-way bindings for updates.</li>
+        <li>Add code to modify the <code>Flag.DateAdopted</code> property when you use the <strong>Show</strong> button. Remember that the <code>DateTime</code> is immutable - you will need to assign a new <code>DateTime</code> to the <code>DateAdopted</code> property each time, make some change such as add a year. It should properly display in the alert dialog, but will not change the UI.</li>
+        <li>Finally, add support for true two-way bindings using the <code>INotifyPropertyChanged</code> interface so we can update either the UI or the code-behind object and see changes occur.</li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'howto_propchange', 'Property Change Notifications', 'Hide'); return false;" class="uiitem">Property Change Notifications</a>
+<div class="indent-none wsblock" id="howto_propchange" style="display:none;">
+<div class="wsitem">
+    <b>Property Change Notifications</b><br />
+    <p>When designing <a target="_blank" href="http://msdn.microsoft.com/en-us/library/ms752347(v=vs.110).aspx">data bindable</a> objects, you should always expose things you want to data bind as public properties - this is a requirement of the binding engine.</p>
+
+    <p>A key aspect to bindings is managing property change notifications, we have to utilize the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.componentmodel.inotifypropertychanged.aspx">INotifyPropertyChanged Interface</a> to ensure the binding infrastructure and other interested subscribers know when property values have changed. Here is a good blog post on <a target="_blank" href="http://www.julmar.com/blog/programming/inotifypropertychanged-in-net-4-5/">Implementing INotifyPropertyChanged in .NET 4.5.</a></p>
+</div>
+</div>
+</p>        
+      </ol>
+
+      <h1>Steps</h1>
+
+     <h2>Add support for two-way bindings</h2>
+     <p>Not all properties default to two-way binding so we'll set the binding mode explicitly.</p>
+
+      <ol>
+         <li>Open the <strong>MainPage.xaml</strong> markup file and on each <code>{Binding}</code> you created earlier, set the <code>Mode</code> to be &quot;TwoWay&quot;. Remember you won't use quotes in the markup extension properties!
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'xamBinding3');return false;" class="uiitem">Show Code</a><div class="indent-large" id="xamBinding3" style="display:none;">
+<pre class="prettyprint">
+&lt;Picker x:Name="country" SelectedItem="{Binding Country<mark>, Mode=TwoWay</mark>}" />
+
+&lt;Label Text="Current Design was Adopted on" FontAttributes="Bold" />
+&lt;DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start" 
+            Date="{Binding DateAdopted<mark>, Mode=TwoWay</mark>}" />
+
+&lt;Label Text="Has Shield" FontAttributes="Bold" />
+&lt;Switch x:Name="hasShield" IsToggled="{Binding IncludesShield<mark>, Mode=TwoWay</mark>}" />
+
+&lt;Label Text="Fun Fact" FontAttributes="Bold" />
+&lt;Label x:Name="description" Text="{Binding Description}" />
+</pre>
+      </div></p>
+      
+      <h2>Add support for source property changes</h2>
+      <p>
+      In this part, we will see why we need <code>INotifyPropertyChanged</code>, and then implement it on our <code>Person</code> object.
+      </p>
+      <ol>
+        <li>Open the <strong>MainPage.xaml.cs</strong> code behind file and locate the <code>OnShow</code> method.</li>
+        <li>We want to modify our <code>Flag</code> object in some way that is independent of the UI.
+        Add a year to the <code>Flag.DateAdopted</code> property by calling <code>.AddYears(1)</code> and assigning the returning value back to the <code>DateAdopted</code> property. <em>Note: you must assign the property since <code>DateTime</code> is immutable</em>.</li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'inpc1');return false;" class="uiitem">Show Code</a><div class="indent-large" id="inpc1" style="display:none;">
+<pre class="prettyprint">
+private async void OnShow(object sender, EventArgs e)
+{
+    <mark>CurrentFlag.DateAdopted = CurrentFlag.DateAdopted.AddYears(1);</mark>
+
+	await DisplayAlert(CurrentFlag.Country,
+		$"{CurrentFlag.DateAdopted:D} - {CurrentFlag.IncludesShield}: {CurrentFlag.MoreInformationUrl}", 
+		"OK");
+}
+</pre>
+      </div></p>
+      <ol start="3">
+        <li>Run the application and note the current date displayed. Press the <strong>Show</strong> button in the tool bar. 
+        It should display the flag details but the year should be incremented in the alert dialog. Make note of the year displayed.</li>
+        <li>Dismiss the alert dialog and notice that the UI is still displaying the <em>original</em> year even though the data is changing in the underlying model.</li>
+        <div class="hintblock">The problem is that Xamarin.Forms is unaware of the property being changed - to make it aware, we need to implement the <code>INotifyPropertyChanged</code> interface on the <code>Flag</code> class.</div>
+        <li>Open <strong>Flag.cs</strong> in the <b>FlagData</b> project.</li>
+        
+        <li>Modify the <code>Flag</code> class to implement <code>System.ComponentModel.INotifyPropertyChanged</code>. The implementation requires a single event named <code>PropertyChanged</code>.</li>
+        
+        <div class="hintblock">
+          <strong>Hint:</strong> If you add the interface definition to the class, you can place your cursor on it and use ALT+ENTER (Windows) or CMD+ENTER (macOS) to get Visual Studio to provide a dummy implementation for you.
+        </div>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'prop_change');return false;" class="uiitem">Show Code</a><div class="indent-large" id="prop_change" style="display:none;">
+<pre class="prettyprint">
+public class Flag <mark>: INotifyPropertyChanged</mark>
+{
+    <mark>public event PropertyChangedEventHandler PropertyChanged;</mark>
+    ...
+}
+</pre>
+      </div></p>
+
+    <ol start="7">
+    	<li>We'll create a helper-method to raise the <code>PropertyChanged</code> event named <code>RaisePropertyChanged</code>. 
+      The method will accept a <code>string</code> parameter which is the text name of the property that has changed.</li>
+        <ul>
+            	<li>.NET 4.5 includes an attribute <code>CallerMemberNameAttribute</code> in the <code>System.Runtime.CompilerServices</code> namespace which you can use to get the compiler to identify the property that has been changed. Check the code below for an example. Alternatively, you can have the caller pass the name using the C# <code>nameof()</code> compiler feature.</li>
+            	<li>Make sure to test the event for <code>null</code> before raising it. You can either use the built-in C# null check support, or for earlier versions of C#, test the event for <code>null</code>, or assign the event to an empty delegate (this is called the <em>null pattern</em>).</li>    		
+    		</ul>
+		</li>
+	</ol>
+
+<p><a href="#" onclick="toggleCode(this,'raisepc');return false;" class="uiitem">Show Code</a><div class="indent-large" id="raisepc" style="display:none;">
+<pre class="prettyprint">
+using System.Runtime.CompilerServices;
+...
+public class Flag : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged;
+    ...
+    <mark>private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }</mark>
+}
+</pre>
+      </div></p>
+
+	<ol start="8">
+        <li>We will change the <code>DateAdopted</code> property first but you should perform these steps for <em>every</em> property which could be changed independent of the UI.</li>
+        <li>Change the existing <code>DateAdopted</code> auto-property into a field-backed property and when it is changed, call the new <code>RaisePropertyChanged</code> method to notify the UI.
+        Hints:
+          <ul class="indent-none">
+            <li>Make sure to compare the two values - it's inefficient to raise a property change notification if the value has not changed.</li>
+            <li>Assign the new value.</li>
+            <li>Raise the property change notification using your new method.</li>
+          </ul>
+        </li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'inpc2');return false;" class="uiitem">Show Code</a><div class="indent-large" id="inpc2" style="display:none;">
+<pre class="prettyprint">
+private DateTime _dateAdopted;
+...
+public DateTime DateAdopted
+{
+    get { return _dateAdopted; }
+    set
+    {
+        if (_dateAdopted != value)
+        {
+            _dateAdopted = value;
+            // Can pass the property name as a string,
+            // -or- let the compiler do it because of the
+            // CallerMemberNameAttribute on the RaisePropertyChanged method.
+            RaisePropertyChanged();
+        }
+    }
+}
+</pre>
+      </div></p>
+
+      <ol start="10">
+        <li>Run the application, scroll down to the Current Design was Adopted On <code>DatePicker</code> and tab the <strong>Show</strong> button - you should see the date changing when it's changed in the underlying <code>Flag</code> object.</li>
+        <li>
+        You can fix the other properties if you like - we aren't changing any of them, but they would all need to raise the <code>PropertyChanged</code> notification to properly notify the UI in a production application. The completed project included with the lab materials will take this extra step.
+        <ul class="indent-none">
+        	<li>It can be helpful to create a method which does the field comparison and assignment so you only have to call that method in each property setter. Check the completed project for an example.</li>
+        </ul>
+        </li>
+        <li>You can also remove the <code>x:Name</code> attributes off all the XAML objects you are now binding - this removes the private field mapped to the control and reduces the Intellisense "clutter" with unused objects.</li>
+      </ol>
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, you have taken an existing Xamarin.Forms application and modified it to use Data Binding to populate the UI. You have successfully added two-way binding and implemented the <code>INotifyPropertyChanged</code> interface on your model object.
+    </p>
+
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

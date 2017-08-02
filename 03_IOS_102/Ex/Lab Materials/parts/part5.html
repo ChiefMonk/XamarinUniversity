@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 5: Display a screen using a Segue</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to the Xamarin Designer for iOS</header>
+
+   
+<section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>5 minutes</p>
+
+        <div class="hintblock">
+            <strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor, they are online to answer any questions you have!
+        </div>
+
+        <h2>Goals</h2>
+        <p> The primary goal of this lab is to display a second View Controller using segues.</p>
+        <img src="res/images/ex5_complete.png" width="640" lt=""/>
+
+        <!-- Include a screen shot of the completed project? -->
+
+        <!-- Include any differences about the OS or environment expectations
+             if there are changes from StartHere for this lab -->
+
+        <!-- Note any starter/complete or assets included in this lab. -->
+        <!-- Remove this section if there are none -->
+        <h2>Required assets</h2>
+        <p>This lab is a continuation of the previous exercise.  You may use your project from exercise 04 or open the completed project in the <b>Part 04 Resources</b> folder.  
+        There is a completed version of the exercise in the <strong>Part 05 Resources</strong> folder if you'd like to compare your solution when you are finished.
+        </p>
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        <p>Update your application to display the About screen using a Segue</p>
+          <ol>
+             <li>Remove the code to launch the About screen programmatically.</li>
+             <li>Add a modal segue from the About button to the About screen.</li>
+         </ol>
+        </p>
+
+        <!-- Steps -->
+        <h1>Steps</h1>
+        <p>
+            Below are the step-by-step instructions to implement the exercise.
+        </p>
+
+		<h2>Remove the code to launch the About screen</h2>
+		<ol>
+			<li>Open ViewController.cs and delete the partial method <b>buttonAbout_TouchUpInside</b>.</li>
+			<li>Open Main.storyboard.</li>
+			<li>Select the About button.</li>
+			<li>In the Properties pane, go to the Events section and clear the reference for <b>Up Inside</b>.</li>
+		</ol>
+		
+		<h2>Add a Segue to the About screen</h2>
+		<ol>
+			<li>Control-drag from the About button to the About View Controller and select a <b>Modal</b> Segue.</li>
+			<li>Run the application.</li>
+			<img src="res/images/modal_segue.png" lt=""/>
+		</ol>
+		
+    <h1>Summary</h1>
+    <p>In this lab you displayed a second screen using a modal segue.</p>
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

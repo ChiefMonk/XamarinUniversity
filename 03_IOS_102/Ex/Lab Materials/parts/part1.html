@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Create a Single View application</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to the Xamarin Designer for iOS</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Goals</h2>
+        <p>
+            The primary goal of this lab will be to create a new single view application and add controls using the Xamarin.iOS storyboard designer. The finished UI should look something like:
+        </p>
+        <img src="res/images/ex1_complete.png" />
+
+        <h2>Required assets</h2>
+        <p>
+            There is a completed version of the exercise in the <strong>Part 01 Resources</strong> folder if you'd like to compare your solution when you are finished.
+        </p>
+
+        <h2>Challenge</h2>
+        <p>Create a new iOS application and add controls using the iOS designer.</p>
+        <ol>
+            <li>Create a new iOS Single View App
+                <ul class="indent-none">
+                    <li>Name the project <b>Fireworks</b>.</li>
+                    <li>Uncheck "iPad" under Devices so that only the iPhone device is selected.</li>
+                </ul>
+            </li>
+            <li>Open the <b>Main</b> storyboard file.</li>
+            <li>Select the storyboard and turn off size classes.</li>
+            <li>Add the following views to the View Controller using the above screen as a guide.
+                <ul>
+                    <li>Two Labels, set the text to Night &amp; Size.</li>
+                    <li>A Button, set the Text to "Start", then change the background color to something you like. Make sure you can still see the text - depending on the color you choose, you may need to also change the text color.</li>
+                    <li>A Switch</li>
+                    <li>A Slider</li>
+                </ul>
+            </li>
+            <li>Verify your design against the above picture and then run the app - try it on different simulators and orientations ... what happens?</li>
+        </ol>
+        
+        <!-- Steps -->
+        <h1>Steps</h1>
+        <div id="ide-selector">
+            Select the Visual Studio environment you want to work with:&nbsp;&nbsp;
+            <a href="#" data-name="xs">macOS</a>
+            or
+            <a href="#" data-name="vs">Windows</a>
+        </div>
+
+        <ide name="xs">
+        <h2>Create the Fireworks application</h2>
+        <ol>
+            <li>
+                Create a new iOS application using the <b>Single View App</b> template.
+                <ul class="indent-none">
+                    <li>Name it &quot;Fireworks&quot;.</li>
+                    <li>Uncheck <b>iPad</b> from the supported devices.</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <table class="indent-none">
+            <tr>
+                <td><img src="res/images/new_app_vsmac.png" /></td>
+                <td><img src="res/images/new_app_vsmac2.png" /></td>
+            </tr>
+        </table>
+        
+        <h2>Disable Size Classes</h2>
+        <ol>
+            <li>Open <b>Main.storyboard</b> and wait for the designer to load.</li>
+            <li>Click on the design surface <em>outside</em> of the view controller, this will give you access to the properties for the storyboard.</li>
+            <li>In the <b>Properties</b> pane, uncheck <b>Use Size Classes</b>.</li>
+            <img src="res/images/size_class.png" />
+            <li>In the popup, choose to keep size class data for iPhone.</li>
+            <img src="res/images/disable_size_classes.png" />
+        </ol>
+        
+        <h2>Add Labels</h2>
+        <ol>
+            <li>Look in the Toolbox for a <b>Label</b>.
+                <div class="hintblock">
+                    <strong>Tip:</strong> To find your views more quickly you can use the Search Bar at the top of the Toolbox.
+                </div>
+            </li>
+            <img src="res/images/toolbox_label.png" />
+            <li>Drag a label to the lower left corner of the view controller on the design surface - make use of the blue guidelines to help you with spacing.</li>
+           
+            <li>Double click on the top label to change it's text to &quot;<b>Night:</b>&quot;. You can do this on the storyboard OR in the properties pane.</li> 
+            <img src="res/images/lab1-Label.png" />
+            
+            <li>Drag a second label and place it below the first and align them on the left edge.</li>
+            <li>Change the text on the lower label to &quot;<b>Size:&quot;</b>.</li>
+            <li>Use the round dragging controls to expand the width of both Labels to make sure the text is completely visible.</li>
+        </ol>
+        
+        <h2>Add additional controls</h2>
+        <ol>
+            <li>Search for a <b>Switch</b> in the Toolbox and place it to the right of the first Label ("Night").</li>
+            <li>Search for a <b>Button</b> and place it to the right of the Switch you just added.</li>
+            <li>Use the Properties pane to set the Button's <b>Background Color</b>. You will find this under the "View" section. The completed solution uses Green, but feel free to pick whatever color you prefer. Depending on the color you choose you may need to change the Text Color under the <b>Button</b> section to make it visible.</li>
+            
+            <img src="res/images/lab1-changeColor.png" />
+            
+            <li>Change the <b>Title</b> of the Button to <b>Start</b> using the properties pane.</li>
+            <li>Search for a <b>Slider</b> and add it to the right of the bottom Label.</li>
+            <li>Expand the width of the Slider to take up the remaining width of the screen.</li>
+        </ol>
+        
+        </ide>
+        
+        <ide name="vs">
+        <h2>Create the Fireworks application</h2>
+        <ol>
+            <li>
+                Create a new iOS application using the <b>iPhone > Single View App</b> template.
+                <ul class="indent-none">
+                    <li>Name it &quot;Fireworks&quot;.</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <img src="res/images/new_app_vs.png" />
+        
+        <h2>Disable Size Classes</h2>
+        <ol>
+            <li>Open <b>Main.storyboard</b> and wait for the designer to load.</li>
+            <li>Click on the design surface <em>outside</em> of the view controller, this will give you access to the properties for the storyboard.</li>
+            <li>In the <b>Properties</b> pane, uncheck <b>Use Size Classes</b>.</li>
+            <img src="res/images/size_class_vs.png" />
+            <li>In the resulting popup, choose to keep size class data for iPhone and click <b>Disable</b> to dismiss the dialog.</li>
+            <img src="res/images/disable_size_classes_vs.png" />
+        </ol>
+        
+        <h2>Add Labels</h2>
+        <ol>
+            <li>Look in the Toolbox for a <b>Label</b>.
+                <div class="hintblock">
+                    <strong>Tip:</strong> To find your views more quickly you can use the Search Bar at the top of the Toolbox.
+                </div>
+            </li>
+            <img src="res/images/toolbox_label-vs.png" />
+            <li>Drag a label to the lower left corner of the view controller on the design surface - make use of the blue guidelines to help you with spacing.</li>
+           
+            <li>Double click on the label to change it's text to &quot;<b>Night:</b>&quot;. You can do this on the storyboard OR in the properties pane.</li> 
+            <img src="res/images/lab1-Label-vs.png" class="indent-none" />
+            
+            <li>Drag a second label and place it below the first one and align them on the left edge.</li>
+            <li>Change the text on the lower label to &quot;<b>Size:&quot;</b>.</li>
+            <li>Use the round dragging controls to expand the width of both labels to make sure the text is completely visible.</li>
+        </ol>
+        
+        <h2>Add additional controls</h2>
+        <ol>
+            <li>Search for a <b>Switch</b> in the Toolbox and place it to the right of the first Label ("Night").</li>
+            <li>Search for a <b>Button</b> and place it to the right of the Switch you just added.</li>
+            <li>
+                Use the Properties pane to set the Button's <b>Background</b>.
+                <ul class="indent-none">
+                    <li>You will find this under the "View" section in the Property pane when the Button is selected.</li>
+                    <li>You will need to change the color from "Default" to "Custom" to select a custom color from the color picker as shown below.</li>
+                    <li>The completed solution uses Green, but feel free to pick whatever color you prefer.</li>
+                    <li>Depending on the color you choose you may need to change the <b>Text Color</b> property under the <b>Button</b> section to make it visible.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <table class="indent-none">
+            <tr>
+                <td><img src="res/images/lab1-changeColor-vs1.png" /></td>
+                <td><img src="res/images/lab1-changeColor-vs2.png" /></td>
+            </tr>
+        </table>
+        
+        <ol start="4">            
+            <li>Change the <b>Title</b> of the Button to <b>Start</b> using the properties pane.</li>
+            <li>Search for a <b>Slider</b> and add it to the right of the bottom Label.</li>
+            <li>Expand the width of the Slider to take up the remaining width of the screen.</li>
+        </ol>
+        </ide>
+        
+        <h2>Run the application</h2>
+        <p>
+            Compare your screen to the finished lab and make sure it looks similar.
+        </p>
+        <img src="res/images/ex1_complete.png" />
+        <p>
+            Once you are satisfied with the results, run the application using the iOS simulator. Try rotating the device (use the <b>Hardware</b> menu). Try different simulator sizes - iPhone 4s, iPhone 5, iPhone 6, and iPhone 6 Plus. What do you notice about the controls?
+        </p>
+        
+
+        <h1>Summary</h1>
+        <p>In this lab you created a new single view iOS application and used the Xamarin.iOS storyboard designer to create the UI for your application.</p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

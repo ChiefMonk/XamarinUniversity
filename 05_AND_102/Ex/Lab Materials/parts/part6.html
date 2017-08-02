@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 6: Launch a system Activity</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Activities and Intents</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Goals</h2>
+
+		<p>
+			This lab covers how to launch an Android system Activity (i.e. an Activity installed with Android and not part of your application).
+			You will start the web browser Activity and pass it the address of the web page you would like it to display. 
+			The red line in the image below indicates the part of the app you will be working on here.
+		</p>
+
+		<img src="./res/images/Browser.png" />
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Required assets</h2>
+
+		<p>
+			The provided <strong>Resources</strong> folder for this part contains a subfolder named <strong>Completed</strong> with a solution you
+			can use to check your work. This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use
+			the <strong>Completed</strong> solution from the previous part as starter code for this part.
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Challenge</h2>
+		<p>
+			Use the guidelines here to work through the exercise on your own. Alternatively, you can use the step-by-step instructions given below.
+		</p>
+
+		<ol>
+			<li>Open <strong>AboutActivity.cs</strong>.</li>
+			<li>Locate the <code>OnLearnMoreClick</code> method.</li>
+			<li>Create an Intent with <code>ActionView</code> and an <code>http://</code> Data value to launch the browser.</li>
+			<li>Call <code>StartActivity</code> and pass it the Intent.</li>
+			<li>Run the app to test your work.</li>
+		</ol>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to implement the exercise.
+		</p>
+
+		<h2>
+			Launch the web browser
+		</h2>
+
+		<ol>
+			<li>
+				Open <strong>AboutActivity.cs</strong>.
+			</li>
+			
+			<li>
+				Locate the <code>OnLearnMoreClick</code> method.
+			</li>
+			
+			<li>
+				Create an Intent with an Action of <code>ActionView</code>. You can pass the symbolic constant <code>Intent.ActionView</code> to the Intent 
+				constructor or create the Intent first and then use the <code>SetAction</code> method.
+			</li>
+
+			<li>
+				Set the Data of the Intent to a web address such as <code>http://www.xamarin.com</code>.
+				The Data in an Android URI so you will need to use the <code>Android.Net.Uri.Parse</code> method to convert a string to a URI.
+				Once you have a URI, use the <code>SetData</code> method to load it into the Intent.
+				The code is shown below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Intent', 'Intent', 'Hide'); return false;" class="uiitem">Intent</a>
+<div class="wsblock" id="Intent" style="display:none;">
+<pre class="prettyprint codeblock">
+var intent = new Intent();
+intent.SetAction(Intent.ActionView);
+intent.SetData(Android.Net.Uri.Parse("http://www.xamarin.com"));
+</pre>
+</div>
+</p>
+			</li>
+
+			<li>
+				Call <code>StartActivity</code> and pass it the Intent.
+			</li>
+			
+			<li>
+				Run the app to test your work. Navigate to the About Activity. Touch the "LEARN MORE" button. Verify the web browser launches and displays the page you specified in the Data.
+			</li>
+		</ol>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h1>Summary</h1>
+		<p>
+			In this section, you started an Activity that was not part of your app. This is one of the core strengths of the Android platform
+			since it lets your app take advantage of other Activities installed on the device. This helps you because it means there is
+			less code to write to get your app ready for market. It also helps the user because they get to use their favorite Activities
+			for things like Contacts, Camera, Email, Web etc. instead of the nonstandard versions each app developer might create if they
+			built their own.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

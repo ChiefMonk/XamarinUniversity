@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 3: Using Value Converters</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Data Binding in Xamarin.Forms</header>
+
+    <section id="main">
+
+    <h1 id="page-title"></h1>
+    <h2>Duration</h2>
+    <p>15 minutes</p>
+        
+    <h2>Goals</h2>
+    <p>
+    In this exercise we will continue modifying the <b>Fun Flag Facts</b> application and work on the two remaining UI properties which are not currently being data bound: the <code>Picker.ItemSource</code> property and the flag image. 
+    </p>
+
+    <h2>Assets</h2>
+    <p>
+    This exercise includes a completed project in the <strong>Part 03 Resources</strong> folder if you'd like to check your work. If you need a starting point, you can use the <b>Completed</b> folder in the prior exercise.
+    </p>
+
+    <h2>Challenge</h2>
+    <p>
+    This exercise adds the two remaining bindings to provide better segregation between the XAML defined elements and the code behind. 
+    When we are finished, the code behind will not reference any of the UI controls directly; instead everything will be loosely-connected using the binding infrastructure. 
+    That means future changes made to the UI definition will have less impact on the code behind.
+    </p>
+
+    <p>
+    The two elements we want to cleanup are the <code>Image.ImageSource</code> assignment and the <code>Picker.ItemsSource</code> assignment, both done in <code>InitializeData</code>. The problem with the image is that we have them stored as <em>embedded resources</em> in the <b>FlagData</b> project. Those cannot be directly loaded by XAML - it requires a little bit of code which we currently have in the <code>FlagExtensions</code> class.
+    </p>
+    
+    <p>
+    The <code>Picker.ItemsSource</code> property could be data bound if we could get access to the list of countries in XAML. We're going to fix both of these problems now.
+    </p>
+
+    <p>Here are the basic steps:</p>
+    <ol class="indent-large">
+      <li>
+      	Create a Value Converter to load the embedded resource image for each flag so we can bind to the <code>ImageUrl</code> property in XAML. Make this value converter generic so you could use it in other projects.
+      	<ul class="indent-none">
+			<li>Apply the Value Converter to a binding on the <code>Image</code> in the UI and tie the <code>Source</code> property to the <code>ImageUrl</code> property of the <code>Flag</code> object.</li>
+      		<li>Remove the <code>x:Name</code> from the image and comment out the code behind currently setting the image source in code.</li>      	
+      	</ul>
+      </li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'howto_converters', 'What is a Value Converter?', 'Hide'); return false;" class="uiitem">What is a Value Converter?</a>
+<div class="indent-none wsblock" id="howto_converters" style="display:none;">
+<div class="wsitem">
+<b>What is a Value Converter?</b><br />
+<p>
+    The <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.windows.data.ivalueconverter(v=vs.110).aspx">IValueConverter</a> interface defines a contract a single binding can use to coerce or convert a property value from a model, into something usable by the UI property it is data bound to. The same interface is used in the WPF/UWP world for the same purpose.
+</p>
+<p>
+For simple, textual conversions, you can use the <a target="_blank" href="http://msdn.microsoft.com/en-us/library/system.windows.data.bindingbase.stringformat(v=vs.110).aspx">Binding.StringFormat</a> property - this performs a <code>String.Format</code> on the source value prior to applying it to the target. It does not perform any conversion going the other direction.
+</p>
+</div>
+</div>
+</p> 
+		<li>
+		Change the <code>BindingContext</code> to include <em>both</em> the current flag, <em>and</em> the list of countries. This can be accomplished in several ways:
+		<ul class="indent-none">
+			<li>Create a <em>View Model</em> class to hold the various properties the UI needs.</li>
+			<li>Expose the list of countries as a <code>static</code> property - then you can use the <code>Binding.Source</code> property and assign the value using <code>{x:Static}</code>.</li>
+			<li>Move the <code>FlagRepository</code> instance into the XAML resources which would make it available directly to all the elements defined in the XAML page.</li>
+		</ul>
+		The steps below use the first approach in a simplified way. The binding engine uses reflection to get property values from the binding context; this means any valid object can be used here. We can use an <em>anonymous type</em> to hold our data like this:
+		</li>
+
+<pre class="prettyprint">
+// Set the binding context to an anonymous type containing both the countries
+// and the current flag. Note: this could also be a real type (like a ViewModel).
+this.BindingContext = new { Countries = repository.Countries, CurrentFlag };
+</pre>
+      
+    </ol>
+
+    <h1>Steps</h1>
+
+    <h2>Create Value Converter for the Image.ImageSource property</h2>
+    <p>
+    We will create a value converter to translate the <code>ImageUrl</code> property on the <code>Flag</code> object into an <code>ImageSource</code> that the Xamarin.Forms image control can display. 
+    Specifically, the value converter will load images from our embedded resources located in the <b>FlagData</b> assembly.
+    </p>
+    <ol>
+    	<li>Open the <b>FlagExtensions.cs</b> file in the <b>Extensions</b> folder. This is the code we are currently using to load the image from our resources.</li>
+      	<li>Create a new folder in the <b>FunFlacts</b> project called <strong>Converters</strong> to store our value converter.</li>
+      	<li>Add a new empty class file to the <strong>Converters</strong> folder named <code>EmbeddedImageConverter</code>.
+      	<li>Implement the <code>IValueConverter</code> interface on the class.
+        <ul class="indent-none">
+            <li>The <code>Convert</code> method should should turn the inbound <code>value</code> into a string and assume it's the embedded resource ID - use the code located in the <code>FlagExtensions.GetImageSource</code> method to load the resource.</li>
+            <li>The <code>ConvertBack</code> method is only used in two-way bindings; in this case our image URL will never be changed by the UI and so it can throw a <code>NotSupportedException</code> to indicate that it is not available.</li>
+            <li>Since the image is in a different assembly, we need to tell the <code>ImageSource.FromResource</code> method where to find it. You can either hard-code this (like it is in the <code>GetImageSource</code> implementation), or create a public property on the value converter and pass a <code>Type</code> in to load the image data. 
+            We'll use this latter approach since it's more flexible - you can load images from <em>any</em> assembly.</li>
+        </ul>
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'imageConverter');return false;" class="uiitem">Show Code</a><div class="indent-large" id="imageConverter" style="display:none;">
+<pre class="prettyprint">
+public class EmbeddedImageConverter : IValueConverter
+{
+    /// Optional type located in the assembly we want to get the resource
+    /// from - if not supplied, the API assumes the resource is located in
+    /// this assembly.
+    public Type ResolvingAssemblyType { get; set; }
+
+    public object Convert(object value, Type targetType, 
+                          object parameter, CultureInfo culture)
+    {
+        var imageUrl = (value ?? "").ToString();
+        if (string.IsNullOrEmpty(imageUrl))
+            return null;
+
+        return ImageSource.FromResource(imageUrl, 
+            ResolvingAssemblyType?.GetTypeInfo().Assembly);
+    }
+
+    public object ConvertBack(object value, Type targetType, 
+                              object parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException(
+          $"{nameof(EmbeddedImageConverter)} cannot be used on two-way bindings.");
+    }
+}
+</pre>
+    </div></p>
+
+    <ol start="5">
+      <li>Open <strong>MainPage.xaml</strong> and assign a new <code>ResourceDictionary</code> to the <code>ContentPage.Resources</code> property.</li>
+      <li>Add an instance of your <code>EmbeddedImageConverter</code> class to the resources so we can use it in our binding expression.
+        <ul class="indent-none">
+    		<li>If you implemented the resolving type property on your converter, you can use <code>{x:Type data:Flag}</code> to pass in the proper type to locate the images. 
+          	<li>You will need to define your XML namespaces to use the custom types in XAML - if you don't recall the syntax, check the code sample below.</li>
+          	<li>Make sure to give the resource a <code>x:Key</code>, such as &quot;irConverter&quot;</li
+          >
+      	</ul>
+      </li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'resources1');return false;" class="uiitem">Show Code</a><div class="indent-large" id="resources1" style="display:none;">
+<pre class="prettyprint">
+&lt;?xml version="1.0" encoding="utf-8" ?>
+&lt;ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FunFlacts"
+             xmlns:eff="clr-namespace:FunFlacts.Effects"
+             <mark>xmlns:data="clr-namespace:FlagData;assembly=FlagData"</mark>
+             <mark>xmlns:cvt="clr-namespace:FunFlacts.Converters"</mark>
+             x:Class="FunFlacts.MainPage"
+             Title="Fun with Flags">
+
+    <mark>&lt;ContentPage.Resources>
+        &lt;ResourceDictionary>
+            &lt;cvt:EmbeddedImageConverter x:Key="irConverter" 
+                    ResolvingAssemblyType="{x:Type data:Flag}" />
+        &lt;/ResourceDictionary>
+    &lt;/ContentPage.Resources></mark>
+    ...
+</pre>
+    </div></p>
+
+    <ol start="7">
+      <li>Data-bind the <code>Image.Source</code> property to the <code>ImageSource</code> property on the flag with a binding.</li>
+      <li>Add your converter to the binding - assign it to the <code>Converter</code> property and use the <code>{StaticResource}</code> markup extension to retrieve it from resources using your assigned key.</li>
+      <li>Remove the code behind which is currently setting the source property. You can also remove the <code>x:Name</code> on the image in XAML since we no longer need to reference it in code behind.</li>
+      <li>Run the application and make sure the flag is properly displayed - make sure to try a few countries by clicking the up and down arrows in the tool bar.</li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'imageBinding');return false;" class="uiitem">Show Code</a><div class="indent-large" id="imageBinding" style="display:none;">
+<pre class="prettyprint">
+&lt;Image HeightRequest="200" 
+        <mark>Source="{Binding ImageUrl, Mode=OneWay, Converter={StaticResource irConverter}}"</mark>
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        Aspect="AspectFit" />
+</pre>
+    </div></p>
+
+    <h2>Bind the Picker items</h2>
+    <p>
+     We will remove the last of the non-databound code-behind by data binding the list of countries to the <code>Picker</code> control in XAML. 
+     To do this, we need to provide access to the list of countries loaded by the <code>FlagsRepository</code>. 
+     We'll do this by supplying an aggregate object as the <code>BindingContext</code>. 
+     This is a common technique used to supply data to your views - and there's a name for the codified pattern: <b>Model-View-ViewModel</b>.
+    </p>
+    <ol>
+    	<li>Open <b>MainPage.xaml.cs</b> and locate the <code>InitializeData</code> method. You can remove all the code from this method <em>except</em> the <code>BindingContext</code> assignment.</li>
+    	<li>Next, change the <code>BindingContext</code> assignment to be an anonymous type that contains the countries <em>and</em> the selected flag:</li>
+
+<pre class="prettyprint">
+// Set the binding context to an anonymous type containing both the countries
+// and the current flag. Note: this could also be a real type (like a ViewModel).
+this.BindingContext = new { Countries = repository.Countries, CurrentFlag };
+</pre>
+
+		<li>Now, we need to fix up our bindings in the XAML. Open the XAML page and fix all the property names for existing bindings - adding <b>CurrentFlag</b> into the property name:</li>
+
+<pre class="prettyprint">
+Date="{Binding <mark>CurrentFlag.</mark>DateAdopted, Mode=TwoWay}"
+</pre>
+
+		<li>Finally, let's bind the countries. Locate the <code>Picker</code> and add a new binding for the <code>ItemsSource</code> property to bind it to the <code>Countries</code> property we created on the anonymous object we assigned to the <code>BindingContext</code>.</li>
+
+<pre class="prettyprint">
+&lt;Picker ItemsSource="{Binding Countries}"
+           SelectedItem="{Binding CurrentFlag.Country, Mode=TwoWay}" />
+</pre>
+		<li>Check your XAML and make sure the <code>x:Name</code> is removed on all the controls - you should no longer have any references to any of these specific UI elements in your code. Instead, it's strictly dealing with the <code>BindingContext</code>.</li>
+
+		<li>Run the application and make sure it's all still working properly.</li>
+    </ol>
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, we used Value Converters to move incompatible property types into bindings - coercing values and loading resources for our UI. Compare the code behind you have left - it is now just behavior, with no UI coupling at all.
+    </p>
+        
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

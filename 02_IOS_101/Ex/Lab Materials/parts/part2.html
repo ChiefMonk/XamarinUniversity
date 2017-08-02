@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Add a root view controller to the Tip Calculator app</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to Xamarin.iOS</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <h2>Lab Goals</h2>
+        <p>
+        The primary goal of this lab will be to disable the default Storyboard UI from the TipCalculator project you created in the previous exercise and replace it with a code-based <code>UIViewController</code> which will be set as the <code>RootViewController</code> for the application.
+        </p>
+
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Part 02 Resources</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work. 
+        </p>
+        
+        <h2>
+            High-level steps
+        </h2>
+        <p>
+            Use the following high-level steps to complete the exercise, step-by-step instructions are provided below that if you need any guidance.
+        </p>
+        <ol>
+            <li>
+                You will start by replacing the existing View Controller source file in the solution with a new C# source file.
+            </li>
+            <li>
+                The class will need to derive from <code>UIViewController</code>.
+            </li>
+            <li>
+                You will create and assign a new <code>UIWindow</code> instance in the <b>AppDelegate.cs</b> source file as part of the <code>FinishedLaunching</code> method.
+            </li>
+            <li>
+                Then, you will then create an instance of your new View Controller and assign it to the <code>Window.RootViewController</code> property.
+            </li>
+            <li>
+                Next, you will call the window's <code>MakeKeyAndVisible</code> method to make the window visible on the device and mark it as the primary, interactive window.
+            </li>
+            <li>
+                As a final step, you can compile the application to make sure it's all constructed properly - we will talk about how to run it next. 
+            </li>
+        </ol>
+
+        <h1>Steps</h1>
+        <div id="ide-selector">
+            Select the Visual Studio environment you want to work with:&nbsp;&nbsp;
+            <a href="#" data-name="xs">macOS</a>
+            or
+            <a href="#" data-name="vs">Windows</a>
+        </div>
+        
+        <ide name="xs">
+            <h2>Add a new UIViewController to the project</h2>
+            <p>
+                The <b>Single View App</b> template created both a Storyboard UI and a View Controller with some basic overrides that is linked to the UI. We want to start from scratch in this app so in this step, we will delete the existing View Controller code and replace it with a new C# class to act as our primary view controller. 
+            </p>
+            <ol>
+                <li>
+                    Locate the <b>ViewController.cs</b> source file in the solution. Right-click on it (or select the gear icon next to it when it is highlighted) and select <b>Remove</b>.
+                </li>
+                <img src="./res/images/lab2-vsmac-remove-file.png" />
+                <li>
+                    Add a new file to the project using either <b>File > New > File</b> from the menu, or use <b>Add > New File</b> from the project context menu. 
+                </li>
+                 <li>
+                    Choose the <b>Empty Class</b> template from the <b>General</b> category and name the file <b>MyViewController</b>; make sure that <b>Add to project</b> is selected and click <b>New</b> to create the file.
+                </li>
+                <img src="./res/images/lab2-vsmac-new-file.png" class="indent-none" />
+                
+                <li>
+                    Open the new source file (the IDE should open it automatically) and change it to derive from <code>UIViewController</code>. You will need to fully-qualify the class or add the <code>UIKit</code> namespace to your using statements at the top of the file.
+                </li>
+
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'viewcontroller');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="viewcontroller" style="display:none;">
+<pre class="prettyprint">
+using System;
+<span class="highlight">using UIKit;</span>
+
+namespace TipCalculator
+{
+    public class MyViewController <span class="highlight">: UIViewController</span>
+    {
+        public MyViewController()
+        {
+        }
+    }
+}
+</pre></div></p>
+            </ol>
+            
+            <h2>Set the RootViewController</h2>
+            <p>
+                In this step, we will create the window and assign our new view controller as the initial (root) view controller for the applicaiton.
+            </p>
+            <ol>
+                <li>
+                    Open the <b>AppDelegate.cs</b> source file in the project.            
+                </li>
+                <li>
+                    Locate the <code>FinishedLaunching</code> method and remove all the code from the method.
+                </li>
+                
+                <li>
+                    The first step is to create a new <code>UIWindow</code> object and assign it. The constructor for <code>UIWindow</code> takes a <code>CGRect</code> which defines the rectangle that the window will cover.
+                    <ul class="indent-none">
+                        <li>
+                            We want it to cover the entire device screen, so use the static property <code>UIScreen.MainScreen.Bounds</code> as the parameter - this defines the entire screen size.
+                        </li>
+                        <li>
+                            Assign the created <code>UIWindow</code> to the existing <code>Window</code> property.
+                        </li>
+                    </ul>
+                </li>
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'createWindow');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="createWindow" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    <span class="highlight">Window = new UIWindow(UIScreen.MainScreen.Bounds);</span>
+}
+</pre></div></p>
+
+                <li>
+                    Next, create a new instance of your <code>MyViewController</code> class and assign it to the <code>Window.RootViewController</code> property. This will make that View Controller (and the view it is responsible for) the initial screen for the application.
+                </li>
+                
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'rootViewController');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="rootViewController" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    <span class="highlight">Window.RootViewController = new MyViewController();</span>
+}
+</pre></div></p>
+    
+                <li>
+                    Finally, we have to direct iOS to make this new window the <em>primary</em> or <em>key</em> window - we do this by calling the <code>MakeKeyAndVisible</code> method on the <code>UIWindow</code> object.
+                </li>
+                
+                <li>
+                    Return <code>true</code> from the method to finish the implementation.   
+                </li>
+
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'makeWindow');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="makeWindow" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+
+    // make the window visible
+    <span class="highlight">Window.MakeKeyAndVisible();</span>
+
+    return true;
+}
+</pre></div></p>
+
+                <li>
+                    Use the <b>Build</b> menu (or the <code class="codeblock">&#8984;+B</code> accelerator key) to compile the application and correct any compile errors.
+                </li>
+            </ol>
+        </ide>
+        
+        <ide name="vs">
+            <h2>Add a new UIViewController to the project</h2>
+            <p>
+                The <b>Single View App</b> template created both a Storyboard UI and a View Controller with some basic overrides that is linked to the UI. We want to start from scratch in this app so in this step, we will delete the existing View Controller code and replace it with a new C# class to act as our primary view controller. 
+            </p>
+            <ol>
+                <li>
+                    Locate the <b>ViewController.cs</b> source file in the solution. Right-click on it and select <b>Delete</b>, or press <b>DEL</b> with the file selected.
+                </li>
+                <img src="./res/images/lab2-vs-remove-file.png" />
+                <li>
+                    Add a new file to the project using either <b>Project > Add Class</b> from the menu, or use <b>Add > Class</b> from the project context menu. 
+                </li>
+                 <li>
+                    Choose the <b>Empty Class</b> template from the <b>General</b> category and name the file <b>MyViewController</b>, and click "Add" to create the file and add it to your project.
+                </li>
+                <img src="./res/images/lab2-vs-new-class.png" class="indent-none" />
+                
+                <li>
+                    Open the new source file (the IDE should open it automatically) and change it to derive from <code>UIViewController</code>. You will need to fully-qualify the class or add the <code>UIKit</code> namespace to your using statements at the top of the file.
+                </li>
+
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'viewcontroller2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="viewcontroller2" style="display:none;">
+<pre class="prettyprint">
+using System;
+<span class="highlight">using UIKit;</span>
+
+namespace TipCalculator
+{
+    public class MyViewController <span class="highlight">: UIViewController</span>
+    {
+        public MyViewController()
+        {
+        }
+    }
+}
+</pre></div></p>
+            </ol>
+            
+            <h2>Set the RootViewController</h2>
+            <p>
+                In this step, we will assign our new view controller as the initial (root) view controller for the applicaiton.
+            </p>
+            <ol>
+                <li>
+                    Open the <b>AppDelegate.cs</b> source file in the project.            
+                </li>
+                <li>
+                    Locate the <code>FinishedLaunching</code> method and remove all the code from the method.
+                </li>
+                
+                <li>
+                    The first step is to create a new <code>UIWindow</code> object and assign it. The constructor for <code>UIWindow</code> takes a <code>CGRect</code> which defines the rectangle that the window will cover.
+                    <ul class="indent-none">
+                        <li>
+                            We want it to cover the entire device screen, so use the static property <code>UIScreen.MainScreen.Bounds</code> as the parameter - this defines the entire screen size.
+                        </li>
+                        <li>
+                            Assign the created <code>UIWindow</code> to the existing <code>Window</code> property.
+                        </li>
+                    </ul>
+                </li>
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'createWindow2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="createWindow2" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    <span class="highlight">Window = new UIWindow(UIScreen.MainScreen.Bounds);</span>
+}
+</pre></div></p>
+
+                <li>
+                    Next, create a new instance of your <code>MyViewController</code> class and assign it to the <code>Window.RootViewController</code> property. This will make that View Controller (and the view it is responsible for) the initial screen for the application.
+                </li>
+                
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'rootViewController2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="rootViewController2" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    <span class="highlight">Window.RootViewController = new MyViewController();</span>
+}
+</pre></div></p>
+    
+                <li>
+                    Finally, we have to direct iOS to make this new window the <em>primary</em> or <em>key</em> window - we do this by calling the <code>MakeKeyAndVisible</code> method on the <code>UIWindow</code> object.
+                </li>
+                
+                <li>
+                    Return <code>true</code> from the method to finish the implementation.   
+                </li>
+
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'makeWindow2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="makeWindow2" style="display:none;">
+<pre class="prettyprint">
+public override bool FinishedLaunching(UIApplication application, 
+                                        NSDictionary launchOptions)
+{
+    // create a new window instance based on the screen size
+    Window = new UIWindow(UIScreen.MainScreen.Bounds);
+
+    // Assign the root view controller
+    Window.RootViewController = new MyViewController();
+
+    // make the window visible
+    <span class="highlight">Window.MakeKeyAndVisible();</span>
+
+    return true;
+}
+</pre></div></p>
+                <li>
+                    Use the <b>Build</b> menu (or the <code class="codeblock">CTRL+SHIFT+B</code> accelerator key) to compile the application and correct any compile errors.
+                </li>
+            </ol>
+        </ide>
+
+        <h2>Summary</h2>
+        <p>
+            Congratulations! You have a complete (if plain) iOS application with a Controller that will create the View for you. Next, we will look at how to run this application using the built-in iOS Simulator.
+        </p>
+        
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 3: Dynamically update Resources</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Resources and Styles</header>
+
+   	<section id="main">
+		<h1 id="page-title"></h1>
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<h2>Goals</h2>
+		<p>
+			The goal of this lab is to have the UI update automatically when Resource values change.
+		</p>
+
+		<h2>Required assets</h2>
+		<p>
+			The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Complete</strong> with a solution you can use to check your work. 
+		</p>
+		<p>
+			This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use the	<strong>Completed</strong> solution from the previous exercise as starter code for this exercise.
+		</p>
+
+		<h2>Challenge</h2>
+		<p>
+			You can use the high-level description here to work through the lab on your own. Alternatively, you can use	the instructions below if you would like step-by-step guidance.
+		</p>
+
+		<ul>
+			<li>
+				Open the <strong>StandardTipPage.xaml.cs</strong> file in the <strong>TipCalculator</strong> project. Modify the two button-click handlers that implement the color schemes so they update the <code>bgColor</code> and <code>fgColor</code> Resources in the page's resource dictionary instead of loading colors into the controls.
+			</li>
+			<li>
+				Open the <strong>StandardTipPage.xaml</strong>. Modify the XAML so the UI will update automatically when the Resource color values change.
+			</li>
+		</ul>
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to complete the exercise.
+		</p>
+
+		<h2>Update Resources from code</h2>
+
+		<p>
+			Here you will write code that updates a few resources stored in a page's Resource Dictionary.
+		</p>
+
+		<ol>
+			<li>
+				Open the <strong>TipCalculator</strong> project.
+			</li>
+
+			<li>
+				Open <strong>StandardTipPage.xaml.cs</strong>.
+			</li>
+
+			<li>
+				Locate the <code>OnLight</code> method and remove all the existing code inside it.
+				Add two new lines of code so the method sets the <code>fgColor</code> Resource in the
+				page's <code>Resources</code> dictionary to <code>#606060</code> and the <code>bgColor</code> resource to <code>#c0c0c0</code>. You can use the static <code>Color.FromHex</code> method to easily convert the hex string into a <code>Color</code>.
+			</li>
+<p><a href="#" onclick="toggleCode(this,'UpdateResource');return false;" class="uiitem">Show Code</a>
+<div id="UpdateResource" style="display:none;">
+<pre class="prettyprint">
+Resources["fgColor"] = Color.FromHex("#606060");
+</pre></div></p>
+
+			<li>
+				Repeat the previous step for the <code>OnDark</code> method but reverse the colors (i.e. set <code>fgColor</code> to <code>#c0c0c0</code> and <code>bgColor</code> to <code>#606060</code>).
+			</li>
+
+			<li>
+				Run the app on a platform of your choice. Click on the "Dark" and "Light" buttons.
+				The UI will not update. You are changing the Resource value in the dictionary; however,
+				the new value is not being propagated to your UI controls.
+			</li>
+		</ol>
+
+		<h2>Update the UI Dynamically</h2>
+
+		<p>
+			Here, you will modify your XAML so updated Resource values are loaded into your UI.
+		</p>
+
+		<ol>
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>
+
+			<li>
+				Locate all of the places that you assign colors from Resource values.
+				Replace the use of the <code>StaticResource</code> markup extension with <code>DynamicResource</code>.
+			</li>
+
+			<li>
+				Run the app on a platform of your choice. Click on the "Dark" and "Light" buttons.
+				The UI will now update correctly.
+			</li>
+		</ol>
+
+		<h1>Summary</h1>
+		<p>
+			Here you replaced the hardcoded static resources with dynamic resources. Your UI now updates automatically as Resource values change. Use of dynamic resources incurs a small amount of additional runtime overhead but can yield clean code that is relatively easy to maintain.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

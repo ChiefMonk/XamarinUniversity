@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Data Binding in Xamarin.Forms</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+        This is a Xamarin.Forms class which includes projects for iOS, Android, and Windows. 
+        When working on the exercises, you can select the easiest supported platform to run your application on. Refer to the <a href="https://university.xamarin.com/resources/setup-requirements" target="_blank">Setup Requirements</a> on the Xamarin University website if you need help with your development environment.
+        </p>
+
+        <h2>Overview</h2>
+        <p>
+        This session introduces the data binding infrastructure that is built into Xamarin.Forms. You will learn how to take advantage of this feature in your Xamarin.Forms applications to reduce the amount of code necessary to present data in your screens.
+        </p>
+
+        <h2>Objectives</h2>
+        <ol>
+            <li>Use data binding to decouple code-behind from UI</li>
+            <li>Use value converters to bind incompatible types</li>
+        </ol>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">XAM310 - Data Binding in Xamarin.Forms</a>.</p>
+
+        <h2>Exercises</h2>
+        <ol>
+            <li>
+                <div class="objective">Using Data Binding in a Xamarin.Forms Application</div>
+                <a href="./parts/part1.html">Exercise</a>
+                <br />
+                This group exercise will introduce creating and using bindings in code-behind and XAML.
+            </li>
+
+            <li>
+                <div class="objective">Keeping the UI and data in sync using Bindings</div>
+                <a href="./parts/part2.html">Exercise</a>
+                <br />
+                This exercise will implement two-way binding for our UI; this will ensure UI data changes are sent to the code-behind. 
+                It will then implement <code>INotifyPropertyChanged</code> to ensure that the UI is updated when the underlying data is changed.
+            </li>
+
+            <li>
+               <div class="objective">Using Value Converters</div>
+                <a href="./parts/part3.html">Exercise</a>
+                <br />
+                There isn't always a 1:1 mapping between our available data and the user interface that presents that data. Value Converters are the bridge which spans this difference. 
+                In this exercise, we will use a Value Converter to data bind images to our resources.
+             </li>
+
+            <li>
+               <div class="objective">Homework: abstracting out the shared code</div>
+                <a href="./parts/part4.html">Homework</a>
+                <br />
+                In this homework assignment, you will pull all the sharable code out of the code behind now that
+                it no longer depends on the UI controls and place it into a separate class which can be unit tested.
+             </li>             
+        </ol>
+
+        <h2>Exploring On Your Own</h2>
+        <div class="wslist">
+            <a href="http://developer.xamarin.com/guides/cross-platform/xamarin-forms/Xaml-for-Xamarin-forms/data_binding_basics/">Data Binding Basics in Xamarin.Forms</a>
+            <a href="http://joshsmithonwpf.wordpress.com/2009/07/11/one-way-to-avoid-messy-propertychanged-event-handling/">Type-safe PropertyChanged event handling in code (blog)</a>
+        </div>
+
+
+
+    </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+</body>
+</html>
+

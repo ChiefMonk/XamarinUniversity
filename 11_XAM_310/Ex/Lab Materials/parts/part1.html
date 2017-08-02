@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Using Data Binding in a Xamarin.Forms Application</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Data Binding in Xamarin.Forms</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Goals</h2>
+        <p>
+            This group exercise will introduce you to the data binding infrastructure built into Xamarin.Forms by taking an existing application and converting it to use Bindings to connect the data defined in code with the UI defined in XAML.
+        </p>
+
+        <h2>Assets</h2>
+        <p>
+            This exercise includes a starter project in the <strong>Part 01 Resources</strong> folder. Make sure you have this folder available before starting the exercise.</p>
+
+        <h2>Challenge</h2>
+        <p>
+            This exercise takes an existing Xamarin.Forms application which displays a set of flags and interesting facts about them. The UI is described in XAML and the associated code behind populates the UI with the data and then watches the various UI events
+            to transfer changes back to the underlying data object.
+        </p>
+
+        <img src="./res/images/app-start.png" />
+
+        <p>
+            You will remove the existing manual data transfer code done in C# and replace it with data bindings; first in C# and then with XAML bindings.
+        </p>
+
+        <p>Here are the basic steps:</p>
+        <ol class="indent-large">
+            <li>Open and examine the starter solution - it has five projects, two PCL projects with data and UI, and three platform head projects for iOS, Android, and UWP. The one you will be working with is <b>FunFlacts</b> which contains the UI definitions
+                for the page.</li>
+            <li>
+                Create a <code>Binding</code> in code behind to tie a property of our <code>Flag</code> object to an <code>Entry</code> control in the UI. This will only be done for a single property to demonstrate the creation of bindings in code.
+            </li>
+
+            <p class="indent-none">
+                <a href="#" onclick="toggleBlock(this, 'howto_bindings', 'What is Data Binding again?', 'Hide'); return false;" class="uiitem">What is Data Binding again?</a>
+                <div class="indent-none wsblock" id="howto_bindings" style="display:none;">
+                    <div class="wsitem">
+                        <b>What is Data Binding again?</b><br />
+                        <p>
+                            Data Binding provides a simple way for Xamarin.Forms applications to display and interact with data. When utilizing bindings, the display of the data is separated from the management and logic driving the data.
+                        </p>
+                        <p>
+                            Bindings can be created in code or markup (XAML) and require three pieces of information to function:
+                        </p>
+                        <ol>
+                            <li>A <em>binding source</em>, which is any .NET object you want to render.</li>
+                            <li>A <em>binding target</em>, which is a <code>BindableProperty</code> of a <code>BindableObject</code>, this is typically some UI control such as a <code>Entry</code>.</li>
+                            <li>A <em>property path</em>, which identifies the specific property of the .NET object to display in the target.</li>
+                        </ol>
+                    </div>
+                </div>
+            </p>
+
+            <p class="indent-none">
+                <a href="#" onclick="toggleBlock(this, 'howto_binding_code', 'How do I create a Binding in code behind?', 'Hide'); return false;" class="uiitem">How do I create a Binding in code behind?</a>
+                <div class="indent-none wsblock" id="howto_binding_code" style="display:none;">
+                    <div class="wsitem">
+                        <b>How do I create a Binding in code behind?</b><br />
+                        <p>
+                            When creating bindings in code, you will set the <a target="_blank" href="http://iosapi.xamarin.com/index.aspx?link=P%3AXamarin.Forms.BindableObject.BindingContext">Binding Context</a> onto your target <code>BindableObject</code>                            to associate the binding source. Next, create a <code>Binding</code> object, passing the property path, and then apply the binding by calling <code>BindableObject.SetBinding</code> on the target.
+                        </p>
+                        <pre class="prettyprint codeblock">
+Person coolGuy = new Person() { Name = "Mark Smith" };
+Entry nameEntry = new Entry();
+
+nameEntry.BindingContext = coolGuy;
+nameEntry.SetBinding(Entry.TextProperty, new Binding("Name"));
+</pre>
+                    </div>
+                </div>
+            </p>
+
+            <li>Next, replace the binding in code with XAML-based bindings for almost all our UI elements using the <code>Flag</code> object as our <code>BindingContext</code>. You will want to data bind the following properties:
+                <ul>
+                    <li><code>Country</code></li>
+                    <li><code>DateAdopted</code></li>
+                    <li><code>IncludesShield</code></li>
+                    <li><code>Description</code></li>
+                </ul>
+                You can try to data bind the final property (<code>ImageUrl</code>), but you will find that it won't quite work at the moment. In a future exercise, we will fix this problem.
+            </li>
+
+            <p class="indent-none">
+                <a href="#" onclick="toggleBlock(this, 'howto_bindingContext', 'How do I create bindings in XAML?', 'Hide'); return false;" class="uiitem">How do I create bindings in XAML?</a>
+                <div class="indent-none wsblock" id="howto_bindingContext" style="display:none;">
+                    <p>
+                        When creating bindings in XAML, you will utilize the <code>{Binding}</code> markup extension, setting it onto the target property of your UI. The <code>BindingContext</code> will often be set through:
+                        <ol>
+                            <li>Code behind</li>
+                            <li><code>{StaticResource}</code> to lookup a resource in XAML.</li>
+                            <li><code>{x:Static}</code> to get a static property</li>
+                            <li>or assigned directly in XAML using the property-element syntax as shown below.</li>
+                        </ol>
+                    </p>
+                    <pre class="prettyprint codeblock">
+&lt;Entry Text="{Binding Name}">
+    &lt;Entry.BindingContext>
+        &lt;Person Name="Mark Smith" />
+    &lt;/Entry.BindingContext>
+&lt;Entry>
+</pre>
+                </div>
+            </p>
+        </ol>
+
+        <h1>Steps</h1>
+        <h2>Open the Starter Solution</h2>
+        <ol>
+            <li>Open the <b>FunFlacts.sln</b> (Fun Flag Facts) solution in the <b>Part 01 Resources/Start</b>.</li>
+            <li>Build and run the application to ensure it's working. It displays a single flag and allows you to edit the details of the flag. It has a <strong>Show</strong> button in the Tool bar which displays the details of the underlying <code>Flag</code>                in an alert box.</li>
+            <li>The solution contains five projects but we will perform all our work in the <strong>FunFlacts</strong> Portable Class Library which is the shared code and UI layer. We also have a data assembly where all the flag data is loaded from - this
+                could be from an Azure service for example. The other three projects are the platform-specific host projects for iOS, Android and UWP.</li>
+            <li>Here are the classes / files we will work with:</li>
+        </ol>
+        <table class="grid indent-large">
+            <tr>
+                <th>File</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><b>App.cs</b></td>
+                <td>
+                    Contains the <code>Application</code> class for our Xamarin.Forms application which defines the starting page for the application.
+                </td>
+            </tr>
+            <tr>
+                <td><b>MainPage.xaml(.cs)</b></td>
+                <td>
+                    Defines the UI and logic for our initial page. The <strong>XAML</strong> file defines the UI using markup, the associated code file then provides the behavior for the UI.
+                </td>
+            </tr>
+            <tr>
+                <td><b>FlagRepository.cs</b></td>
+                <td>
+                    This class is in the <b>FlagData</b> project and contains the sample data we will be working with. This defines a repository class that retrieves our flags.
+                </td>
+            </tr>
+            <tr>
+                <td><b>Flag.cs</b></td>
+                <td>
+                    Also in the <b>FlagData</b> project and defines the <code>Flag</code> class used for all the objects coming from the repository.
+                </td>
+            </tr>
+        </table>
+
+        <h2>Create a Binding in code</h2>
+        <p>
+            First, you'll manually create a single binding to see the required information and steps. There are three required pieces of information: source (<code>BindingContext</code>), property path, and target <code>BindableProperty</code>.
+        </p>
+
+        <ol>
+            <li>Open <strong>MainPage.xaml.cs</strong> and locate the <code>InitializeData</code> method.</li>
+            <li>Comment-out or delete the lines which set the <b>country</b> <code>Picker</code> control's <code>SelectedItem</code> property and the <code>SelectedIndexChanged</code> event handler.
+                <li>Set the <code>BindingContext</code> on the <code>country</code> control to the active <code>Flag</code>.</li>
+                <li>Create a <code>Binding</code> which has the property path - we want to tie to the <code>Country</code> property on our flag.</li>
+                <li>Finally, add a binding to the <code>country</code> control using the <code>SetBinding</code> method - you want to associated the <code>Binding</code> to the <code>Picker.SelectedItemProperty</code> property.</li>
+        </ol>
+
+        <p><a href="#" onclick="toggleCode(this,'codeBinding');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="codeBinding" style="display:none;">
+                <pre class="prettyprint">
+private void InitializeData()
+{
+	country.ItemsSource = (IList) repository.Countries;
+	// country.SelectedItem = CurrentFlag.Country;
+	// country.SelectedIndexChanged += (s, e) => CurrentFlag.Country = repository.Countries[country.SelectedIndex];
+	<mark>country.BindingContext = CurrentFlag;
+	country.SetBinding(Picker.SelectedItemProperty, 
+		new Binding(nameof(CurrentFlag.Country)));</mark>
+	...
+</pre>
+            </div>
+        </p>
+
+        <ol start="6">
+            <li>Run the application and make sure the country picker is correctly populated. Try changing it's value and then click the <strong>Show</strong> button to see if it changed the underlying object as you can see here:
+                <img src="./res/images/show-flag.png" />
+            </li>
+            <li><b>Note:</b> There is a generic version of <code>SetBinding</code> which doesn't require a string; we are using <code>nameof</code> here which performs the same function using a modern C# feature.</li>
+        </ol>
+
+        <h2>Create XAML-based bindings for our controls</h2>
+        <p>More often than not, you will place bindings in XAML which reduces the code-behind, decouples the UI, and makes the code-behind primarily behavior.</p>
+        <ol>
+            <li>First, remove the property setters and event handlers from the following controls in the code-behind:
+                <ul class="indent-none">
+                    <li><strong>country</strong></li>
+                    <li><strong>adopted</strong></li>
+                    <li><strong>hasShield</strong></li>
+                    <li><strong>description</strong></li>
+                </ul>
+                We want to leave the <strong>flagImage</strong> control alone for now - these will require a little more work to data bind.</li>
+            <li>Set the <code>BindingContext</code> which our XAML bindings will pull from. We could set it on every single element here in code, but remember from the lecture that <code>BindingContext</code> is <em>inherited</em> when it is set on a parent
+                element. So, assign the <code>BindingContext</code> on the page itself - make it the <code>Flag</code> object we want to get all our data from. Do this at the end of the <code>InitializeData</code> method - in particular
+                <b>make sure it's set <em>after</em> the <code>Picker.ItemSource</code> property is set</b>.
+                <br><br>If the country Picker no longer displays the country when you run the app, it's likely you are setting the
+                <code>ItemsSource</code> <em>after</em> the <code>BindingContext</code> which clears the value.</li>
+        </ol>
+        <p><a href="#" onclick="toggleCode(this,'xamBinding1');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="xamBinding1" style="display:none;">
+                <pre class="prettyprint">
+private void InitializeData()
+{
+    country.ItemsSource = (IList) repository.Countries;
+    // country.SelectedItem = CurrentFlag.Country;
+    // country.SelectedIndexChanged += (s, e) => CurrentFlag.Country = repository.Countries[country.SelectedIndex];
+    // country.BindingContext = CurrentFlag;
+    // country.SetBinding(Picker.SelectedItemProperty, new Binding(nameof(CurrentFlag.Country)));
+
+    flagImage.Source = CurrentFlag.GetImageSource();
+
+    // adopted.Date = CurrentFlag.DateAdopted;
+    // adopted.DateSelected += (s, e) => CurrentFlag.DateAdopted = e.NewDate;
+
+    // hasShield.IsToggled = CurrentFlag.IncludesShield;
+    // hasShield.Toggled += (s, e) => CurrentFlag.IncludesShield = hasShield.IsToggled;
+
+    // description.Text = CurrentFlag.Description;
+
+    // Set the binding context
+    <mark>this.BindingContext = CurrentFlag;</mark>
+}
+</pre>
+            </div>
+        </p>
+
+        <ol start="3">
+            <li>Open <strong>MainPage.xaml</strong> and add <code>{Binding PROPERTY_NAME}</code> tags on each of the above controls to tie the appropriate property to each target. Examine the code you just commented out to determine the proper source and
+                target properties. For example, the <strong>country</strong> element would look like this:
+                <pre class="prettyprint codeblock">
+&lt;Picker x:Name="country" SelectedItem="{Binding Country}" />
+</pre> This ties the <code>SelectedItem</code> property of the <code>Picker</code> control to the <code>Country</code> property of the <code>BindingContext</code> (flag).</li>
+        </ol>
+        <p><a href="#" onclick="toggleCode(this,'xamBinding2');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="xamBinding2" style="display:none;">
+                <pre class="prettyprint">
+&lt;Picker x:Name="country" SelectedItem="{Binding Country}" />
+
+&lt;Label Text="Current Design was Adopted on" FontAttributes="Bold" />
+&lt;DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start" 
+            Date="{Binding DateAdopted}" />
+
+&lt;Label Text="Has Shield" FontAttributes="Bold" />
+&lt;Switch x:Name="hasShield" IsToggled="{Binding IncludesShield}" />
+
+&lt;Label Text="Fun Fact" FontAttributes="Bold" />
+&lt;Label x:Name="description" Text="{Binding Description}" />
+</pre>
+            </div>
+        </p>
+
+        <ol start="4">
+            <li>Run the application and ensure each field displays data.</li>
+            <li>Press the arrows on the toolbar to try different flags - the values should change. This is because we are changing the <code>BindingContext</code> - and therefore it's changing the binding values!</li>
+            <li>Try changing a control's value (for example, select a new country) and click the <strong>Show</strong> button to see if it changed the underlying object. <em>Hint: it should!</em></li>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise, you updated an existing Xamarin.Forms application and modified it to use Data Binding to populate the UI.
+        </p>
+
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 3: Create the UI for a Tip Calculator</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to Xamarin.iOS</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Lab Goals</h2>
+        <p>
+            In this exercise, we will be adding three controls to our screen: a <code>UITextField</code>, a <code>UIButton</code> and a <code>UILabel</code> to complete the UI for a simple Tip Calculator.
+        </p>
+
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Part 03 Resources</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work. 
+        </p>
+
+        <h2>
+            High-level steps
+        </h2>
+        <p>
+            Use the following high-level steps to complete the exercise, step-by-step instructions are provided below that if you need any guidance.
+        </p>
+        <ol>
+            <li>
+                Override the <code>ViewDidLoad</code> method in the View Controller.
+            </li>
+            <li>
+                Add a <code>UITextField</code>, a <code>UIButton</code> and a <code>UILabel</code> as subviews to the root view as shown below. You will need to calculate the proper frame for each control, they should be positioned vertically down the screen like this:
+                <img src="./res/images/lab4-spacing.PNG" class="indent-none" />
+                The controls have an 8 point margin between each other, and each control is sized to hold the content. Apple tends to use 8 and 20 as the margin spacing, but as long as you are consistent and it's a reasonable amount of space, you can use your own values. The <code>UITextField</code> needs more spacing on the top to make sure it sits below the status bar - remember that <b>(0,0)</b> is the top/left corner of the screen.
+        </ol>
+
+        <h1>Steps</h1>
+        <h2>Create the UI for our Tip Calculator</h2>
+        <p>
+            In this section, we will add the controls to our UI to create the GUI for the Tip Calculator. You can use either Visual Studio - the instructions are identical for both operating systems.
+        </p>
+        <ol>
+            <li>
+                Open the <b>MyViewController.cs</b> source file.
+            </li>
+            
+            <li>
+                If you have not done it already, go ahead and override the <code>ViewDidLoad</code> method, make sure to call the base class implementation.
+            </li>
+            
+            <li>
+                If you have not set the <code>BackgroundColor</code> for the <code>View</code> to Yellow, then go ahead and add that line of code. Remember you can use the <code>UIColor.Yellow</code> constant as your color value.
+            </li>
+            
+<pre class="prettyprint codeblock">
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+
+    this.View.BackgroundColor = UIColor.Yellow;
+}
+</pre>
+            
+            <li>
+                Create a new <code>UITextField</code> variable in the <code>ViewDidLoad</code> override.
+                <ul class="indent-none">
+                    <li>Name the field <b>totalAmount</b>.</li>
+                    <li>Calculate the frame using the above diagram - it should be 20pts from the left and right edges of the screen, 28pts from the top and be 35pts in height (the width is based on the screen). You will need to use the <code>View.Bounds.Width</code> to stretch this across the view. You can either pass the calculated <code>CGRect</code> into the constructor, or set the <code>Frame</code> property.</li>
+                    <li>You will need to add a <code>using</code> for <code>CoreGraphics</code> to use the <code>CGRect</code> type.
+                    <li>Set the <code>KeyboardType</code> to <code>KeyboardType.DecimalPad</code>.</li>
+                    <li>Set the <code>BorderStyle</code> to <code>UITextBorderStyle.RoundedRect</code>.</li>
+                    <li>Set the <code>Placeholder</code> to "Enter Total Amount".</li>
+                </ul>
+            </li>
+            
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'totalAmount');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="totalAmount" style="display:none;">
+<pre class="prettyprint">
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UITextField totalAmount = new UITextField(
+                    new CGRect(20, 28, View.Bounds.Width-40, 35)) 
+    {
+        KeyboardType = UIKeyboardType.DecimalPad,
+        BorderStyle = UITextBorderStyle.RoundedRect,
+        Placeholder = "Enter Total Amount"
+    };
+}
+</pre></div></p>            
+            
+            <li>
+                Create a new <code>UIButton</code> variable in the <code>ViewDidLoad</code> override.
+                <ul class="indent-none">
+                    <li>Name the field <b>calcButton</b>.</li>
+                    <li>Pass <code>UIButtonType.Custom</code> to the constructor so we can change the colors.</li>
+                    <li>Calculate the frame using the above diagram, like the text field, it should be 20pts from the left and right edges of the screen and should be 8pts below the text field. From the above diagram, it should be 45pts in height. You will need to set the <code>Frame</code> property directly in order to use the constructor that takes a button type.</li>
+                    <li>Set the <code>BackgroundColor</code> to a dark green using the <code>UIColor.FromRGB</code> static method (make the green component <b>0.5f</b> to make it darker).</li>
+                    <li>Use the <code>SetTitle</code> method to set the text to "Calculate" for the <code>UIControlState.Normal</code>.</li>
+                </ul>
+            </li>
+            
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'calcButton');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="calcButton" style="display:none;">
+<pre class="prettyprint">
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UIButton calcButton = new UIButton(UIButtonType.Custom) 
+    {
+        Frame = new CGRect(20, 71, View.Bounds.Width - 40, 45),
+        BackgroundColor = UIColor.FromRGB(0, 0.5f, 0),
+    };
+    calcButton.SetTitle("Calculate", UIControlState.Normal);
+}
+</pre></div></p>         
+
+            <li>
+                Finally, create a new <code>UILabel</code> variable in the <code>ViewDidLoad</code> override.
+                <ul class="indent-none">
+                    <li>Name the field <b>resultLabel</b>.</li>
+                    <li>Calculate the frame using the above diagram, it should be 40pts high and have the same left and right margins as the other two controls. You can pass the frame into the constructor, or set the property.</li>
+                    <li>Set the <code>TextColor</code> to <code>UIColor.Blue</code>.</li>
+                    <li>Set the <code>TextAlignment</code> to <code>UITextAlignment.Center</code> to center the text horizontally.</li>
+                    <li>Set the <code>Font</code> property to <code>UIFont.SystemFontOfSize(24)</code> to make the font slightly larger than normal - the parameter passed to this method is the font point size.</li>
+                    <li>Set the <code>Text</code> property to <code>"Tip is $0.00"</code> so we have some default text we can see.</li> 
+                </ul>
+            </li>   
+
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'resultLabel');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="resultLabel" style="display:none;">
+<pre class="prettyprint">
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+     UILabel resultLabel = new UILabel(new CGRect(20, 124, View.Bounds.Width-40, 40)) 
+     {
+        TextColor = UIColor.Blue,
+        TextAlignment = UITextAlignment.Center,
+        Font = UIFont.SystemFontOfSize(24),
+        Text = "Tip is $0.00"
+    };
+}
+</pre></div></p>                 
+            
+            <li>Now we need to add all these child views into our screen. You can add them individually (<code>View.Add</code> or <code>View.AddSubview</code>), or add them as an array of <code>UIView</code> objects using <code>View.AddSubviews</code>.</li>
+            
+<p class="indent-none"><a href="#" onclick="toggleCode(this,'addViews');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="addViews" style="display:none;">
+<pre class="prettyprint">
+public override void ViewDidLoad()
+{
+    base.ViewDidLoad();
+    ...
+    
+    UITextField totalAmount = ...;
+    UIButton calcButton = ...;
+    UILabel resultLabel = ...; 
+    
+    <span class="highlight">View.AddSubviews(totalAmount, calcButton, resultLabel);</span>
+}
+</pre></div></p>                  
+            
+            <li>
+                Build and run the application - you should see an interactive UI, it won't have any behavior yet, but you should be able to tap in the edit field and enter values with the on-screen keyboard:
+            </li>
+            
+            <img src="./res/images/lab4-running.png" class="indent-none" />
+            
+            <li>
+                If you don't see the on-screen keyboard when you tap, but you see a cursor, then it's likely that the simulator is configured to use the hardware keyboard on your Mac. You can change this using the <b>Hardware > Keyboard > Connect Hardware Keyboard</b> option on the simulator menu. 
+            </li>
+            
+            <img src="./res/images/lab4-toggle-keyboard.PNG" class="indent-none" />
+            
+            <li>
+                One interesting thing about the application to play with: notice that the on-screen keyboard appears automatically when you tap in the edit field, but does not dismiss when you tap the button? We'll talk about this behavior next.
+            </li> 
+            
+        </ol>
+        
+        <p>
+            As mentioned above, there is a completed solution in the <b>Part 03 Resources</b> folder - if you have any trouble, you can compare your code against the final solution.
+        </p>
+        
+        <h2>Summary</h2>
+        <p>
+            In this exercise, you have added several controls to your application. The final step will be to add some behavior to the tip calculator.
+        </p>
+        
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

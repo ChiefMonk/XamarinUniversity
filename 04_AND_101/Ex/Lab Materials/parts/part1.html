@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Create a Xamarin.Android project</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to Xamarin.Android</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Goals</h2>
+
+		<p>
+			This lab walks you through creating a new Xamarin.Android project. There is no code to write here; however, the
+			instructions will point out a few key parts of the project after you have created it.
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Required assets</h2>
+
+		<p>
+			The provided <strong>Resources</strong> folder for this part contains a subfolder named <strong>Completed</strong> with a solution you
+			can use to check your work.
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h1>Steps</h1>
+		<p>
+			Below are the instructions to implement the exercise. If you would like more detail, please see Xamarin's
+            <a target="_blank" href="http://developer.xamarin.com/guides/android/getting_started/hello,android/hello,android_quickstart/">Android quickstart</a>.
+            It contains a guided walkthrough with screenshots for Visual Studio on both platforms documenting each step.
+		</p>
+
+		<h2>
+			Create a new project
+		</h2>
+
+		<ol>
+			<li>
+                Launch your preferred IDE (Visual Studio or Visual Studio for Mac).
+            </li>
+			
+            <li>
+                Create a new single view Xamarin.Android project.
+				<br/>
+				In Visual Studio for Mac, use <strong>File > New > Solution</strong>, then choose the <strong>Android App</strong> template from the <strong>Android > App</strong> category.
+				<br/>
+				In Visual Studio, use <strong>File > New > Project</strong>, then choose the <strong>Single-View App (Android)</strong> template from the <strong>Visual C# > Android</strong> category.
+			</li>
+            
+            <li>
+                Name the app <strong>TipCalculator</strong>.
+            </li>
+
+            <li>
+                Choose a location for the project files.
+            </li>
+
+            <li>
+                Use the default values for all other project settings.
+            </li>
+ 		</ol>
+
+		<h2>
+			Examine the source code (Optional)
+		</h2>
+
+		<ol>
+            <li>
+				Run the app and spend a moment using it so you understand its behavior. The template code typically has a single button that displays
+				the number of times it has been clicked.
+			</li>
+
+			<li>
+				Open the file <strong>Resource > Layout > Main.axml</strong> in the Source view. If you find you are in the Design view, click the
+				<strong>Source</strong> tab at the bottom of the window.
+			</li>
+            
+			<li>
+				Examine the XML that declares the <code>Button</code>. In particular, note that the button has an <code>id</code> assigned to it.
+			</li>
+            
+			<li>
+				Open the file <strong>MainActivity.cs</strong>.
+			</li>
+            
+			<li>
+				The template generated an Activity for you. Activities are the core building blocks of Android applications.
+				The <code>Activity</code> attribute for your <code>MainActivity</code> has <code>MainLauncher</code> set to <code>true</code> which makes this Activity your app's primary entry point (i.e. analogous to a <code>Main</code> method from a C# Console Application). Notice it also assigns an <code>Icon</code> to the activity - this sets an Icon next to the title of the app when the app is displaying this activity.
+			</li>
+
+			<li>
+				There are two things to note in <code>OnCreate</code>. <code>SetContentView</code> takes an identifier for an XML file
+				(<code>Resource.Layout.Main</code>) as its argument and instantiates the UI. <code>FindViewById</code> takes an
+				<code>id</code> and returns a reference to the view with that id. This is how the code gets access to the views in the UI.
+			</li>
+		</ol>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+	
+		<h1>Summary</h1>
+		<p>
+			In this section, you created a new Xamarin.Android application. Subsequent exercises will examine the code in more
+			detail and expand it into a simple but functional app.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Homework: Add a customizable tip to the Tip Calculator</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <header>Introduction to Xamarin.iOS</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Lab Goals</h2>
+        <p>
+            In this optional homework exercise, you will add an additional piece of UI to allow the user to select the tip percentage to apply and then extend the logic to utilize this information to calculate the tip amount.
+        </p>
+
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Homework</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work or to see how to implement the logic. 
+        </p>
+
+        <h2>
+            High-level steps
+        </h2>
+        <p>
+            Here is the final UI you will be generating. We have added a <code>UISegmentedControl</code> just after the button to allow the user to select an appropriate tip percentage. This control is similar to a set of mutually exclusive radio buttons.
+        </p>
+        
+        <img src="./res/images/homework-completed.PNG" class="indent-none" />
+        
+        <p>
+            Here is what you will need to do for this exercise, if you have any trouble or need a hint, check the completed solution included with the lab materials.
+        </p>
+        <ol>
+            <li>
+                Add a <code>UISegmentControl</code> into the UI between the button and the result label. It should be 20pts from the left and right, and have an 8pt margin on the top and bottom like the other controls.
+            </li>
+            
+            <li>
+                Insert 4 segments into the <code>UISegmentedControl</code> using the <code>InsertSegment</code> method. You want 10%, 15%, 20% and 25%.
+                <ul class="indent-none">
+                    <li>The method takes three parameters: the text to display, the position of the button (starting at zero), and whether to animate in - this last parameter should be <code>false</code> since we are adding the control during the initial load and not later in the app lifecycle.</li>
+                </ul> 
+                Here's an example of inserting the 10 and 15% segments:
+            </li>
+            
+<pre class="codeblock prettyprint">
+UISegmentedControl tipAmount = ...;
+tipAmount.InsertSegment("10%", 0, false);
+tipAmount.InsertSegment("15%", 1, false);
+</pre>
+            <li>
+                Use the <code>SelectedSegment</code> property to set the initial selection to the 20% segment (should be index "2").
+            </li>
+            
+            <li>
+                Insert the segment control into the parent view hierarchy.
+            </li>
+            
+            <li>
+                Finally, update your tip logic to get the selected segment and use the appropriate tip amount percentage.
+            </li>
+        </ol>
+        
+        <h2>Bonus Challenge</h2>
+        <p>
+            As a bonus challenge, see if you can get the tip to be recalculated automatically if you change the tip percentage without tapping the <b>Calculate</b> button. This will require a few changes:
+        </p>
+        <ol>
+            <li>
+                You will need to handle the <code>ValueChanged</code> event from your <code>UISegmentedControl</code>.
+            </li>
+            <li>
+                You will need to move the tip calculation logic into it's own method - this is your <b>Model</b> logic. You can move it into it's own source file, or just into a method in the View Controller since it is very simple.
+            </li>
+            <li>
+                The tip calculation logic needs access to the UI elements - you will need to either pass the values in, or make the controls available at the class level by promoting them to fields in the view controller.
+            </li>
+        </ol>
+    
+        <h2>Summary</h2>
+        <p>
+            In this homework exercise you added some logic to make the tip amount customizable using a <code>UISegmentedControl</code>. Check the completed sample in the <b>Homework</b> folder if you would like to see an example implementation. 
+        </p>
+        
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Creating your first iOS application</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to Xamarin.iOS</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Lab Goals</h2>
+        <p>
+        The primary goal of this lab will be to walk through the creation of a brand new Xamarin.iOS application using Visual Studio. We will then build and run it using the built-in iOS Simulator from Apple.
+        </p>
+
+        <h2>
+            High-level steps
+        </h2>
+        <p>
+            This is a group exercise, intended to be done with an instructor in a live session, but you can do the same steps on your own using the following high-level steps to complete the exercise. Step-by-step instructions are provided below that if you need any guidance.
+        </p>
+        <ol>
+            <li>
+                We will be using the <b>Single View App</b> iOS project template which is included with both IDEs once Xamarin tools are installed (although it's named <b>Single View App (iPhone)</b> in Visual Studio).
+            </li>
+            <li>
+                The app will be named <b>TipCalculator</b> and should be placed in a known location such as your desktop.
+            </li>
+            <li>
+                On Visual Studio, we will use the <b>iPhone > Single View App (iPhone)</b> template.
+            </li>
+            <li>
+                Next, we will compile the application and install it onto the iOS simulator.
+            </li>
+            <li>
+                Finally, we will run the application on the iOS simulator. If you are using Windows as your development platform, you will need access (direct or remote) to the Mac in order to see it launch and run.
+            </li>
+        </ol>
+
+        <h1>Steps</h1>
+        <div id="ide-selector">
+            Select the Visual Studio environment you want to work with:&nbsp;&nbsp;
+            <a href="#" data-name="xs">macOS</a>
+            or
+            <a href="#" data-name="vs">Windows</a>
+        </div>
+
+        <ide name="xs">
+        <h2>Create a Xamarin.iOS application with Visual Studio for Mac</h2>
+        <p>
+            In this section, we will walk through the creation of a new Xamarin.iOS application using Visual Studio for Mac.
+        </p>
+        <ol>
+            <li>
+                Launch <strong>Visual Studio</strong> - just double-click on the Visual Studio for Mac icon in your Applications folder on OS X or use Spotlight to find Visual Studio and start it. Visual Studio will open up and look something like the following:
+            </li>
+            <img class="indent-none" src="./res/images/lab1-vsmac-welcome.png" />
+
+            <li>
+                Next, start the project creation wizard by clicking the <b>New Solution</b> button in the left corner of the welcome screen, or through the <b>File > New > Solution</b> menu choice.
+            </li>
+
+            <li>
+                Select <b>App</b> under the <b>iOS</b> section and the <b>Single View App</b> template from the choices on the right side and click <b>Next</b> to move to the next step.
+            </li>
+            <img class="indent-none" src="./res/images/lab1-wiz-p1.png" />
+
+            <li>
+                Type &quot;TipCalculator&quot; as the app name.
+            </li> 
+
+            <li>
+                This should fill in the <b>Identifier</b> field as well, but if it does not, use your website + appname in reverse-DNS notation with the id all in lowercase with no spaces - for example this app will be &quot;com.yourcompany.tipcalculator&quot;. We'll talk more about this identifier in another class, but it will be used to uniquely represent your application to Apple when you publish the application.
+            </li>
+
+            <li>
+                Uncheck the iPad option - we only want to target a phone device in this first application to make things a bit simpler, you can leave the target version at it's default value - it is automatically set to the highest supported value available based on the iOS SDKs you have installed.
+            </li>
+            <img class="indent-none" src="./res/images/lab1-wiz-p2.png" />
+
+            <li>
+                Click <b>Next</b> to move to the next page.
+            </li>
+
+            <li>
+                All of these default should be fine, but you can change them if you like, just make sure the solution and project name does not contain any spaces and that the location is in an easily available place with a reasonable amount of disk space available since the project will be compiled in this spot. 
+                <br />
+                <br />
+                We won't be needing any version control here, but Visual Studio for Mac supports creating the Git infrastructure if you are a fan of that VCS.
+                <br />
+                <br />
+                If it's present, make sure the Xamarin Test Cloud option stays unchecked - we don't need any UI Tests for this simple app here although if you want to learn about that, check out the <a href="https://university.xamarin.com/classes/track/testing">XTC102 - Working with Xamarin.UITest</a> class.
+            </li>
+            <img class="indent-none" src="./res/images/lab1-wiz-p3.png" />
+
+            <li>
+                Click <b>Create</b> to create the project.
+            </li>
+        </ol>
+
+        <h3>What's been created?</h3>
+        <p>
+            Visual Studio will create a single project in the solution and automatically load it. It should look something like:
+        </p>
+        <img class="indent-none" src="./res/images/lab1-vsmac-final.png" />
+
+        
+        <h2>Compile the Xamarin.iOS application with Visual Studio for Mac</h2>
+        <p>
+            In this section, we will use Visual Studio to compile our project on the Mac.
+        </p>
+        <ol>
+            <li>
+                Select one of the simulator styles from the dropdown in the toolbar in Visual Studio:
+                <img src="./res/images/lab3-build-bar.PNG" class="indent-none" />
+                If you click on the drop-down, it will display a list of available simulator styles:
+                <img src="./res/images/lab3-build-bar-down.PNG" class="indent-none" />
+            </li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'no_sims', 'I don\'t see all these simulator versions', 'Hide'); return false;" class="uiitem">I don't see all these simulator versions</a>
+<div class="wsblock indent-none" id="no_sims" style="display:none;">
+<!-- Each item is in a div "wsitem" -->
+<div class="wsitem">
+    <!-- Give it a title and description -->
+    <b>I don't see all these simulator versions</b>
+    <p>
+       The simulator variations are created and installed through Xcode, and Visual Studio will read the configuration and display what's available. If you don't see the simulator image you are looking for, you can create it through Xcode.
+    </p>
+    <p>
+        Open Xcode, then use the <b>Preferences > Downloads > Components</b> dialog. This will list iOS versions you can download and install onto your Mac.
+    </p>
+    <img src="./res/images/lab3-xcode-new-sims.PNG" class="indent-none" />
+    <p>
+        To create new simulator styles, use <b>Window > Devices</b> to open the device list dialog: 
+    </p>
+    <img src="./res/images/lab3-xcode-sim-list.PNG" class="indent-none" />
+    <p>
+        ... and then click the "+" button at the bottom left corner to create a new style and fill in the dialog.
+    </p>
+    <img src="./res/images/lab3-xcode-new-sim-dialog.PNG" class="indent-none" />
+    <p>
+        You will likely need to restart Visual Studio to see changes in the simulator list.
+    </p>
+</div>
+</div>
+</p>
+
+            <li>
+                Click the "Play" button in the toolbar to build and launch the application in the simulator. You can also build from the <b>Build</b> menu or, as mentioned in the discussion, use the <code class="codeblock">&#8984;+B</code> accelerator key (look at the menu drop-down to see the accelerator keys).
+            </li>
+            
+            <img src="./res/images/lab3-play-button.PNG" class="indent-none" />
+            
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'starter_edition', 'I am using the Starter Edition and getting a build error', 'Hide'); return false;" class="uiitem">I am using the Starter Edition and getting a build error</a>
+<div class="wsblock indent-none" id="starter_edition" style="display:none;">
+<!-- Each item is in a div "wsitem" -->
+<div class="wsitem">
+    <!-- Give it a title and description -->
+    <b>I am using the Starter Edition and getting a build error</b>
+    <p>
+        If you are using a free Starter edition license for Xamarin, and you have a UITest project in the solution with your application, then you might get a build error here indicating that native code cannot be used in Starter Edition applications.
+    </p>
+    <p> 
+        The problem is that the <a href="https://components.xamarin.com/view/calabash">Xamarin Test Cloud agent component</a> which was added to the project for the UI tests contains native code. We recommend you activate a business trial (or purchase a license) for Xamarin University as several future labs will also not work with the Starter license. However, if you prefer to continue today without a purchased license, you can do the following to get this to compile:
+    </p>
+    <ol>
+        <li>
+            Remove the Xamarin TestCloud Agent component from the packages folder - just expand the folder, right-click on the Xamarin.TestCloud.Agent component and select <b>Remove</b>.
+        </li>
+        <li>
+            You should have already removed the initialization code in the prior exercise, but you can verify this just to make sure. Open the <b>AppDelegate.cs</b> file and find the <code>FinishedLaunching</code> override. Look for a single line of code used to initialize the Calabash server that allows the application to be automated from an external process. It is surrounded with an <code>#ifdef</code>, you can remove the entire block of code highlighted below if it exists:        
+        </li>
+    </ol>
+<pre class="prettyprint codeblock">
+public override bool FinishedLaunching(UIApplication application, NSDictionary launchOptions)
+{
+    ...
+    <span class="highlight">// Code to start the Xamarin Test Cloud Agent
+    #if ENABLE_TEST_CLOUD
+    Xamarin.Calabash.Start();
+    #endif</span>
+    
+    ...
+    return true;
+}
+</pre>
+</div></div></p>            
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'profiler', 'I am getting a compile error indicating I need a business license', 'Hide'); return false;" class="uiitem">I am getting a compile error indicating I need a business license</a>
+<div class="wsblock indent-none" id="profiler" style="display:none;">
+<!-- Each item is in a div "wsitem" -->
+<div class="wsitem">
+    <!-- Give it a title and description -->
+    <b>I am getting a compile error indicating I need a business license</b>
+    <p>
+    New projects created in Visual Studio may have <em>profiling support</em> enabled which lets you profile the code and identify hotspots. This is a business license feature; if you are using an Indie or Starter license, you will need to turn this off in the project settings or the project will not build.
+    </p>
+    <p>
+    The fix is to either activate a business license or trial, OR to disable the feature in the project settings. Just right-click on the project and select Properties, or double-click on the project node in the Solution tree.
+    </p>
+    <p>
+    This will open the project properties dialog a?? select iOS Build from the list and then uncheck "Enable Profiling", this will remove the compile error.
+    </p>
+    <img src="./res/images/lab1-disable-profiler.png" />
+</div></div></p>   
+            
+            <li>
+                The iOS simulator should launch on your Mac and then run your new application. In Visual Studio, it should briefly display a launch screen which was added to your project by the template and then switch to an empty screen which we will be changing shortly. 
+            In Visual Studio, you will only see the blank screen.</li>
+            
+            <table>
+                <tr>
+                 <td><img src="./res/images/lab3-final1.png" /></td>
+                    <td><img src="./res/images/lab3-final2.png" /></td>
+                </tr>
+            </table>
+        </ol>
+        
+        <div class="hintblock">
+            <b>Quick Tip:</b> If you want to launch the iOS Simulator independent of Visual Studio, try adding Xcode to your Dock. Then you can right-click on the icon and select <b>Open Developer Tool > iOS Simulator</b> to quickly launch the simulator.  
+        </div>
+
+        </ide>
+
+        <ide name="vs">
+        <h2>Create a Xamarin.iOS application with Visual Studio + Windows</h2>
+        <p>
+            In this section, we will walk through the creation of a new Xamarin.iOS application using Visual Studio on Windows. The screenshots here all depict Visual Studio, but you can use any supported version of the IDE.
+        </p>
+        <ol>
+            <li>
+                Launch <strong>Visual Studio</strong> using the Start Menu or icon. Visual Studio will open up and look something like the following:
+            </li>
+            <img class="indent-none" src="./res/images/lab1-vs-welcome.png" />
+
+            <li>
+                Click the <b>New Project</b> link in the top-left corner of the Welcome page to create a new project.
+            </li>
+
+            <li>
+                Select the <b>Visual C# > iOS > iPhone</b> section on the left side of the <b>New Project</b> dialog and then the <b>Single View App (iPhone)</b> template in the list of available templates.
+            </li>
+
+            <li>
+                Name the project <b>TipCalculator</b> and place it into a known location (here we put it on the desktop). You can leave the solution folder as the default value.
+            </li>
+            <img class="indent-none" src="./res/images/lab1-vs-newproject.png" />
+
+            <li>
+                Click <b>OK</b> to create the project.
+            </li>
+        </ol>
+
+        <p>
+            During the project creation process, you may be prompted to connect to a Xamarin Build Host. If you have trouble, run through the <a href="http://developer.xamarin.com/guides/ios/getting_started/installation/windows/troubleshooting/">troubleshooting guide</a>.
+        </p>
+
+        <h3>What's been created?</h3>
+        <p>
+            Visual Studio will create a single project in the solution. Once the project is created, Visual Studio will load it for you. It should look something like this:
+            <img class="indent-none" src="./res/images/lab1-vs-final.png" />
+        </p>
+
+        <h2>Compile the Xamarin.iOS application with Visual Studio + Windows</h2>
+        <p>
+            In this section, we will use Visual Studio to compile our project and then execute it on the Mac Build Host. To complete this part, you will need some type of remote-access to the Mac you are using as a Build host so you can see the simulator.
+        </p>
+        <ol>
+            <li>
+                First, make sure you have "iPhone Simulator" selected in the build-configuration drop-down.
+                <img src="./res/images/lab3-vs-select-sim.PNG" class="indent-none" />
+                Next, select one of the simulator styles from the dropdown in the toolbar in Visual Studio:
+                <img src="./res/images/lab3-vs-sim-list.PNG" class="indent-none" />
+            </li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'no_sims', 'I don\'t see all these simulator versions', 'Hide'); return false;" class="uiitem">I don't see all these simulator versions</a>
+<div class="wsblock indent-none" id="no_sims" style="display:none;">
+<!-- Each item is in a div "wsitem" -->
+<div class="wsitem">
+    <!-- Give it a title and description -->
+    <b>I don't see all these simulator versions</b>
+    <p>
+       The simulator variations are created and installed through Xcode on your Mac Build Host, and Visual Studio will read the configuration and display what's available from the Build Host you have selected. If you don't see the simulator image you are looking for, you can create it through Xcode.
+    </p>
+    <p>
+        Switch over to your Mac Build Host and open Xcode, then use the <b>Preferences > Downloads > Components</b> dialog. This will list iOS versions you can download and install onto your Mac.
+    </p>
+    <img src="./res/images/lab3-xcode-new-sims.PNG" class="indent-none" />
+    <p>
+        To create new simulator styles, use <b>Window > Devices</b> to open the device list dialog: 
+    </p>
+    <img src="./res/images/lab3-xcode-sim-list.PNG" class="indent-none" />
+    <p>
+        ... and then click the "+" button at the bottom left corner to create a new style and fill in the dialog.
+    </p>
+    <img src="./res/images/lab3-xcode-new-sim-dialog.PNG" class="indent-none" />
+    <p>
+        You will likely need to restart Visual Studio to see changes in the simulator list.
+    </p>
+</div>
+</div>
+</p>
+
+            <li>
+                Click the "Play" button in the toolbar to build and launch the application in the simulator, this is the same button you use to select the simulator style, just click to the left of the down-arrow. You can also build from the <b>Build</b> menu or, as mentioned in the discussion, use the <code class="codeblock">CTRL+SHIFT+B</code> accelerator key (look at the menu drop-down to see the accelerator keys).
+            </li>
+            
+            <img src="./res/images/lab3-vs-play-button.PNG" class="indent-none" />
+            
+            <li>
+                Next, switch over to your Mac Build Host. The iOS simulator should launch on your Mac and then run your new application. It should briefly display a launch screen which was added to your project by the template and then switch to an empty screen which we will be changing shortly.
+            </li>
+            
+            <table>
+                <tr>
+                    <td><img src="./res/images/lab3-final1.png" /></td>
+                    <td><img src="./res/images/lab3-final2.png" /></td>
+                </tr>
+            </table>
+            
+        </ol>        
+
+        </ide>
+
+        <h2>Summary</h2>
+        <p>
+            Congratulations! You have created a new iOS application, next we will walk through the project together and discuss what has actually been created.
+        </p>
+        
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

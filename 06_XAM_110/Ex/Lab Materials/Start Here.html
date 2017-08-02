@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Intro to Cross-Platform Mobile Development</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+        This is a cross-platform class which has projects for iOS, Android, and Windows. To complete the coding exercise for this class, you will need either a Windows or macOS Xamarin development environment. 
+        Please read the <a href="https://university.xamarin.com/resources/setup-requirements">setup requirements</a> if you need help installing the Xamarin development environment.
+        </p>
+
+        <h2>Overview</h2>
+        <p>
+            This class introduces how to create solutions that have multiple platform targeted applications and how to maximize code sharing between them using two techniques: Shared Projects and Portable Class Libraries.
+        </p>
+
+        <h2>Objectives</h2>
+        <ol>
+            <li>Work with shared components</li>
+            <li>Share code using Shared Projects</li>
+            <li>Share code using Portable Class Libraries</li>
+            <li>Share code using .NET Standard libraries</li>
+        </ol>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">XAM110 - Intro to Cross Platform Mobile Development</a>.</p>
+
+        <div class="hintblock">
+            To demonstrate the cross-platform nature of Xamarin, all the exercises include projects for iOS, Android, and Windows. In order to set the active project, you may need to change the build type - for example, iOS projects should use the Debug|iPhoneSimulator build. If you are trying to change the startup project and the option is unavailable, it is very likely because the project is not supported for the active build type.
+        </div>
+
+        <h2>Exercises</h2>
+        <ol>
+            <li><div class="objective">Share code using Shared Projects</div>
+            <a href="./parts/part1.html">Exercise</a>
+            <br />
+            One way to share code across platforms is to compile the same source files into each project. In this exercise, we will examine sharing code at the source-level with the Shared Project feature in Visual Studio for Windows and Mac.
+            </li>
+
+            <li><div class="objective">Share code using Portable Class Libraries</div>
+            <a href="./parts/part2.html">Exercise</a>
+            <br />
+            A completely different style of code sharing is to share assemblies between projects - in this section, we will look at Portable Class Libraries and how to use them effectively in your projects to maximize the amount of code we can share.
+            </li>
+        </ol>
+
+        <h2>Additional resources</h2>
+        <p>
+        Here are the <a target="_blank" href="https://university.xamarin.com/faq/xam110-introduction-to-cross-platform-mobile-development">Frequently Asked Questions</a> about Cross-Platform development.</p>
+
+        <div class="wsitem">
+            <b>Popular Components</b><br />
+            Here are some popular open-source projects from Xamarin, you can install these into your applications using NuGet.<br />
+            <a href="https://github.com/jamesmontemagno/Xamarin.Plugins">Cross platform Xamarin and Windows plugins for PCLs</a><br />
+            <a href="https://github.com/xamarin/Xamarin.Mobile">Xamarin.Mobile cross-platform abstraction for Contacts, Geolocation and the camera</a><br />
+            <a href="https://github.com/xamarin/Xamarin.Auth">Cross-Platform authentication API (OAuth)</a>
+        </div>
+
+        <div class="indent-medium"><b>High Level Concepts (Review)</b></div>
+        <div class="wslist">
+            <a href="http://docs.xamarin.com/guides/cross-platform/application_fundamentals/building_cross_platform_applications/">Building Cross Platform Applications</a>
+            <a href="http://docs.xamarin.com/guides/cross-platform/application_fundamentals/building_cross_platform_applications/sharing_code_options/">Sharing Code Options</a>
+            <a href="http://docs.xamarin.com/guides/cross-platform/application_fundamentals/data/">Cross-Platform Data Access</a>
+            <a href="http://docs.xamarin.com/guides/cross-platform/application_fundamentals/web_services/">Cross-Platform Web Services</a>
+        </div>
+
+        <br />
+
+        <div class="wsitem">
+            <b>Using Components</b><br />
+            You can add existing pre-built code into your project using <a href="http://nuget.org">NuGet </a> or the <a href="http://components.xamarin.com/">Xamarin Component Store</a>.<br />
+
+            <a href="http://docs.xamarin.com/guides/cross-platform/application_fundamentals/components_walkthrough/">Including a Component in your project</a><br />
+            <a href="https://nuget.codeplex.com/documentation?title=Getting%20Started">NuGet Documentation</a>
+        </div>
+
+        <div class="wsitem">
+            <b>Portable Class Libraries</b><br />
+            
+            We also utilize <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/pcl/">Portable Class Libraries</a> to manage shared code. If you need a .NET API that does not appear to be available, check the <a href="https://pclcontrib.codeplex.com/">PCL Contributions library</a>. <br />
+
+            <a href="http://blogs.msdn.com/b/dsplaisted/archive/2012/08/27/how-to-make-portable-class-libraries-work-for-you.aspx">How to make Portable Class Libraries work for you.</a><br />
+            <a href="http://msdn.microsoft.com/en-us/library/gg597391(v=vs.110).aspx">Cross-Platform Development with Portable Class Libraries (MSDN)</a><br />
+        </div>
+
+        <div class="wsitem">
+            <b>Arguments for/against Portable Class Libraries (PCLs) and Shared Projects</b><br />
+
+            There are a number of reasons for choosing portable binaries, Shared Projects, or both. For a few viewpoints, here are some blog posts to explore.<br/>
+            
+            <a href="http://xfcomplete.net/general/2016/01/19/pcl-or-shared-project/">Jason Smith presents a short case on the cleaner code and potential future possibilities of Portable Class Libraries.</a><br/>
+            <a href="http://tirania.org/blog/archive/2016/Jan-22.html">Miguel de Icaza provides a response in favor of Shared Projects for the simplicity they can provide over PCLs.</a>
+        </div>
+
+    </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+</body>
+</html>
+

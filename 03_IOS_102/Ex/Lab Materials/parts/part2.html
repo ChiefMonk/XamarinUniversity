@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Use Autolayouts</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Introduction to the Xamarin Designer for iOS</header>
+
+   
+<section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <div class="hintblock">
+            <strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor, they are online to answer any questions you have!
+        </div>
+
+        <h2>Goals</h2>
+
+        <p>
+        During this lab we will update our Fireworks application, using constraints to size and position our views relative to the view controller. </p>
+
+        <img src="res/images/ex2_complete.png" width="480" lt="" img style='border:1px solid #bbbbbb'/>
+
+        <!-- Include a screen shot of the completed project? -->
+
+        <!-- Include any differences about the OS or environment expectations
+             if there are changes from StartHere for this lab -->
+
+        <!-- Note any starter/complete or assets included in this lab. -->
+        <!-- Remove this section if there are none -->
+        <h2>Required assets</h2>
+        <p>This lab is a continuation of the previous exercise.  You may use your project from exercise 01 or open the completed project in the <b>Part 01 Resources</b> folder.  
+        There is a completed version of the exercise in the <strong>Part 02 Resources</strong> folder if you'd like to compare your solution when you are finished.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        <p>Add constraints to the controls added in the previous exercise to allow them to dynamically size and position themselves relative to the parent view controller</p>
+          <ol>
+<!-- Can put additional hints in collapsible blocks for additional resources - these should be
+   things we covered in the materials already, but useful as reminders for how to complete a task. Make sure to replace the "unique_id_here", also you have to write out the starting text twice - make sure they are the same! -->
+                <li>Open completed solution from the previous exercise</li>
+                <li>Open Main.storyboard</li>
+                <li>Using the toolbar, add recommended constraints to both labels and the switch</li>
+                <li>Use the constraint dragging controls to add constraints to the button</li>
+                <li>Use the constraint dragging controls to add constraints to the slider</li>
+          </ol>
+        </p>
+
+        <!-- Steps -->
+        <h1>Steps</h1>
+        <p>
+            Below are the step-by-step instructions to implement the exercise.
+        </p>
+
+        <h2>Apply recommended constraints</h2>
+        <p>For several of the controls, we can use the designer's automatic constraints feature.</p>
+        <ol>
+            <li>Open Main.storyboard.</li>
+            <li>Select the <b>Night</b> label.</li>
+            <li>Press the <b>Add recommended constraints</b> toolbar button (green plus).</li>
+            <img src="res/images/constraints_toolbar.png" lt=""/>
+            <li>Add recommended constraints to the second label and the switch (do not add constraints yet for the button or the slider).</li>
+            <li>Run the application and try rotating the simulator or device to landscape ( Hardware &gt; Rotate Left).</li>
+            <img src="res/images/lab2-rotate.png" width="542" height="248" style='border:1px solid #bbbbbb' lt="" img/>
+          </ol>
+        </h2>
+        
+   
+        
+        <h2>Add constraints to the button</h2>
+        <p>We want the button to stretch and take up any available space.  
+            The recommended constraints button adds fixed value constraints for width and height so we'll add constraints to the button by hand.
+        </p>
+        <ol>
+            <li>Select the button in the designer.</li>
+            <li>Single click to show the constraints dragging controls.</li>
+            <li>Use the right-edge constraint dragging bar and add a constraint to the right edge of the view controller.</li>
+            <img src="res/images/constraint_dragging_btn.png" lt=""/>
+            <li>Use the left-edge constraint dragging bar to add a constraint to the left edge of the switch.</li>
+            <li>Use the center constraint dragging bar to add a vertical centering constraint to the switch.</li>
+            <li>Run the application and try rotating the simulator or device to landscape.</li>
+            <img src="res/images/ex2_btn_constraints.png" width="480" lt="" img style='border:1px solid #bbbbbb'/>
+        </ol>
+
+     <h2></h2>
+        <ol>
+            <li>Add constraints to the slider</li>
+            <p>This will be very similar to adding constraints to the button.</p>
+             <li>Use the right-edge constraint dragging bar and add a constraint to the right edge of the view controller.</li>
+            <li>Use the left-edge constraint dragging bar to add a constraint to the left edge of the <b>Size</b> label.</li>
+            <li>Use the center constraint dragging bar to add a vertical centering constraint to the <b>Size</b>> label.</li>
+            <li>Run the application and try rotating the simulator or device to landscape.</li>
+            <img src="res/images/ex2_complete.png" width="480" lt="" img style='border:1px solid #bbbbbb'/>
+        </ol>
+
+
+    <h1>Summary</h1>
+    <p>In this lab you added constraints to your views to allow them to dynamically size and position themselves on screen.</p>
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+    
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

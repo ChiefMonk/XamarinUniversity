@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 5: Use the built-in ImageCell</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Using ListView in Xamarin.Forms</header>
+
+    <section id="main">
+
+    <h1 id="page-title"></h1>
+    <h2>Duration</h2>
+    <p>15 minutes</p>
+        
+    <h2>Goals</h2>
+    <p>
+    This final exercise will provide a better visualization for the rows so that we see the image, country and date adopted.
+    </p>
+
+    <h2>Assets</h2>
+    <p>
+        We will continue from the prior exercise. You may use your existing solution or start with the <b>Completed</b> solution in the <b>Part 04 Resources</b> folder.
+        In addition, there is a completed version of this exercise in the <b>Part 05 Resources</b> folder that you can use to check your work.
+      </p>
+
+    <h2>Challenge</h2>
+    <p>
+    This exercise adds a <code>DataTemplate</code> to the <code>ListView</code> using the built-in <code>ImageCell</code> type.
+    </p>
+
+    <p>Here are the basic steps:</p>
+    <ol class="indent-medium">
+      <li>
+        Add a <code>DataTemplate</code> to the <code>ListView</code>. Remember this is assigned to the <code>ItemTemplate</code> property.
+      </li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'whatis_datatemplate', 'What is a DataTemplate?', 'Hide'); return false;" class="uiitem">What is a DataTemplate?</a>
+<div class="indent-none wsblock" id="whatis_datatemplate" style="display:none;">
+<!-- Each item is in a div "wsitem" -->
+<div class="wsitem">
+    <!-- Give it a title and description -->
+   <b>What is a DataTemplate?</b>
+   <p>
+      The <code>ListView</code> generates a collection of vertical data using a template for each generated row. The default template is a simple <code>Label</code> with the text from the object added to the <code>ListView</code>. However, it can be completely customized using a <code>DataTemplate</code>. 
+    </p>
+    <p>
+      The template definition provides the "recipe" for each row to create and the system has <a href="http://developer.xamarin.com/guides/cross-platform/xamarin-forms/controls/cells/">several predefined cells to choose from</a>. When the row is inflated from the template, it assigns the <code>BindingContext</code> to be the specific item being rendered. You can then use binding expressions to supply the specific data for the row. 
+    </p>
+</div>
+</div>
+</p>
+
+      <li>In the <code>DataTemplate</code>, define a new <code>ImageCell</code> with the <code>DetailColor</code> set to &quot;Gray&quot;.</li>
+      <li>Data bind the following properties to the <code>ImageCell</code>:
+        <ul class="indent-none" type="square">
+          <li><code>ImageSource</code> &gt; <code>ImageUrl</code>. You will need a value converter for this - copy it from the existing <strong>FlagDetailsPage.xaml</strong></li>
+          <li><code>Text</code> &gt; <code>Country</code></li>
+          <li><code>Detail</code> &gt; <code>DateAdopted</code>, use the <code>StringFormat</code> "'Adopted on {0:d}'"</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h1>Steps</h1>
+
+    <div id="ide-selector">
+        Below are the step-by-step instructions to implement the exercise.
+        <br /><br />
+        You can use either C# code, or XAML to setup a Data Template depending on how you defined your <code>ListView</code>. Both approaches are shown here, select the one most appropriate to your project.&nbsp;&nbsp;
+        <a href="#" data-name="xs">XAML</a> or
+        <a href="#" data-name="vs">C#</a>
+    </div>
+    
+    <ide name="xs">
+
+    <h2>Add a DataTemplate to the ListView</h2>
+    <p>
+    The first thing we need to do is assign a <code>DataTemplate</code> definition to the <code>ListView.ItemTemplate</code> property.
+    </p>
+
+    <ol>
+      <li>Open the <strong>AllFlags.xaml</strong> markup page.</li>
+      <li>Assign the <code>ListView.ItemTemplate</code> property to a new <code>DataTemplate</code>.</li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'dataTemplate');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplate" style="display:none;">
+<pre class="prettyprint">&lt;ListView ItemsSource="{Binding Flags}" 
+          SelectedItem="{Binding CurrentFlag, Mode=TwoWay}"
+          ItemTapped="OnItemTapped"
+          IsPullToRefreshEnabled="True"
+          Refreshing="OnRefreshing"&gt;
+    &lt;ListView.ItemTemplate&gt;
+        &lt;DataTemplate&gt;
+            
+        &lt;/DataTemplate&gt;
+    &lt;/ListView.ItemTemplate&gt;
+&lt;/ListView&gt;
+</pre>
+    </div></p>
+
+    <h2>Define an <code>ImageCell</code> for our Row visualization</h2>
+    <p>Next, we need to supply the visual instructions for the row - these go into the <code>DataTemplate</code> definition. The <code>ListView</code> requires that this always be a <code>Cell</code> type, so we will use an <code>ImageCell</code> here.</p>
+
+    <ol>
+      <li>Inside the <code>DataTemplate</code>, define an <code>ImageCell</code>.</li>
+      <li>Set the <code>DetailColor</code> to "Gray".</li>
+      <li>Remember that the <code>BindingContext</code> for the row will be a single <code>Flag</code> object definition. Apply <code>{Binding}</code> values for the following properties:
+        <ul class="indent-none">
+          <li><code>Text</code> &gt; <code>Country</code>.</li>
+          <li><code>Detail</code> &gt; <code>DateAdopted</code>, use the <code>StringFormat</code> "'Adopted on {0:d}'".</li>
+        </ul>
+      </li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'dataTemplate1');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplate1" style="display:none;">
+<xmp class="prettyprint"><ListView.ItemTemplate>
+    <DataTemplate>
+        <ImageCell DetailColor="Gray"
+                    Text="{Binding Country}"
+                    Detail="{Binding DateAdopted, StringFormat='Adopted on {0:d}'}" />
+    </DataTemplate>
+</ListView.ItemTemplate>  
+</xmp>
+    </div></p>
+    <ol start="4">
+      <li>Run the application to see what it looks like now, you should see something like:</li>
+    </ol>
+
+    <figure>
+      <img src="./res/images/textcell.png" alt="App running on Android" />
+      <figcaption>Cell with just text running on Android</figcaption>
+    </figure>
+
+    <h2>Do the final image binding on the ImageCell</h2>
+    <p>The last step is to provide the <code>ImageSource</code> for our <code>ImageCell</code>.</p>
+    <ol>
+      <li>We need a Value Converter to load the images for our ListView. We already have one setup in the details page that we can use - we just need to move it to a more global scope so it's available in our list page as well. Open the <strong>FlagDetailsPage.xaml</strong> markup page and move the <code>ResourceDictionary</code> into the <code>App.xaml</code> file - you will need to move the namespace definitions for the converters (xmlns:cvt) and data (xmlns:data).</li>
+      <li>Next, open the <b>AllFlags.xaml</b> file and data bind the <code>ImageCell.ImageSource</code> property to the <code>ImageUrl</code> property using the converter - check the syntax in the <code>FlagDetailsPage</code> page where it uses the same converter for the <code>Image</code> if you need some guidance.</li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'dataTemplate2');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplate2" style="display:none;">
+<xmp class="prettyprint"><Application xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:cvt="clr-namespace:FunFlacts.Converters"
+    xmlns:data="clr-namespace:FlagData;assembly=FlagData"
+    x:Class="FunFlacts.App">
+
+  <Application.Resources>
+    <!-- Application resource dictionary -->
+    <ResourceDictionary>
+      <cvt:EmbeddedImageConverter x:Key="irConverter" 
+          ResolvingAssemblyType="{x:Type data:Flag}" />
+      </ResourceDictionary>
+  </Application.Resources>
+</xmp>
+<xmp class="prettyprint"><ImageCell DetailColor="Gray"
+      ImageSource="{Binding ImageUrl, Mode=OneWay, Converter={StaticResource irConverter}}"
+      Text="{Binding Country}"
+      Detail="{Binding DateAdopted, StringFormat='Adopted on {0:d}'}" /> 
+</xmp>
+    </div></p>
+
+    <ol start="3">
+      <li>Run the application to see the final results and then comment this code out and try it in code behind.</li>
+    </ol>
+    </ide>
+
+    <ide name="vs">
+
+    <h2>Add a DataTemplate to the ListView</h2>
+    <p>
+    The first thing we need to do is assign a <code>DataTemplate</code> definition to the <code>ListView.ItemTemplate</code> property.
+    </p>
+
+    <ol>
+      <li>
+        Open the <strong>AllFlags.xaml.cs</strong> file.
+      </li>
+      <li>
+        After the <code>ListView</code> has been created, create a new <code>DataTemplate</code> object and pass in <code>typeof(ImageCell)</code> as the parameter. This indicates we want to create an image-based cell to display our data.
+      </li>
+      <li>
+        Assign the created <code>DataTemplate</code> to the <code>ItemSource</code> property on the <code>ListView</code>.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'dataTemplateCS');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplateCS" style="display:none;">
+<pre class="prettyprint">
+var dt = new DataTemplate(typeof(ImageCell));
+
+// We assume here that the ListView field is named "theListView"
+theListView.ItemTemplate = dt;
+</pre>
+    </div></p>
+
+    <h2>Define the bindings for our Row visualization</h2>
+    <p>
+    Next, we need to supply the visual instructions for the row - these are done as either static value setters, or as bindings to pull from the <code>BindingContext</code> for each row.
+    </p>
+
+    <ol>
+      <li>
+        Use <code>SetValue</code> to set the <code>ImageCell.DetailColorProperty</code> to <code>Color.Gray</code>.
+      </li>
+      <li>
+        Remember that the <code>BindingContext</code> for the row will be a single <code>Person</code> object definition. Add <code>SetBinding</code> calls for the following properties:
+        <ul class="indent-none">
+          <li><code>ImageCell.TextProperty</code> to bind to <code>Country</code>.</li>
+          <li><code>ImageCell.DetailProperty</code> to bind to <code>DateAdopted</code>.</li>
+        </ul>
+        You can use either version of <code>SetBinding</code> - the one that takes a string-based parameter, or the one that takes a full <code>Binding</code> object. We'll use both here since we want the date to use the "d" format - so we need to set a <b>stringFormat</b>.
+      </li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'dataTemplateCS1');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplateCS1" style="display:none;">
+<pre class="prettyprint">
+var dt = new DataTemplate(typeof(ImageCell));
+dt.SetValue(TextCell.DetailColorProperty, Color.Gray);
+dt.SetBinding(TextCell.TextProperty, nameof(Flag.Country));
+dt.SetBinding(TextCell.DetailProperty, new Binding(nameof(Flag.DateAdopted), 
+               stringFormat: "Adopted on {0:d}")));
+</pre>
+    </div></p>
+    <ol start="3">
+      <li>Run the application to see what it looks like now, you should see something like:</li>
+    </ol>
+    <img src="./res/images/textcell.png" />
+
+    <h2>Do the final image binding on the ImageCell</h2>
+    <p>The last step is to provide the <code>ImageSource</code> for our <code>ImageCell</code>.</p>
+    <ol>
+      <li>
+        Data bind the <code>ImageCell.ImageSourceProperty</code> to the <code>HeadshotUrl</code> property. Use the <code>SetBinding</code> override that takes a <code>Binding</code> as we will need to supply an additional parameter beyond just the name of the property.
+      </li>
+      <li>
+        For this property, we need a value converter to create an image from an embedded resource. One has already been created in the project (and is being used by the current <b>Details</b> page). Create an instance of the <code>EmbeddedImageConverter</code> and pass it in as the <code>converter</code> parameter for the <code>Binding</code>. See the below code hint if you need a little help with this.
+      </li>
+    </ol>
+<p><a href="#" onclick="toggleCode(this,'dataTemplateCS2');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="dataTemplateCS2" style="display:none;">
+<pre class="prettyprint">
+dt.SetBinding(ImageCell.ImageSourceProperty,
+    new Binding(nameof(Flag.ImageUrl), 
+      converter: new Converters.EmbeddedImageConverter 
+        { ResolvingAssemblyType = typeof(Flag) }));
+</pre>
+    </div></p>
+
+    <ol start="3">
+      <li>Run the application to see the results.</li>
+    </ol>
+
+    </ide>
+
+    <figure>
+      <img src="./res/images/imagecell.jpg" alt="ImageCell on iOS" />
+      <figcaption>App with Images running on iOS</figcaption>
+    </figure>
+
+    <p>
+      Notice how the flags are different sizes on iOS and UWP, but not on Android? In fact on UWP, they are massive images because the native control rendering them goes ahead and uses the full size of the image! We'll look at ways to fix this problem in <a href="">XAM312 - Customizing ListView</a> but for now, you can provide smaller images which are the correct scale/size for displaying in a list. The completed version of this lab adds a new property to the <code>Flag</code> "SmallImageUrl" which has a much smaller image of each flag using a consistent size with a 4px transparent border around it.
+    </p>
+
+    <figure>
+      <img src="./res/images/fixed-imagecell.jpg" alt="Fixed ImageCell on iOS" />
+      <figcaption>App with sized images running on iOS</figcaption>
+    </figure>    
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, you provided a new row visualization for the <code>ListView</code> so we can see an image and some details about the contact prior to selecting them.
+    </p>
+        
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>
