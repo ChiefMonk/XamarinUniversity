@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utils="clr-namespace:Calculator.Utils;assembly=Calculator"
+             x:Class="Calculator.MainPage">
+	
+	<ContentPage.Padding>
+		<OnPlatform x:TypeArguments="Thickness">
+			<OnPlatform.iOS>
+				0,20,0,0
+			</OnPlatform.iOS>
+		</OnPlatform>
+	</ContentPage.Padding>
+		
+
+	<Grid Padding="5,0" RowSpacing="1" ColumnSpacing="1" BackgroundColor="Black">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+
+		<!-- ROW 0 : START -->
+		<Label Grid.ColumnSpan="4" 
+			   Grid.Column="0"	
+			   Grid.Row="0"  
+			   FontSize="30"
+			   FontAttributes="Bold" 
+			   BackgroundColor="WhiteSmoke"
+			   TextColor="DeepSkyBlue"				  
+			   HorizontalTextAlignment="Center"
+			   VerticalTextAlignment="Center"
+			   LineBreakMode="NoWrap"
+			   Margin="5"
+			   Text="Chipo's Calculator"/>
+		<!-- ROW 0 : END -->
+
+		<!-- ROW 0 : START -->
+		<Label x:Name="LblOperationText" 
+			   Grid.ColumnSpan="4" 
+			   Grid.Column="0"	
+			   Grid.Row="1"  
+			   FontSize="48"
+			   FontAttributes="Bold" 
+			   BackgroundColor="Black"
+			   TextColor="White"				  
+			   HorizontalTextAlignment="End"
+			   VerticalTextAlignment="Center"
+			   LineBreakMode="NoWrap"
+			   Margin="5"
+			   Text="6 + 10"/>
+		<!-- ROW 0 : END -->
+
+		<!-- ROW 1 : START -->
+		<Label x:Name="LblResultText" 
+			   Grid.ColumnSpan="4" 
+			   Grid.Column="0"	
+			   Grid.Row="2"  
+			   FontSize="48"
+			   FontAttributes="Bold" 
+			   BackgroundColor="Black"
+			   TextColor="White"				  
+			   HorizontalTextAlignment="End"
+			   VerticalTextAlignment="Center"
+			   LineBreakMode="NoWrap"
+			   Margin="5"
+			   Text="= 16" />
+		<!-- ROW 1 : END -->
+		
+		<!-- ROW 2 : START -->
+		<Button x:Name="BtnSeven" 
+				Grid.Row="3" 
+				Grid.Column="0"				
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="7"
+				Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnEight" 
+					Grid.Row="3" 
+				Grid.Column="1"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="8"
+				Clicked="OnSelectNumber">
+
+
+			
+
+		</Button>
+
+		<Button x:Name="BtnNine" Grid.Row="3" 
+				Grid.Column="2"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="9" 
+				Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnDevide" Grid.Row="3" 
+				Grid.Column="3"
+				BackgroundColor="{x:Static utils:SharedResources.OpButtonBkColor}"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="/" Clicked="OnSelectOperator"/>
+		<!-- ROW 2 : END -->
+
+		<!-- ROW 3 : START -->
+		<Button x:Name="BtnFour" Grid.Row="4" 
+				Grid.Column="0"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="4" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnFive" Grid.Row="4" 
+				Grid.Column="1"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="5" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnSix" Grid.Row="4" 
+				Grid.Column="2"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="6" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnMultiply" Grid.Row="4" 
+				Grid.Column="3"
+				BackgroundColor="{x:Static utils:SharedResources.OpButtonBkColor}"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="X" Clicked="OnSelectOperator"/>
+		<!-- ROW 3 : END -->
+
+		<!-- ROW 4 : START -->
+		<Button x:Name="BtnOne" Grid.Row="5" 
+				Grid.Column="0"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="1" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnTwo" Grid.Row="5" 
+				Grid.Column="1"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="2" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnThree" Grid.Row="5" 
+				Grid.Column="2"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="3" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnMinus" Grid.Row="5" 
+				Grid.Column="3"
+				BackgroundColor="{x:Static utils:SharedResources.OpButtonBkColor}"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="-" Clicked="OnSelectOperator"/>
+		<!-- ROW 4 : END -->
+
+		<!-- ROW 5 : START -->
+		<Button x:Name="BtnZero" 
+				Grid.ColumnSpan="3"
+				Grid.Row="6" 
+				Grid.Column="0"
+				BackgroundColor="White"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="Black"
+				Text="0" Clicked="OnSelectNumber"/>
+
+		<Button x:Name="BtnPlus" 
+				Grid.Row="6" 
+				Grid.Column="3"
+				BackgroundColor="{x:Static utils:SharedResources.OpButtonBkColor}"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="+" Clicked="OnSelectOperator"/>
+		<!-- ROW 5 : END -->
+
+		<!-- ROW 6 : START -->
+		<Button x:Name="BtnClear" Grid.Row="7" 
+				Grid.Column="0"
+				BackgroundColor="#808080"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="C" Clicked="OnClear"/>
+
+		<Button x:Name="BtnEquals" 
+				Grid.ColumnSpan="3"
+				Grid.Row="7" 
+				Grid.Column="1"
+				BackgroundColor="{x:Static utils:SharedResources.OpButtonBkColor}"
+				FontSize="36"
+				BorderRadius="0" 
+				TextColor="White"
+				Text="=" Clicked="OnCalculate"/>
+		<!-- ROW 6 : END -->
+	</Grid>
+
+</ContentPage>
