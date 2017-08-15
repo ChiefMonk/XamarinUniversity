@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTunes.iOS", "MyTunes.iOS\MyTunes.iOS.csproj", "{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}"
 EndProject
@@ -9,7 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTunes.Droid", "MyTunes.Dr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTunes.UWP", "MyTunes.UWP\MyTunes.UWP.csproj", "{F9C452EE-F8D9-4690-B3FB-1EF35A5E1772}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MyTunes.Shared", "MyTunes.Shared\MyTunes.Shared.shproj", "{111E7895-04EB-47AD-BEF1-57D4B01B67F4}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		MyTunes.Shared\MyTunes.Shared.projitems*{111e7895-04eb-47ad-bef1-57d4b01b67f4}*SharedItemsImports = 13
+		MyTunes.Shared\MyTunes.Shared.projitems*{cc9983a8-412b-434b-a38f-84f7f754d6d2}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
 		Ad-Hoc|ARM = Ad-Hoc|ARM
@@ -74,7 +80,6 @@ Global
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|Any CPU.Deploy.0 = Debug|iPhoneSimulator
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|iPhone.ActiveCfg = Debug|iPhone
-		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|iPhone.Build.0 = Debug|iPhone
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|iPhone.Deploy.0 = Debug|iPhone
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{A3D17E5F-2659-4EAD-87A1-3B7E56E90807}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
@@ -135,6 +140,7 @@ Global
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|iPhone.Build.0 = Debug|Any CPU
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|iPhone.Deploy.0 = Debug|Any CPU
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
 		{CC9983A8-412B-434B-A38F-84F7F754D6D2}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -233,5 +239,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3505F27-66C8-4E13-9A65-8148F33B4397}
 	EndGlobalSection
 EndGlobal

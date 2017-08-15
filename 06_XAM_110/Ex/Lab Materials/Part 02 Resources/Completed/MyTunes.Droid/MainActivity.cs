@@ -14,7 +14,7 @@ namespace MyTunes
 	[Activity(Label = "My Tunes", MainLauncher = true)]
 	public class MainActivity : ListActivity
 	{
-		protected async override void OnCreate(Bundle bundle)
+		protected  override async void OnCreate(Bundle bundle)
 		{
 			base.OnCreate(bundle);
 
