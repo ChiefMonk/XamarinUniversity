@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TipCalculator", "TipCalculator\TipCalculator\TipCalculator.csproj", "{2B2E2A48-6A9F-4A1B-942B-474A98DB3C9D}"
 EndProject
@@ -99,7 +99,6 @@ Global
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Debug|x86.ActiveCfg = Debug|iPhone
-		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Debug|x86.Build.0 = Debug|iPhone
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Release|Any CPU.ActiveCfg = Release|iPhone
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Release|Any CPU.Build.0 = Release|iPhone
 		{AA8E9D4C-B9F1-46B0-8307-24C8EF4883A4}.Release|ARM.ActiveCfg = Release|iPhone
@@ -231,8 +230,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DA3CF008-5BE0-4532-88A5-73D48FB09C53}
 	EndGlobalSection
 EndGlobal
