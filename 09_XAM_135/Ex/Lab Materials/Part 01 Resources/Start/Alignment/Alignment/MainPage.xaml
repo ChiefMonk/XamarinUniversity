@@ -6,8 +6,8 @@
 
 	<StackLayout Padding="0,20,0,0">
 
-		<StackLayout Orientation="Horizontal">
-			<Label Text="Horizontal" VerticalOptions="Center" />
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Horizontal" VerticalOptions="Center" />
 			<Button Text="Start"  Clicked="OnHorizontalStartClicked"  />
 			<Button Text="Center" Clicked="OnHorizontalCenterClicked" />
 			<Button Text="End"    Clicked="OnHorizontalEndClicked"    />

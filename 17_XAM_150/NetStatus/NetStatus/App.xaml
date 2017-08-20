@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NetStatus.App">
+	<Application.Resources>
+
+	    <ResourceDictionary>
+            <Color x:Key="ColorText">SkyBlue</Color>
+	        <Color x:Key="ColorBackground">#f0f0f0</Color>
+
+	        <Style x:Key="LabelMain" TargetType="Label">
+	            <Setter Property="TextColor" Value="{StaticResource ColorText}" />
+	            <Setter Property="BackgroundColor" Value="{StaticResource ColorBackground}" />
+	            <Setter Property="FontSize" Value="20"/>
+	            <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+
+            <Style TargetType="Label" BasedOn="{StaticResource LabelMain}">
+            </Style>
+        </ResourceDictionary>
+
+    </Application.Resources>
+</Application>

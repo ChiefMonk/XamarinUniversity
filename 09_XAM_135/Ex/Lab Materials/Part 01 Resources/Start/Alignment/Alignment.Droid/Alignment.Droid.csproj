@@ -128,9 +128,9 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Alignment\Alignment.csproj">
-      <Project>{2EF720D2-8A0D-44A4-A224-851221AB2359}</Project>
-      <Name>Alignment</Name>
+    <ProjectReference Include="..\Alignment.Core\Alignment.Core.csproj">
+      <Project>{dd87901e-a79e-40e1-bc34-e849d53276a3}</Project>
+      <Name>Alignment.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

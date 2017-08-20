@@ -1,0 +1,28 @@
+This exercise uses an existing REST service. This part covers the capabilities of the service; there is no code to write here.
+
+The Book service is located at http://xam150.azurewebsites.net/api/books. Here are the valid operations you can perform:
+
+1. Call GET /login to get a token (if you don't pass this token to the other methods, you'll get an Unauthorized status returned). 
+This will create a unique session for your application and will populate the session with a few default books.
+
+2. All other calls need to add the string-based token (with no quotes) as the Authorization header. 
+This is what identifies you to the service. In addition, you should set the Accept header to application/json.
+
+3. Call GET to get a list of the books in your session. This will return a JSON array of books which have the shape:
+
+[
+    {
+        "isbn":"1025801012",
+        "title":"Answers to Absurd Hypothetical Questions",
+        "authors":["Randall Munroe"],
+        "publishDate":"2014-09-04T00:00:00+00:00",
+        "genre":"Nonfiction"
+    }
+]
+
+4. Call PUT /xxxx to update a book, where xxxx is the ISBN code for an existing book with the JSON book as the body of the request.
+
+5. Call DELETE /xxxx to delete a book, where xxxx is the ISBN code for the book.
+
+6. Call POST to add a new book, with the JSON book as the body of the request, the ISBN code must be empty. 
+This will return the JSON book with the ISBN code filled in.

@@ -21,7 +21,7 @@ namespace Alignment.UWP
 		{
 			this.InitializeComponent();
 
-			LoadApplication(new Alignment.App());
+			LoadApplication(new Alignment.Core.App());
 		}
 	}
 }
