@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Use existing async APIs in an application</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Using Async and Await</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <h2>Goals</h2>
+
+        <p>
+            The primary goal of this lab is to modify an existing application to use the event-based async pattern to download search results from a web service.
+        </p>
+
+        <div align="center"><img src="res/images/Ex1_complete.png" width="320" alt=""  style="border:1px solid #999999"/></div>
+      
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Part 01 Resources</strong> folder contains a subfolder named <strong>Start</strong> with a solution you will use
+            as starting point. There is also a <strong>Completed</strong> folder with a solution you can use to check your work.
+            Please make sure you have these folders before you begin.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        <p>
+            Update an existing application to use the event-based async pattern when searching for movies.
+        </p>
+        <p>
+            <ol>
+                <li>Examine the start solution.</li>
+                <li>Add a new method to <b>MovieApi.cs</b> called <b>SearchAsync</b> that uses <code>WebClient</code>'s <code>DownloadStringAsync</code> method and the <code>DownloadStringCompleted</code> <code>event</code>.</li>
+                <li>In <b>MovieApi.cs</b>, create a public <code>Action</code> named <b>SearchComplete</b> and invoke it when the search completes, passing in the movie data.</li>
+                <li>In <b>SearchPage.xaml.cs</b>, update the <b>OnSearch</b> method to use the new <b>SearchAsync</b> method and <b>SearchComplete</b> action.</li>
+            </ol>
+        </p>
+      
+        <!-- Steps -->
+        <h1>Steps</h1>
+  
+        <h2>Examine the Start Solution</h2>
+        <ol>
+            <li>Open the <b>MediaPhone</b> shared project.</li>
+            <li>Inspect <b>SearchPage.xaml</b>; it displays a <code>SearchBar</code> and a <code>ListView</code>.</li>
+            <li>Open the <b>Data</b> folder in the solution explorer.  The code in <b>MovieApi.cs</b> is used to query the iTunes movie database.  </li> <b>SearchResult.cs </b> holds a model object class to hold the returned data.
+            <li>Run the application and try searching for a movie.</li>
+            <li>Perform a search using a keyword that will return multiple results (try <b>captain</b>).  
+                Try to interact with the UI before the search results are returned? What happened?</li>
+        </ol>
+
+        <h2>Add an Asynchronous Search Method</h2>
+        <ol>
+            <li>Open <b>MovieApi.cs</b>.</li>
+            <li>Create a new <code>void</code> method named <b>SearchAsync</b> that accepts a single <code>string</code> parameter named <b>text</b>.</li>
+            <li>Copy the null check code, the creation of the local <b>query</b> <code>string</code> and the creation of the <code>WebClient</code> from the old <b>Search</b> method.
+<p><a href="#" onclick="toggleCode(this,'SearchAsync');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="SearchAsync" style="display:none;">
+<pre class="prettyprint">
+public void SearchAsync(string text)
+{
+    if (String.IsNullOrEmpty(text))
+        throw new ArgumentNullException("text");
+
+    string query = String.Format(SearchUrl, WebUtility.HtmlEncode(text));
+
+    WebClient wc = new WebClient();
+}   
+</pre></div></p></li>
+
+            <li>Instead of calling the <code>WebClient</code>'s <code>DownloadString</code> method, 
+                subscribe to the <code>DownloadStringCompleted</code> <code>EventHandler</code>.  
+                You may use any subscription method you prefer; the completed solution uses a lambda expression.</li>
+            <li>Within the handler, check the <code>DownloadStringCompletedEventArgs</code>'s <code>Error</code> property for <code>null</code>.</li>
+            <li>If <code>Error</code> is null, we can assume the download completed successfully.  
+                Save the <code>DownloadStringCompletedEventArgs</code>'s <code>Result</code> property to a local <code>string</code> variable named <b>resultText</b>. </li>
+            <li>Parse the <b>resultText</b> using the static <code>JsonConvert.DeserializeObject</code> method and save to local variable named <b>results</b>.</li>
+            <li>Call the <code>WebClient</code> <b>wc</b>'s <code>DownloadStringAsync</code> method.  For the parameter, create a new <code>Uri</code> passing <b>query</b> into the constructor of the <code>Uri</code>.</li>
+    <p><a href="#" onclick="toggleCode(this,'SearchAsync2');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="SearchAsync2" style="display:none;">
+<pre class="prettyprint">
+public void SearchAsync(string text)
+{
+    ...
+    wc.DownloadStringCompleted += (sender, e) => 
+    {
+        if (e.Error == null)
+        {
+            string resultText = e.Result;
+
+            var results = JsonConvert.DeserializeObject&lt;SearchResult&gt;(resultText);
+        }
+    };
+    wc.DownloadStringAsync(new Uri(query));
+}   
+</pre></div></p>
+        </ol>
+
+        <h2>Provide the Search Results</h2>
+        <p>We'll create a public action that will provide the deserialized results to a subscriber when the results are ready.</p>
+        <ol>
+            <li>In <b>MovieApi.cs</b>, create a public <code>Action</code> that accepts an <code>IEnumerable</code> of <code>SearchItem</code>s and an <code>Exception</code> named <b>SearchComplete</b>.</li>
+            <li>Add the <code>event</code> keyword before the <code>Action</code> declaration to limit its accessibility.</li>
+                The deserialized <b>results</b> variable contains a property that is also named <b>results</b> which is a <code>List</code> of <code>SearchItem</code>s.  
+                When invoking the <code>Action</code>, pass in <b>results.results</b> as the first parameter and <code>null</code> for 2nd <code>Exception</code> parameter.
+            <li>If <code>e.Error</code> is not null, invoke the <b>SearchComplete</b> <code>Action</code> passing in <code>null</code> for the first parameter and the error for the second parameter.</li>
+<p><a href="#" onclick="toggleCode(this,'SearchComplete');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="SearchComplete" style="display:none;">
+<pre class="prettyprint">
+public event Action&lt;IEnumerable&lt;SearchItem&gt;, Exception&gt; SearchComplete;
+public void SearchAsync(string text)
+{
+    ...
+    wc.DownloadStringCompleted += (sender, e) => 
+    {
+        if (e.Error == null)
+        {
+            string resultText = e.Result;
+
+            var results = JsonConvert.DeserializeObject&lt;SearchResult&gt;(resultText);
+            SearchComplete?.Invoke(results.results, null);
+        }
+        else
+        {
+            SearchComplete?.Invoke(null, e.Error);
+        }
+    };
+    ...
+}
+</pre></div></p>
+        </ol>
+
+        <h2>Invoke the Async Search method</h2>
+        <ol>
+            <li>Open <b>SearchPage.xaml.cs</b>.</li>
+            <li>In the <b>OnSearch</b> method, delete the <code>try</code>, <code>catch</code>, and <code>finally</code> blocks.</li>
+            <p><a href="#" onclick="toggleCode(this,'OnSearch');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="OnSearch" style="display:none;">
+<pre class="prettyprint">
+void OnSearch(object sender, EventArgs e)
+{
+    if (String.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+}
+</pre></div></p>
+            <li>Create a local instance of <code>MovieApi</code> named <b>api</b>.
+                Subscribe to its <b>SearchComplete</b> <code>event</code> that we created in the last step.</li>
+            <li>In the handler, check if the <code>Exception</code> exists, and if so return.</li>
+            <li>If the <code>Exception</code> is <code>null</code>, use a <code>foreach</code> loop to add each item from the passed in <code>IEnumerable</code> of <code>SearchItem</code>s to the <code>ListView</code>'s data source named <b>Data</b>.</li>
+            <li>Set the <b>searchProgress</b>'s <b>IsRunning</b> property to null to hide the activity indicator.</li>
+            <li>After the handler, call <b>api</b>'s <b>SearchAsync</b> method, passing in the search terms text from the <b>searchBar</b>.</li>
+                <li>Run the application.  Notice that the <code>ActivityIndicator</code> is now visible during searches.</li>
+       
+<p><a href="#" onclick="toggleCode(this,'OnSearch2');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="OnSearch2" style="display:none;">
+<pre class="prettyprint">
+void OnSearch(object sender, EventArgs e)
+{
+    ...
+
+    MovieApi api = new MovieApi();
+    api.SearchComplete += (results, ex) => {
+        if (ex != null)
+        {
+            DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+            return;
+        }
+
+        foreach (var item in results)
+            Data.Add(item);
+
+        searchProgress.IsRunning = false;
+    };
+
+    api.SearchAsync(searchBar.Text);
+}
+</pre></div></p>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise, you updated an existing application to use the event-based async pattern to query a web service for search results.  
+            This allowed the UI to remain responsive while waiting for the results from the web service.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

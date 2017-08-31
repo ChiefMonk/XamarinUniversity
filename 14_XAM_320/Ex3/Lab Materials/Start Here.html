@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Model-View-ViewModel in Xamarin.Forms</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+        This is a Xamarin.Forms class which includes projects for iOS, Android, and Windows. When working on the exercises, you can select the easiest supported platform to run your application on. Refer to the <a href="https://university.xamarin.com/resources/setup-requirements" target="_blank">Setup Requirements</a> on the Xamarin University website if you need help with your development environment.
+        </p>
+
+        <h2>Overview</h2>
+        <p>
+            This session introduces the Model-View-ViewModel (MVVM) architectural design pattern and shows you how to apply it in your Xamarin.Forms applications using the built-in data binding infrastructure.
+        </p>
+
+        <h2>Objectives</h2>
+        <ol>
+            <li>Decide where to place code in Model-View-ViewModel</li>
+	    <li>Define Visual Behavior</li>
+	    <li>Use Commands</li>
+	    <li>Test MVVM based apps</li>
+        </ol>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">XAM320 - Model-View-ViewModel in Xamarin.Forms</a>.</p>
+
+        <h2>Exercises</h2>
+        <ol>
+            <li>
+                <div class="objective">Defining a ViewModel</div>
+                <a href="./parts/part1.html">Exercise</a>
+                <br />
+                In this exercise, we will create a ViewModel and use data binding to connect it to a Xamarin.Forms GUI.
+            </li>
+
+            <li>
+                <div class="objective">Creating ViewModel Collections</div>
+                <a href="./parts/part2.html">Exercise</a>
+                <br />
+                We will continue our prior exercise and create a <code>MainViewModel</code> to manage a collection of quotes.
+            </li>
+
+            <li>
+               <div class="objective">Driving behavior through properties</div>
+                <a href="./parts/part3.html">Exercise</a>
+                <br />
+                In this exercise, we will add in selection support, and use data triggers to change the UI based on property values exposed in the view models.
+            </li>
+
+            <li>
+               <div class="objective">Using commands to run behavior</div>
+                <a href="./parts/part4.html">Exercise</a>
+                <br />
+                The last piece we can control in our ViewModels is the behavior of the application - what happens when you tap the button or swipe that list. In this exercise, we will examine commanding - the official way to push behavior into our bindable ViewModel.
+            </li>
+
+            <li>
+               <div class="objective">Adding unit tests for View Models</div>
+                <a href="./parts/part5.html">Exercise</a>
+                <br />
+                This demonstration will show an example of providing some unit tests for our <code>MainViewModel</code> along with some dependency injection to isolate the services which are used in the view model.
+             </li>             
+           
+        </ol>
+
+        <h2>Exploring On Your Own</h2>
+        <div class="wslist">
+            <a href="http://msdn.microsoft.com/en-us/magazine/dd419663.aspx">The Model-View-ViewModel Design Pattern (MSDN Magazine)</a>
+            <a href="http://msdn.microsoft.com/en-us/library/hh848246.aspx">The MVVM Pattern (Microsoft patterns and practices)</a>
+            <a href="http://joshsmithonwpf.wordpress.com/2009/07/11/one-way-to-avoid-messy-propertychanged-event-handling/">Type-safe PropertyChanged event handling (blog)</a>
+        </div>
+
+        <h3>MVVM Libraries</h3>
+        <p>All of the following are open-source frameworks for implementing the MVVM design pattern.&nbsp;Most provide fairly sophisticated implementations which go beyond what is being discussed in this course. These are in no particular order and there are many others out there as well, so do some exploring and testing before you settle on a library.</p>
+        <div class="wslist">
+            <a href="https://github.com/MvvmCross/MvvmCross">MvvmCross</a>
+            <a href="http://mvvmlight.codeplex.com">MvvmLight</a>
+            <a href="http://mvvmhelpers.codeplex.com/">MvvmHelpers</a>
+            <a href="http://reactiveui.net">ReactiveUI</a>
+            <a href="http://github.com/Caliburn-Micro">Caliburn-Micro</a>
+        </div>
+
+        <h3>Unit Testing</h3>
+        <div class="wslist">
+            <a href="http://blog.codinghorror.com/good-test-bad-test/">Why write Unit Tests?</a>
+            <a href="http://msdn.microsoft.com/en-us/magazine/cc163665.aspx">Writing maintainable Unit Tests</a>
+        </div>
+
+
+    </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+</body>
+</html>
+

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Add and use an existing Effect</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Xamarin.Forms Effects</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+        <h2>Goals</h2>
+
+        <p>
+            The primary goal of this lab is to use a provided Effect and apply it to a control in our application. Specifically, we're going to use an effect that will use the platform-specific APIs to apply a custom font to a Xamarin.Forms label.
+        </p>
+
+        <img src="res/images/ex2_complete.png" width="640" alt="" style='border:1px solid #999999'/></div>
+
+        <h2>Required assets</h2>
+        <p>
+            This is a continuation of the previous exercise. You can use your existing solution or open the solution in the <b>Part 01 Resources > Completed</b> folder. The <strong>Part 02 Resources</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work. 
+            Please make sure you have these folders before you begin.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+       
+            <ol>
+                <li>Add the provided custom font effect in the <b>Assets</b> folder to each head project.</li>
+                <li>Add the provided font in the <b>Assets</b> folder to each head project.</li> 
+                <li>Open <b>MainPage.xaml.cs</b> in the PCL and resolve the <code>Effect</code> using its identifier: <b>"Xamarin.CustomFontEffect"</b>.</li>
+                <li>Add the <code>Effect</code> to the Welcome Label.</li>
+                <li>Toggle the effect on and off using the switch.</li>
+            </ol>
+        </p>
+
+        <!-- Steps -->
+        <h1>Steps</h1>
+
+        <h2>Add the Effect and font</h2>
+        <p>The <b>Assets</b> folder contains a platform-specific custom font effect for each platform. This effect is designed to be applied to a Xamarin.Forms Label.</p>
+        <ol>
+            <li>
+                Add the appropriate CustomFontEffect source file to each platform-specific project.
+            </li>
+            
+            <li>
+                Add the provided <b>Pacifico.ttf</b> font to each head project:
+                <ul>
+                    <li>iOS: Add it to the <b>Resources</b> folder. The Build Action should be <b>BundleResource</b>.</li>
+                    <li>Android: Add it to the <b>Assets</b> folder. The Build Action should be <b>AndroidAsset</b>.</li>
+                    <li>Windows: Add it to the <b>Assets</b> folder. The Build Action should be <b>Content</b>.</li>
+                </ul>
+            </li>
+            
+            <li>
+                For <b>iOS</b> only: update the <b>Info.plist</b> to include the font.
+                <ul>
+                    <li>In Visual Studio for Mac, double-click on <b>Info.plist</b> and change the view to <b>Source</b> via the tabs at the bottom. Add a new entry by right-clicking and selecting <b>New key</b>. Change the Property to <b>Fonts provided by application</b>. Under the new entry add a string with the value <b>Pacifico.ttf</b>.</li>
+                    <li>In Visual Studio on Windows you'll need to edit the <b>Info.plist</b> file manually: right-click and select <b>Open with...</b>, from the provided options select <b>XML (Text) Editor</b> and add the following xml:
+<pre class="prettyprint">
+&lt;key&gt;UIAppFonts&lt;/key&gt;
+&lt;array&gt;
+   &lt;string>Pacifico.ttf&lt;/string&gt;
+&lt;/array&gt;</pre>
+                        </p>
+                    </li>
+                </ul>
+            </li>    
+        </ol>
+
+        <h2>Resolve the Effect</h2>
+        <ol>
+            <li>Open <b>MainPage.xaml.cs</b> in the <b>ControlExplorer</b> PCL project.</li>
+            <li>Create an <code>Effect</code> field named <b>fontEffect</b>.</li>
+            <li>In the constructor, use the ID of the custom font effect (<b>"Xamarin.CustomFontEffect"</b>) to resolve the <code>Effect</code>. Assign the resolved <code>Effect</code> to the <b>fontEffect</b> field.</li>
+<p><a href="#" onclick="toggleCode(this,'fontEffect');return false;" class="uiitem">Show Code</a>
+<div id="fontEffect" style="display:none;">
+<pre class="prettyprint">
+public partial class MainPage : ContentPage
+{
+    Effect fontEffect;
+
+    public MainPage()
+    {
+        InitializeComponent();
+
+        fontEffect = Effect.Resolve("Xamarin.CustomFontEffect");
+    }
+}</pre></div>
+
+        </ol>
+
+        <h2>Apply the Effect</h2>
+        <ol>
+            <li>Examine the code in <b>MainPage.xaml</b>, notice there is a <code>Label</code> named <b>labelWelcome</b>.</li>
+            <li>Return to the constructor in <b>MainPage.xaml.cs</b>.</li>
+            <li>Add <b>fontEffect</b> to <b>labelWelcome</b> using the <code>Add</code> method on <b>labelWelcome</b>'s <code>Effects</code> property.</li>
+            <li>Run the application on any platform; you should see the custom font on the label showing the text "Welcome to Effects!".</li>
+      <p><a href="#" onclick="toggleCode(this,'Add');return false;" class="uiitem">Show Code</a>
+<div id="Add" style="display:none;">
+<pre class="prettyprint">
+public MainPage()
+{
+    ...
+    fontEffect = Effect.Resolve("Xamarin.CustomFontEffect");
+    labelWelcome.Effects.Add(fontEffect);
+}
+</pre></div>
+      
+        </ol>
+
+        <h2>Toggle the effect on/off</h2>
+        <p>Next we'll use the switch to turn the effect on and off.</p>
+        <ol>
+            <li>Go to the <code>OnSwitchToggled</code> method in <b>MainPage.xaml.cs</b>.</li>
+            <li>Check <b>switchEffects</b>' <code>IsToggled</code> property and add/remove the effect depending on the switch's state. A possible solution is shown below.</li>
+ <p><a href="#" onclick="toggleCode(this,'OnSwitchToggled');return false;" class="uiitem">Show Code</a>
+<div id="OnSwitchToggled" style="display:none;">
+<pre class="prettyprint">
+private void OnSwitchToggled(object sender, ToggledEventArgs e)
+{
+    labelWelcome.Effects.Remove(fontEffect);
+
+    if(switchEffects.IsToggled)
+        labelWelcome.Effects.Add(fontEffect);
+}
+</pre></div>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise you added a provided Effect that uses platform-specific APIs to apply a custom font to a Xamarin.Forms label.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

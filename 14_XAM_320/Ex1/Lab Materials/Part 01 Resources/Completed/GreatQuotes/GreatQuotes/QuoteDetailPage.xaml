@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:me="clr-namespace:GreatQuotes;assembly=GreatQuotes"
+    x:Class="GreatQuotes.QuoteDetailPage" Title="Great Quotes">
+
+    <Grid RowSpacing="10" Padding="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Label FontSize="Large" Text="{Binding QuoteText}" 
+                HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+
+        <Label Text="{Binding Author}"
+                Grid.Row="1" HorizontalOptions="End" HorizontalTextAlignment="End"
+                TextColor="{Binding Gender, Converter={StaticResource genderToColorConverter}}"
+                />
+
+    </Grid>
+
+    </ContentPage>

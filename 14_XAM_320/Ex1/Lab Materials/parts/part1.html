@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Defining a ViewModel</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Model-View-ViewModel in Xamarin.Forms</header>
+
+    <section id="main">
+
+      <h1 id="page-title"></h1>
+      <h2>Duration</h2>
+      <p>20 minutes</p>
+
+      <h2>Goals</h2>
+      <p>
+      This exercise introduces the Model-View-ViewModel (MVVM) architectural presentation pattern. You will take an existing application that uses data binding and add ViewModel abstractions for the data being presented.
+      </p>
+
+      <h2>Assets</h2>
+      <p>
+      This exercise includes a starter project in the <strong>Part 01 Resources</strong> folder. It also includes an <b>Assets</b> folder with some additional code. Make sure you have these folders available before starting the exercise.</p>
+
+      <h2>Challenge</h2>
+      <p>
+        This set of exercises take an existing Xamarin.Forms <b>Great Quotes</b> application and add in support to use the MVVM design pattern. As you work on the application, the UI and user experience will, for the most part, be provided for you to reduce the time of the lab. Your part will focus on <em>how</em> the logic executes and in using the pattern.
+      </p>
+
+      <p>
+        The starter application includes a single screen to display a quote and the author of the quote.
+      </p>
+
+      <img src="./res/images/lab1-fin.PNG" height="400" />
+
+      <p>
+        Our goals for this exercise are to implement the MVVM pattern by introducing a View Model which will wrap the underlying model data structure which is currently being used.
+      </p>
+
+      <p>Here are the basic steps you will go through:</p>
+      <ol class="indent-large">
+        <li>
+          Add a <code>SimpleViewModel</code> implementation. This will be a straight-forward implementation of <code>INotifyPropertyChanged</code>. This implementation has been provided for you and is in the <b>Part 01 Resources</b> folder.
+        </li>
+        <li>
+          Create a new <code>QuoteViewModel</code> which wraps a <code>GreatQuote</code> type.
+        </li>
+        <li>
+          Change the UI code to rely on the view models instead of directly on the data.
+        </li>
+      </ol>
+
+      <p>
+        If you are fluent in the MVVM architecture, then feel free to go off and perform the conversion on your own - you can either use the Assets files included in the lab resources, or utilize a 3<sup>rd</sup> party library. If this is somewhat new to you, then it is recommended you follow along with the steps provided below.
+      </p>
+
+      <h1>Steps</h1>
+      <h2>Open the Starter Solution</h2>
+      <ol>
+          <li>
+            Open the <b>GreatQuotes.sln</b> solution in the <b>Part 01 Resources/Start</b> folder.
+          </li>
+          <li>
+            Build and run the application to make sure it is working before making changes. As mentioned earlier, it displays quotes using an XML data file as the backing storage.
+          </li>
+          <li>
+            There are two projects that implement the data infrastrucure:
+          </li>
+      </ol>
+      <table class="grid alternate-rows indent-large">
+        <tr>
+          <th>Project</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><b>GreatQuotes</b></td>
+          <td>
+            This is the shared PCL which contains the XAML pages, converters and common data structures used in the application. The common data used is in the <b>Data</b> folder and consists of three files:
+            <ul class="indent-none">
+              <li><code>GreatQuote.cs</code> is a model class for a single quote.</li>
+              <li><code>IQuoteLoader.cs</code> is an interface which is implemented by the <b>QuoteLoader</b> class in the shared project which is used to load and save the quotes to an XML file.</li>
+              <li><code>QuoteManager.cs</code> is a static class with two static methods to load and save the quotes. It resolves <b>IQuoteLoader</b> from the Xamarin.Forms Dependency Service.</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><b>GreatQuotes.Data</b></td>
+          <td>This is a Shared Project which contains a single source file to load the quotes from an XML file.
+            <ul class="indent-none">
+              <li><code>QuoteLoader.cs</code> is a static class which implements the <code>IQuoteLoader</code> interface.
+              It uses compiler directives to split up the platform specific code.  This class is loaded into the Xamarin.Forms Dependency Service.</li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+
+      <h2>Add support for a base view model</h2>
+      <p>
+        Typically, when you use MVVM, you will find that the core of a View Model is common code which can be abstracted to a base class. This class is often provided in MVVM libraries, but is very simple to create on your own  if you are concerned with code size, or have restrictions on included code. In this step, we will add a basic implementation which we will then use to construct view models.
+      </p>
+      <ol>
+        <li>
+          Create a new folder in the <b>GreatQuotes</b> PCL named <b>Assets</b>. This is where we will place our MVVM infrastructure code.
+        </li>
+        <li>
+          Add the <b>SimpleViewModel.cs</b> file from the <b>Part 01 Resources -> Assets</b> folder that is included with this lab. This is our basic ViewModel implementation that we will derive all our view models from.
+        </li>
+        <li>
+          Open the file and examine the implementation. It implements <code>INotifyPropertyChanged</code>. and provides several virtual methods to raise a property change notification.
+        </li>
+      </ol>
+
+      <h2>Create a GreatQuote view model</h2>
+      <p>
+        The core data we work with is the <code>GreatQuote</code> project. In a pure MVVM solution, we would never expose models directly to the UI - however this is a bendable rule; generally if the data does not change and it is under your control (e.g. you own the <em>shape</em> of the data and it's not defined by some other system), then it's probably ok to use the models directly.
+      </p>
+      <p>
+        However, in this case, we want to eventually be able to modify <code>GreatQuote</code>, so we will need to implement <code>INotifyPropertyChanged</code> so the UI sees changes being made to the data. We could either push this implementation down into the model, or we can wrap it in a ViewModel - which also provides other benefits we could leverage. This is the approach we will take here.
+      </p>
+
+<p><a href="#" onclick="toggleBlock(this,'inpc','Designing Bindable classes', 'Hide');return false;" class="uiitem">Designing Bindable classes</a><div class="indent-large" id="inpc" style="display:none;">
+  <div class="wsitem">
+      <b>Designing Bindable classes</b><br />
+      <p>
+        When designing View Models, all of your public members should either be properties or methods. When using data binding with properties, we want to make sure the class is public and that the property has a public getter (and setter if it's going to be used in a two-way binding). This will allow the binding infrastructure to manage the connection between our data and the UI. Methods are not directly bindable, but we can call them from our code behind to invoke logic.
+      </p>
+      <p>
+        A key aspect to property binding is managing property change notifications, we have to utilize the <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.inotifypropertychanged.aspx">INotifyPropertyChanged Interface</a> to ensure the binding infrastructure and other interested subscribers know when property values have changed. Here is a good blog post on <a href="http://www.julmar.com/blog/programming/inotifypropertychanged-in-net-4-5/">Implementing INotifyPropertyChanged in .NET 4.5.</a>
+      </p>
+  </div>
+</div></p>
+
+      <ol>
+        <li>
+          Create a new folder in the <b>GreatQuotes</b> PCL named <b>ViewModels</b>. This is where we will place our view models.
+        </li>
+        <li>
+          Add a new C# source file named <b>QuoteViewModel.cs</b> into the folder. This will be our ViewModel for a quote. Derive the class from the <code>SimpleViewModel</code> base class so we get our <code>INotifyPropertyChanged</code> implementation.
+          We could name this <b>GreatQuoteViewModel</b>, and it's a very common practice to just append <b>ViewModel</b> to the data type. But you can also refactor the name or shorten it for convenience. So let's call this <b>QuoteViewModel</b>.
+        </li>
+        <li>
+          Add a constructor parameter of type <code>GreatQuote</code> and store it into a field in the class. You will need to add a <code>using</code> statement to access this type.
+        </li>
+        <li>
+          Now, we need to expose the properties we want the UI to bind to. The ViewModel doesn't have to expose <em>all</em> of the properties if some are not necessary to the UI - and you can rename properties to make them more obvious if the underlying model was generated by a tool and uses confusing names. Here's the properties we want to expose from the ViewModel:
+            <ul class="indent-none">
+              <li>
+                <code>FirstName</code>
+              </li>
+              <li>
+                <code>LastName</code>
+              </li>
+              <li>
+                <code>QuoteText</code>
+              </li>
+              <li>
+                <code>Gender</code>
+              </li>
+            </ul>
+        </li>
+        <li>
+          Each bindable property has a standard implementation, the getter returns the data from the model, and the setter updates the value and raises a property change notification. For example, here is the <code>Quote</code> property implementation:
+        </li>
+
+<pre class="codeblock prettyprint">
+public string Quote
+{
+    get { return quote.Quote; }
+    set {
+        if (quote.Quote != value) {
+            quote.Quote = value;
+            RaisePropertyChanged();
+        }
+    }
+}
+</pre>
+
+        <div class="hintblock">
+          You might be wondering about the call to <code>RaisePropertyChanged</code> which passes no parameters. This raises our <code>INotifyPropertyChanged</code> notification, and it <em>does</em> pass a property name, however it's being supplied by the compiler through a special trick - if you look at the implementation of the <code>RaisePropertyChanged</code> method, you will find a special attribute tag applied to the string parameter - <code>[CallerMemberName]</code>. This tag tells the compiler to pass the name of the method making the call - in this case it passes the name of the property. This takes care of 90% of our cases and keeps us from passing "magic" strings around in our code.
+        </div>
+
+        <li>
+          Go ahead and implement the required properties we need (<code>FirstName</code>, <code>LastName</code>, <code>QuoteText</code> and <code>Gender</code>) using the above code snippet as an example.
+        </li>
+        <li>
+          Next, let's add another property into the ViewModel - <code>Author</code>. This will be a combination of the <code>FirstName</code> and <code>LastName</code> properties with a space between them. Right now, the UI has a more complex UI setup involving two <code>Label</code>'s inside a <code>StackLayout</code> because of the model structure. We can reduce the UI complexity and remove a panel - which improves our rendering and layout performance by creating an aggregate property that puts the data exactly in the format the view needs it to be in. This is the primary benefit of this architectural pattern.
+            <ul class="indent-none">
+              <li>
+                We don't need a setter for this - it will be read only. Instead, the property will be changed by altering the <code>FirstName</code> and <code>LastName</code> properties.
+              </li>
+              <li>
+                That means you will need to raise a <b>PropertyChange</b> notification for <code>Author</code> when either of the two underlying properties are changed - make sure to add the call to <code>RaisePropertyChanged</code>, passing either the expression identifying the property: <code>() => Author</code>, or a string: &quot;Author&quot;.
+              </li>
+
+            </ul>
+        </li>
+
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'properties');return false;" class="uiitem">Show Code</a><div class="indent-large" id="properties" style="display:none;">
+<pre class="prettyprint">
+public class QuoteViewModel : SimpleViewModel
+{
+    readonly GreatQuote quote;
+
+    public string FirstName
+    {
+        get { return quote.FirstName; }
+        set {
+            if (quote.FirstName != value) {
+                quote.FirstName = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => Author);
+            }
+        }
+    }
+
+    public string LastName
+    {
+        get { return quote.LastName; }
+        set {
+            if (quote.LastName != value) {
+                quote.LastName = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(() => Author);
+            }
+        }
+    }
+
+    public string Author
+    {
+        get { return quote.FirstName + " " + quote.LastName; }
+    }
+
+    public Gender Gender
+    {
+        get {return quote.Gender;}
+        set {
+            if (quote.Gender != value) {
+                quote.Gender = value;
+                RaisePropertyChanged();
+            }
+        }
+    }
+
+    public string QuoteText
+    {
+        get { return quote.QuoteText; }
+        set {
+            if (quote.QuoteText != value) {
+                quote.QuoteText = value;
+                RaisePropertyChanged();
+            }
+        }
+    }
+
+    public QuoteViewModel(GreatQuote quote)
+    {
+        this.quote = quote;
+    }
+}
+</pre>
+      </div></p>
+
+
+      <h2>Connect the UI</h2>
+      <p>
+        Now that we have our ViewModel, let's connect the UI. We will replace <code>GreatQuote</code> with our <code>QuoteViewModel</code> in the <code>QuoteDetailPage</code>.
+      </p>
+      <ol>
+        <li>
+          First we need to replace the passed <code>GreatQuote</code> in the constructor for <code>QuoteDetailPage</code> with our new <code>QuoteViewModel</code>.
+          <ul class="indent-none">
+            <li>
+              Remember to add the proper <code>using</code> statement to bring the view model into scope.
+            </li>
+            <li>
+              You can remove the existing <code>using GreatQuotes.Data</code> statement - this will help you locate these substitution places.
+            </li>
+          </ul>
+        </li>
+      </ol>
+        <p>
+          Next, we want to use our new <code>Author</code> property in the XAML design.
+        </p>
+      <ol start="2">
+        <li>
+          Open the XAML for the <code>QuoteDetailPage</code> and locate the <code>StackLayout</code> at the end which is displaying the first and last name.
+        </li>
+        <li>
+          Copy one of the existing labels inside the <code>StackLayout</code> and then remove the <code>StackLayout</code> and it's children and replace it with the copied <code>Label</code>. Data bind the <code>Text</code> property to the <code>Author</code> ViewModel property. Set the following properties on the <code>Label</code> to align it to the right on the bottom, make sure to keep the current <code>TextColor</code> binding:
+            <ul class="indent-none">
+              <li>
+                <code>Grid.Row</code> should be "1"
+              </li>
+              <li>
+                <code>HorizontalOptions</code> should be "End"
+              </li>
+              <li>
+                <code>HorizontalTextAlignment</code> should be "End"
+              </li>
+            </ul>
+        </li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'xaml');return false;" class="uiitem">Show Code</a><div class="indent-large" id="xaml" style="display:none;">
+<pre class="prettyprint">
+&lt;Label Text="{Binding Author}"
+          Grid.Row="1" HorizontalOptions="End" HorizontalTextAlignment="End"
+          TextColor="{Binding Gender, Converter={StaticResource genderToColorConverter}}" />
+
+</pre>
+      </div></p>
+
+      <ol start="4">
+        <li>
+          Open the <b>App.xaml.cs</b> file and wrap the current <code>GreatQuote</code> being passed into <code>QuoteDetailPage</code> with a <code>QuoteViewModel</code>. Remember to add the proper <code>using</code> statement.
+        </li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'appVM');return false;" class="uiitem">Show Code</a><div class="indent-large" id="appVM" style="display:none;">
+<pre class="prettyprint">
+var quote = new <span class="highlight">QuoteViewModel</span>(QuoteManager.Load().First());
+</pre>
+      </div></p>
+      <ol start="5">
+        <li>
+          Build and run the application - it should run <em>exactly</em> as it did before. This is because the Xamarin.Forms binding engine binds by name, it doesn't care what the class is that exposes the properties.
+        </li>
+      </ol>
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, you have implemented the basics of the Model-View-ViewModel pattern. It did not change much about the application, however the implementation did allow us to simplify the UI construction in small ways.
+    </p>
+
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

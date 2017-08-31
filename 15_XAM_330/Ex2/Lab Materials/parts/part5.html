@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Add an attached property</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Xamarin.Forms Effects</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>15 minutes</p>
+
+        <div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+        <h2>Goals</h2>
+
+        <p>
+            The primary goal of this lab is to create an attached property that can be added to a button to set the second color of our gradient effect.
+        </p>
+
+        <img src="res/images/ex5_complete.png" alt=""  style='border:1px solid #999999'/></div>
+
+        <h2>Required assets</h2>
+        <p>
+            This is a continuation of the previous exercise. You can use your existing solution or open the solution in the <b>Part 04 Resources > Completed</b> folder. The <strong>Part 05 Resources</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work. 
+            Please make sure you have these folders before you begin.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        
+      <ol>
+                <li>Add an attached property named <b>GradientColorProperty</b> to the button gradient RoutingEffect. Code the setter and getter methods for the property.</li>
+                <li>When the slider moves, create a color based on the position and assign it to the button using the attached property you just created.</li>
+                <li>In each platform-specific button gradient effect class:
+                    <ul>
+                        <li>Read the attached property and use it for the bottom color.</li>
+                        <li>Override <code>OnElementPropertyChanged</code>, watch for the <b>GradientColor</b> property, and update the gradient.</li>
+                    </ul>
+             </ol>
+   
+
+      <!-- Steps -->
+        <h1>Steps</h1>
+
+        <h2>Add an Attached Property</h2>
+        <ol>
+            <li>Open <b>ButtonGradientEffect.cs</b> in the <b>ControlExplorer</b> PCL project.</li>
+            <li>Add a <code>public static readonly BindableProperty</code> named <b>GradientColorProperty</b>.</li>
+            <li>Assign <b>GradientColorProperty</b> using the static <code>BindableProperty.CreateAttached</code> method: set the property name to <b>"GradientColor"</b>, the type to <code>Color</code>, the declaring type to <code>ButtonGradientEffect</code> and the default value to black.</li>
+<p><a href="#" onclick="toggleCode(this,'BindableProperty');return false;" class="uiitem">Show Code</a>
+<div id="BindableProperty" style="display:none;">
+<pre class="prettyprint">
+public class ButtonGradientEffect : RoutingEffect
+{
+    public static readonly BindableProperty GradientColorProperty = BindableProperty.CreateAttached("GradientColor", typeof(Color), typeof(ButtonGradientEffect), Color.Black);
+    ....
+}</pre></div>
+            <li>Add a <code>public static void</code> setter method named <b>SetGradientColor</b> that accepts a <code>VisualElement</code> and a <code>Color</code>.</li>
+            <li>Within the setter method, call the <code>SetValue</code> method on the passed-in <code>VisualElement</code>. The parameters are the <code>BindableProperty</code> and the passed in <code>Color</code>.
+            <li>Add a <code>public static Color</code> getter method named <b>GetGradientColor</b> that accepts a <code>VisualElement</code>.</li>
+            <li>Within the getter method, call the <code>VisualElement</code>'s <code>GetValue</code> method, passing in the <code>BindableProperty</code>. Cast the return value to a <code>Color</code> and return it.</li>
+<p><a href="#" onclick="toggleCode(this,'SetGradientColor');return false;" class="uiitem">Show Code</a>
+<div id="SetGradientColor" style="display:none;">
+<pre class="prettyprint">
+public static void SetGradientColor(VisualElement view, Color color) 
+{ 
+    view.SetValue(GradientColorProperty, color); 
+}
+
+public static Color GetGradientColor(VisualElement view) 
+{ 
+    return (Color) view.GetValue(GradientColorProperty); 
+}</pre></div>
+        </ol>
+
+        <h2>Set the Attached Property</h2>
+        <p>We'll use the existing slider to adjust the second color of our gradient. When the slider position changes, we'll create a color and assign it to the button via the attached property.
+        <ol>
+            <li>Open <b>MainPage.xaml.cs</b> and find the <code>OnSliderColorValueChanged</code> method.</li>
+            <li>Use the slider position to generate a color. The slider has been configured with Min/Max values of 0 and 255 which can be read using the passed in <code>ValueChangedEventArgs</code>'s <code>NewValue</code> property. Generate a grey <code>Color</code> by using <code>NewValue</code> for the RGB color values.</li>
+            <li>Set the new color as the gradient color attached property onto the button named <b>buttonClick</b>. Use the static <code>ButtonGradientEffect.SetGradientColor</code> method.</li>
+<p><a href="#" onclick="toggleCode(this,'OnSliderColorValueChanged');return false;" class="uiitem">Show Code</a>
+<div id="OnSliderColorValueChanged" style="display:none;">
+<pre class="prettyprint">
+private void OnSliderColorValueChanged(object sender, ValueChangedEventArgs e)
+{
+    Color gradColor = new Color(e.NewValue / 255.0, e.NewValue / 255.0, e.NewValue / 255.0);
+    ButtonGradientEffect.SetGradientColor(buttonClick, gradColor);
+}</pre></div>
+        </ol>
+
+
+        <h2>Read the Attached Property</h2>
+        <p>The steps below are the same for each head project. Complete the steps below for each platform you wish to support.
+        <ol>
+            <li>Open <b>MyButtonGradientEffect</b> in the head project and find the <code>SetGradient</code> method.</li>
+            <li>Update the <b>colorBottom</b> assignment to read the attached property by calling the <code>static</code> <code>ButtonGradientEffect.GetGradientColor</code> method. Remember, the property is attached to the button defined in Xamarin.Forms, so pass in <b>xfButton</b>.</li>
+<p><a href="#" onclick="toggleCode(this,'SetGradient');return false;" class="uiitem">Show Code</a>
+<div id="SetGradient" style="display:none;">
+<pre class="prettyprint">
+void SetGradient()
+{
+    ....
+    var colorBottom = ButtonGradientEffect.GetGradientColor(xfButton);
+}</pre></div>
+            <li>We also need to respond to property changes: override <code>OnElementPropertyChanged</code>.</li>
+            <li>Within the method, check if the <code>Element</code> property is a <code>Button</code>; if it is not, return.</li>
+            <li>Next check for updates to the attached property by comparing the <code>PropertyName</code> property on the passed in <code>PropertyChangedEventArgs</code>. You can use the <b>PropertyName</b> property on <b>GradientColorProperty</b> to compare.</li>
+            <li>If <code>PropertyName</code> matches our gradient property, call <code>SetGradient</code>.</li>
+<p><a href="#" onclick="toggleCode(this,'OnElementPropertyChanged');return false;" class="uiitem">Show Code</a>
+<div id="OnElementPropertyChanged" style="display:none;">
+<pre class="prettyprint">
+protected override void OnElementPropertyChanged(PropertyChangedEventArgs e)
+{
+    base.OnElementPropertyChanged(e);
+
+    if (Element is Button == false)
+        return;
+
+    if (e.PropertyName == ButtonGradientEffect.GradientColorProperty.PropertyName)
+        SetGradient();
+}</pre></div>
+    <li>Run the application and move the slider, the bottom color of the gradient on the button should change from black to white.</li>
+        </ol>
+
+        <h2>Bonus: Repond to size changes in iOS</h2>
+        <p>On iOS, we created a gradient layer with a fixed width and height. We can use <b>OnElementPropertyChanged</b> to respond to size changes on the element. </p>
+        <ol>
+            <li>Open <b>MyButtonGraidentEffect</b> in the iOS head project.</li>
+            <li>In <code>OnElementPropertyChanged</code>, call <code>SetGradient</code> if <code>e.PropertyName</code> matches <code>VisualElement.WidthProperty</code> or <code>VisualElement.HeightProperty</code>.</li>
+<p><a href="#" onclick="toggleCode(this,'WidthProperty');return false;" class="uiitem">Show Code</a>
+<div id="WidthProperty" style="display:none;">
+<pre class="prettyprint">
+protected override void OnElementPropertyChanged(PropertyChangedEventArgs e)
+{
+    ...
+
+    if (e.PropertyName == ButtonGradientEffect.GradientColorProperty.PropertyName
+     || e.PropertyName == VisualElement.WidthProperty.PropertyName
+     || e.PropertyName == VisualElement.HeightProperty.PropertyName)
+    {
+        SetGradient();
+    }
+}</pre></div>         
+
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise you defined an attached property to store a color. You attached and updated the property to a Xamarin.Forms button. You then read and used the color property to update the gradient in each platform-specific project.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

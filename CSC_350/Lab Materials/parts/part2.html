@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Convert app to use async and await</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Using Async and Await</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <h2>Goals</h2>
+
+        <p>
+            The primary goal of this lab is to modify an existing application to use the task-based async pattern when downloading search results from a web service.
+        </p>
+
+        <div align="center"><img src="res/images/Ex2_complete.png" width="320" alt=""  style='border:1px solid #999999'/></div>
+      
+        <h2>Required assets</h2>
+        <p>
+            This exercise is a continuation from the previous exercise.  You may use your existing solution 
+            or start with the <b>Completed</b> solution in the <b>Part 01 Resources</b> folder.
+            The provided <strong>Part 02 Resources</strong> folder contains a subfolder named <strong>Completed</strong>
+             with a solution you can use to check your work. Please make sure you have this folder before you begin.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        <p>
+            Update an existing application to use the task-based async pattern when searching for movies from a web service.
+        </p>
+        <p>
+            <ol>
+                <li>Open <b>MovieApi.cs</b> and replace the <b>SearchAsync</b> method with a task-based version.  Use the synchronous <b>Search</b> method as a starting-point.</li>
+                <li>Call the new <b>SearchAsync</b> method from within the <b>OnSearch</b> method in <b>SearchPage.xaml.cs</b>.</li>
+            </ol>
+        </p>
+
+      
+        <!-- Steps -->
+        <h1>Steps</h1>
+  
+        <h2>Create a new Async Search Method</h2>
+        <ol>
+            <li>Open <b>MovieApi.cs</b> in the shared project <b>MediaPhone</b>.</li>
+            <li>Comment-out or delete the existing <b>SearchAsync</b> method, we're going to replace it.</li>
+            <li>Create a new <code>static</code> method named <b>SearchAsync</b>, copying the signature from the original <b>Search</b> method.  
+                The new method should return an <code>IEnumerable</code> of <code>SearchItem</code>'s and accept a single string parameter named <b>text</b>.</li>
+            <li>Next, copy the contents of the original <b>Search</b> method into your new <b>SearchAsync</b> method.</li>
+        </ol>
+    <p><a href="#" onclick="toggleCode(this,'SearchAsync');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="SearchAsync" style="display:none;">
+<pre class="prettyprint">
+public static IEnumerable&lt;SearchItem&gt; SearchAsync(string text)
+{
+    if (string.IsNullOrEmpty(text))
+        throw new ArgumentNullException("text");
+
+    string query = string.Format(SearchUrl, WebUtility.HtmlEncode(text));
+
+     WebClient wc = new WebClient();
+    string resultText = wc.DownloadString(query);
+
+    var results = JsonConvert.DeserializeObject&lt;SearchResult&gt;(resultText);
+    return results.results;
+} 
+</pre></div></p>
+
+    <h2>Modify Search Async to use the Task Async Pattern</h2>
+        <ol>
+            <li>Add the <code>async</code> keyword to the method signature before the return type.</li>
+            <li>Change the return type to return a <code>Task</code> that encapsulates the <code>IEnumerable</code> of <code>SearchItem</code>s.</li>
+            <li>Change the method call on the <code>WebClient</code> to download the results to use the new method; change it from <code>DownloadString</code> to <code>DownloadStringTaskAysnc</code>.</li>
+            <li>Note that <code>DownloadStringTaskAsync</code> returns a <code>Task</code> so we can now use the <code>await</code> keyword.
+                Await the call to <code>DownloadStringTaskAsync</code>.</li>
+        </ol>
+    <p><a href="#" onclick="toggleCode(this,'SearchAsync2');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="SearchAsync2" style="display:none;">
+<pre class="prettyprint">
+public static async Task&lt;IEnumerable&lt;SearchItem&gt;&gt; SearchAsync(string text)
+{
+    ...
+    string resultText = await wc.DownloadStringTaskAsync(query);
+} 
+</pre></div></p>
+
+        <h2>Call the Task-based Async Search Method</h2>
+        <ol>
+            <li>Open <b>SearchPage.xaml.cs</b>.</li>
+            <li>Restore the <b>OnSearch</b> method to its original synchronous form:
+
+<pre class="prettyprint">
+void OnSearch (object sender, EventArgs e)
+{
+    if (string.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+
+    try
+    {
+        var results = MovieApi.Search(searchBar.Text);
+        foreach (var item in results)
+            Data.Add(item);
+    }
+    catch (WebException ex)
+    {
+        DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+    }
+    finally
+    {
+        searchProgress.IsRunning = false;
+    }
+}
+</pre>
+</li>
+
+            <li>Change the call to the static <b>MovieApi.Search</b> method to <b>MovieApi.SearchAsync</b>.</li>
+            <li>Since this method returns a <code>Task</code> any calls to this method should be awaited. Place the <code>await</code> keyword before the call to <b>SearchAsync</b>.</li>
+            <li>In order to use the <code>await</code> keyword, our method needs to be marked as async. Add the <code>async</code> keyword before the method signature of <b>OnSearch</b>.</li>
+            <li>We can make one additional optimization now that our <b>OnSearch</b> method is asynchronous. Examine the return type from the call to <code>DisplayAlert</code>.  This method also returns a task and can be awaited.  Await the call to <code>DisplayAlert</code>.</li>
+            <li>Run the application, it will remain responsive while downloading search results. </li>
+            <li>Compare the final solution to the start solution from <b>Part 01</b>. Notice only a few lines of code are different between the task-based async version and the original synchronous code.</li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'OnSearch2');return false;" class="uiitem">Show Code</a>
+<div class="indent-medium" id="OnSearch2" style="display:none;">
+<pre class="prettyprint">
+async void OnSearch (object sender, EventArgs e)
+{
+    if (string.IsNullOrEmpty(searchBar.Text))
+        return;
+
+    Data.Clear();
+    searchProgress.IsRunning = true;
+
+    try
+    {
+        var results = await MovieApi.SearchAsync(searchBar.Text);
+        foreach (var item in results)
+            Data.Add(item);
+    }
+    catch (WebException ex)
+    {
+        await DisplayAlert("Error", ex.Message + "\r\nAre you connected to the Internet?", "OK");
+    }
+    finally
+    {
+        searchProgress.IsRunning = false;
+    }
+}
+</pre></div></p>
+      
+        <h1>Summary</h1>
+        <p>
+            In this exercise you used the task-based async pattern to download movie search results.  You also compared the tasked-based async implementation with a synchronous version.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

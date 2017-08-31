@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    x:Class="MediaPhone.SearchPage"
+    Title="Media Phone">
+    <Grid>
+        <StackLayout Spacing="10">
+            <SearchBar x:Name="searchBar" SearchButtonPressed="OnSearch" Placeholder="Enter Search Term" />
+            <ListView x:Name="searchResults" RowHeight="80">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ImageCell Text="{Binding Title}"
+                                Detail="{Binding RatingAndGenre}"
+                                ImageSource="{Binding Artwork}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+
+        <ActivityIndicator x:Name="searchProgress" 
+            HorizontalOptions="Center"
+            VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

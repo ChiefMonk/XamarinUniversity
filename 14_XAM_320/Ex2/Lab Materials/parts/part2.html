@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Creating ViewModel Collections</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Model-View-ViewModel in Xamarin.Forms</header>
+
+    <section id="main">
+
+      <h1 id="page-title"></h1>
+      <h2>Duration</h2>
+      <p>15 minutes</p>
+        
+      <h2>Goals</h2>
+      <p>
+      This exercise will continue from the prior exercise and display a collection of <code>QuoteViewModel</code> elements in a <code>ListView</code> using data binding. To do this, we will create a new ViewModel to hold and manage the collection.
+      </p>
+
+      <div class="hintblock">
+        Even though this is a continuation from the prior exercise, there is a new starter project you must begin with in order to get both screens - the first to display a list of quotes, and the second to display the quote details.
+      </div>
+
+      <h2>Assets</h2>
+      <p>
+      This exercise includes a starter project in the <strong>Part 02 Resources</strong> folder. Make sure you have this folder available before starting the exercise and that you start with this project.
+      </p>
+
+      <h2>Challenge</h2>
+      <p>
+        This set of exercises take an existing Xamarin.Forms <b>Great Quotes</b> application which has a single ViewModel used to wrap a quote and add in support to manage a collection using the MVVM design pattern.
+      </p>
+
+      <p>
+        The starter application includes two screens in this lab and utilizes a <code>NavigationPage</code> to go back and forth between two screens. The first screen displays a list of quotes and the second displays the full detail for a selected quote (the same page you worked on earlier) as you can see below.
+      </p>
+
+      <table>
+        <tr>
+          <td><img src="./res/images/greatQuotes1.PNG" width="350" /></td>
+          <td><img src="./res/images/greatQuotes2.PNG" width="350" /></td>
+        </tr>
+      </table>
+
+      <p>Here are the basic steps you will go through:</p>
+      <ol class="indent-large">
+        <li>
+          Create a new <code>MainViewModel</code> which manages the <code>QuoteViewModel</code> elements you created in the prior exercise.
+        </li>
+        <li>
+          Change the UI code to use the new <code>MainViewModel</code>.
+        </li>
+      </ol>
+
+      <p>
+        If you are fluent in the MVVM architecture, then feel free to go off an perform the work on your own - using the above high-level steps. If this is somewhat new to you, then it is recommended you follow along with the steps provided below.
+      </p>
+
+      <h1>Steps</h1>
+
+      <h2>Create a Main view model</h2>
+      <p>
+        In MVVM applications we will often utilize multiple view models - even in simple ones like this. In this case, we need something to manage the collection of quotes so we can bind to the entire collection. We'll use a <em>Main View Model</em> for this purpose.
+      </p>
+
+<p><a href="#" onclick="toggleBlock(this,'incc','Binding to Collections', 'Hide');return false;" class="uiitem">Binding to Collections</a><div class="indent-large" id="incc" style="display:none;">
+  <div class="wsitem">
+      <b>Managing Collections of data in MVVM</b><br />
+      <p>
+        When creating View Models, we often expose lists of data. A best practice is to always expose an abstraction, typically an interface such as <code>IList&lt;T&gt;</code> or <code>IEnumerable&lt;T&gt;</code>. In this fashion, the implementation can be changed over time - for example you could start out with a <code>List&lt;T&gt;</code> and then change it to something else without affecting the binary contract of the view model.
+      </p>
+      <p>
+        If the collection itself will be modified at runtime (not the items <em>in</em> the collection, but the collection itself), then it will need to report collection change notifications. The easiest way to manage this is to use the <a href="http://msdn.microsoft.com/en-us/library/ms668604(v=vs.110).aspx">ObservableCollection&lt;T&gt;</a> which works like a <code>List</code> but provides the change notifications.
+      </p>
+  </div>
+</div></p>
+
+      <ol>
+        <li>
+          Create a new C# source file in the <b>ViewModels</b> folder named <b>MainViewModel.cs</b>.
+        </li>
+        <li>
+          Derive the new class from your <code>SimpleViewModel</code> base class. You will need to add a <code>using</code> definition to include the proper namespace.
+        </li>
+        <li>
+          Add a public property named <b>Quotes</b> which is of type <code>IList&lt;QuoteViewModel></code>. We want to expose the view model - not the underlying quote data.
+        </li>
+        <li>
+          In the constructor, set the property to an <code>ObservableCollection&lt;QuoteViewModel></code> and populate it using the code that is currently in the <b>QuoteListPage.xaml.cs</b> source file. It uses the <code>QuoteManager</code> class.
+            <ul class="indent-none">
+              <li>
+                Use the LINQ <code>Select</code> expression to convert each <code>GreatQuote</code> into a <code>QuoteViewModel</code>. See the below code hint if you aren't sure how to do this.
+            </ul>
+        </li>
+      </ol>
+
+<p><a href="#" onclick="toggleCode(this,'mainViewModel');return false;" class="uiitem">Show Code</a><div class="indent-large" id="mainViewModel" style="display:none;">
+<pre class="prettyprint">
+using GreatQuotes.Infrastructure;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using GreatQuotes.Data;
+
+namespace GreatQuotes.ViewModels
+{
+    public class MainViewModel : SimpleViewModel
+    {
+        public IList&lt;QuoteViewModel> Quotes { get; private set; }
+
+        public MainViewModel()
+        {
+            Quotes = new ObservableCollection&lt;QuoteViewModel>(
+                QuoteManager.Load()
+                            .Select(q => new QuoteViewModel(q)));
+
+        }
+    }
+}
+</pre>
+      </div></p>
+
+      <h2>Connect the UI</h2>
+      <p>
+        The last step is to connect the UI to the view models. We will replace all usages of <code>GreatQuote</code> with our <code>QuoteViewModel</code> and set the <code>BindingContext</code> for the <code>QuoteListPage</code> to be our collection of <code>QuoteViewModel</code> objects.
+      </p>
+      <ol>
+        <li>
+          The first thing we need to do is replace all the instances of <code>GreatQuote</code> with our new <code>QuoteViewModel</code>. It is currently used in the code behind for the <code>QuoteListPage</code>. Open that source and do a simple name replacement of the class.
+          <ul class="indent-none">
+            <li>
+              Remember to add the proper <code>using</code> statement to bring the view model into scope.
+            </li>
+            <li>
+              You can remove the existing <code>using GreatQuotes.Data</code> statement - this will help you locate these substitution places.
+            </li>
+          </ul> 
+        </li>
+      </ol>
+        <p>
+          Next, we want to use our <code>MainViewModel</code>, and we <em>could</em> just put an instance into the <code>QuoteListPage</code> which needs it, however, as we proceed, other pages will need access to the same instance of this class. There are several popular solutions - a view model locator class, dependency injection, etc. We will take a simple approach here and just create a public static property on the <code>App</code> class - this will make it available across our application, as well as to XAML through the <code>{x:Static}</code> markup extension.
+        </p>
+      <ol start="2">
+        <li>
+          Open the <b>App.xaml.cs</b> file - this is the code behind for our <code>Application</code> class (introduced in Xamarin.Forms 1.3).
+        </li>
+        <li>
+          Add a new <code>public static</code> property of type <code>MainViewModel</code>, name it <b>MainViewModel</b>, and initialize it with a new instance of the class in a static constructor (open the code hint below if you aren't sure how to do this).
+        </li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'mainViewModel2');return false;" class="uiitem">Show Code</a><div class="indent-large" id="mainViewModel2" style="display:none;">
+<pre class="prettyprint">
+using Xamarin.Forms;
+<span class="highlight">using GreatQuotes.ViewModels;</span>
+
+namespace GreatQuotes
+{
+    public partial class App : Application
+    {
+        <span class="highlight">public static MainViewModel MainViewModel { get; private set; }</span>
+
+        <span class="highlight">static App()
+        {
+            MainViewModel = new MainViewModel();
+        }</span>
+
+        public App()
+        {
+          ....
+</pre>
+      </div></p>
+
+      <ol start="4">
+        <li>
+          Open the <b>QuoteListPage.xaml.cs</b> file and replace the <code>BindingContext</code> for the page with the new <code>MainViewModel</code> property value.
+        </li>
+      </ol>
+<p><a href="#" onclick="toggleCode(this,'mainViewModel3');return false;" class="uiitem">Show Code</a><div class="indent-large" id="mainViewModel3" style="display:none;">
+<pre class="prettyprint">
+using Xamarin.Forms;
+public partial class QuoteListPage : ContentPage
+{ 
+    public QuoteListPage ()
+    {
+        <span class="highlight">BindingContext = App.MainViewModel;</span>
+        ...
+</pre>
+      </div></p>
+      <ol start="5">
+        <li>
+          Finally, change the <code>ListView</code> in the <b>QuoteListPage.xaml</b> to use the <code>Quotes</code> property from our <code>MainViewModel</code> as the <code>ItemsSource</code>.
+        </li>
+        <li>
+          Since we have the new <code>Author</code> property available, go ahead and data bind the <code>Detail</code> property of the <code>TextCell</code> in the data template. See the code hint below if you are uncertain on how to do that. Before this, we would have had to create a custom view cell to display the two properties. This allows us to use the (much) more efficient <code>TextCell</code> template.
+        </li>
+      </ol>
+
+<p><a href="#" onclick="toggleCode(this,'mainViewModelxaml');return false;" class="uiitem">Show Code</a><div class="indent-large" id="mainViewModelxaml" style="display:none;">
+<pre class="prettyprint">
+&lt;ListView ItemsSource="{Binding <span class="highlight">Quotes</span>}" ItemTapped="OnQuoteSelected">
+      &lt;ListView.ItemTemplate>
+        &lt;DataTemplate>
+            &lt;TextCell Text="{Binding QuoteText}"
+                    <span class="highlight">Detail="{Binding Author}"</span>
+                    DetailColor="{Binding Gender, Converter={StaticResource genderToColorConverter}}">
+                &lt;TextCell.ContextActions>
+                    &lt;MenuItem Text="Edit" />
+                    &lt;MenuItem Text="Delete" IsDestructive="True" />
+                &lt;/TextCell.ContextActions>
+            &lt;/TextCell>
+        &lt;/DataTemplate>
+      &lt;/ListView.ItemTemplate>
+    &lt;/ListView>  
+</pre>
+      </div></p>
+
+      <ol start="6">
+        <li>
+          Build and run the application - it should run almost as it did before, however now the new <code>Author</code> property is available for the <code>ListView</code> detail, again showing how beneficial this pattern can be because we can morph the bindable properties into exactly what the view needs.
+        </li>
+      </ol>
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, you have implemented a collection of view models and data bound it to a UI. It did not change much about the application, however the implementation is quite a bit more flexible now as you will see in the upcoming exercises.
+    </p>
+
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

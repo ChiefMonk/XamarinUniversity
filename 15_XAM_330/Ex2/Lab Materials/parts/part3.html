@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Create a RoutingEffect</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Xamarin.Forms Effects</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+
+        <h2>Duration</h2>
+        <p>5 minutes</p>
+
+        <div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+        <h2>Goals</h2>
+
+        <p>
+            The primary goal of this lab is to create a <code>RoutingEffect</code> for an existing effect to simplify application in XAML and avoid using string literals to resolve the effect.
+        </p>
+
+         <img src="res/images/ex3_complete.png" width="640" alt=""  style='border:1px solid #999999'/></div>
+
+
+        <h2>Required assets</h2>
+        <p>
+            This is a continuation of the previous exercise. You can use your existing solution or open the solution in the <b>Part 02 Resources > Completed</b> folder. The <strong>Part 03 Resources</strong> folder contains a subfolder named <strong>Completed</strong> with a solution you can use to check your work. 
+            Please make sure you have these folders before you begin.
+        </p>
+
+        <!-- Give them a challenge here, high-level steps of what we want them to do
+             so they can use this instead of the step-by-step (baby steps) included below -->
+        <h2>Challenge</h2>
+        <p>
+            <ol>
+                <li>Create a class in the <b>ControlExplorer</b> PCL named <b>LabelFontEffect</b> that derives from <b>RoutingEffect</b>.</li>
+                <li>Create or update the constructor to accept no parameters and pass the font effect's ID ("Xamarin.CustomFontEffect") to the base constructor.</li>
+                <li>Open <b>MainPage.xaml</b> and apply <b>LabelFontEffect</b> in XAML to the second label.</li>
+            </ol>
+        </p>
+
+        <!-- Steps -->
+        <h1>Steps</h1>
+
+        <h2>Create a RoutingEffect</h2>
+        <ol>
+            <li>In the <b>ControlExplorer</b> PCL project, create a new class named <b>LabelFontEffect</b>.</li>
+            <li>Update the class to derive from <code>RoutingEffect</code>.</li>
+            <li>Create or update the constructor to accept no parameters.</li>
+            <li>Call the base constructor passing in the custom font effect's ID: <b>"Xamarin.CustomFontEffect".</b></li>
+<p><a href="#" onclick="toggleCode(this,'CustomFontEffect');return false;" class="uiitem">Show Code</a>
+<div id="CustomFontEffect" style="display:none;">
+<pre class="prettyprint">
+class LabelFontEffect : RoutingEffect
+{
+    public LabelFontEffect() : base("Xamarin.CustomFontEffect")
+    {
+    }
+}</pre></div>
+        </ol>
+
+        <h2>Apply the RoutingEffect in XAML</h2>
+        <ol>
+            <li>Open <b>MainPage.xaml</b>.
+            <li>Add an XML namespace declaration to the root page's open tag. Name it <b>ef</b> and set it to the RoutingEffect's namespace: <b>ControlExplorer</b>.
+                Note: this will already be in your code if you used the provided starter code.</li>
+            <li>Open <b>MainPage.xaml</b> and find the second label. It has no name specified.</li>
+            <li>Use <i>property-element</i> syntax to add an instance of <b>LabelFontEffect</b> to the label's <code>Effects</code> collection.</li>
+           
+<p><a href="#" onclick="toggleCode(this,'ef');return false;" class="uiitem">Show Code</a>
+<div id="ef" style="display:none;">
+<pre class="prettyprint">
+&lt;ContentPage ...
+    xmlns:ef="clr-namespace:ControlExplorer"&gt;
+             
+    &lt;StackLayout x:Name="stackLayout" Padding="20" Spacing="10"&gt;
+        ...
+        &lt;Label Text="Effects are a great way to ..."&gt;
+            &lt;Label.Effects>
+                &lt;ef:LabelFontEffect /&gt;
+            &lt;/Label.Effects&gt;
+        &lt;/Label&gt;</pre></div>
+        </ol>
+
+        <h2>Apply the RoutingEffect in C#</h2>
+        <p>With the <b>RoutingEffect</b> created we can update effect resolution for <b>labelWelcome</b>.
+        <ol>
+            <li>Open <b>MainPage.xaml.cs</b> and find the constructor.</li>
+            <li>Replace the code that resolves "Xamarin.CustomFontEffect" to instead instantiate an instance of <code>LabelFontEffect</code>.</li>
+            <li>Run the application.</li>
+<p><a href="#" onclick="toggleCode(this,'csharp');return false;" class="uiitem">Show Code</a>
+<div id="csharp" style="display:none;">
+<pre class="prettyprint">
+public MainPage()
+{
+    InitializeComponent();
+
+    fontEffect = new LabelFontEffect();
+
+    labelWelcome.Effects.Add(fontEffect);
+}</pre></div>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            In this exercise you created a <code>RoutingEffect</code> and used it to apply the effect in XAML.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>
