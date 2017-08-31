@@ -24,7 +24,7 @@ namespace Fireworks
 
 		partial void UIButton1532_TouchUpInside(UIButton sender)
 		{
-			throw new NotImplementedException();
+			
 		}
 	}
 }

@@ -36,9 +36,8 @@
                                 <rect key="frame" x="118" y="322" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </switch>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1532" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="1532" translatesAutoresizingMaskIntoConstraints="NO">
                                 <rect key="frame" x="183" y="322" width="121" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" colorSpace="calibratedRGB" red="0.43529411764705883" green="0.90588235294117647" blue="0.52549019607843139" alpha="1"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17" weight="heavy"/>
                                 <state key="normal" title="Start">
@@ -48,12 +47,20 @@
                                 <connections>
                                     <action selector="UIButton1532_TouchUpInside:" destination="BYZ-38-t0r" id="1533" eventType="touchUpInside"/>
                                 </connections>
+                                <constraints>
+                                    <constraint id="2413" firstAttribute="width" constant="121"/>
+                                    <constraint id="2414" firstAttribute="height" constant="30"/>
+                                </constraints>
                             </button>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" id="1534" translatesAutoresizingMaskIntoConstraints="NO" fixedFrame="YES">
                                 <rect key="frame" x="118" y="372" width="186" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </slider>
                         </subviews>
+                        <constraints>
+                            <constraint id="2411" firstItem="8bC-Xf-vdC" firstAttribute="trailing" secondItem="1532" secondAttribute="trailing" constant="16"/>
+                            <constraint id="2412" firstItem="8bC-Xf-vdC" firstAttribute="bottom" secondItem="1532" secondAttribute="bottom" constant="128"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

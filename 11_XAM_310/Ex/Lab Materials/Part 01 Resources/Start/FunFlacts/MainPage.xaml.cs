@@ -31,24 +31,38 @@ namespace FunFlacts
 
 		private void InitializeData()
 		{
-            country.ItemsSource = (IList) repository.Countries;
-            country.SelectedItem = CurrentFlag.Country;
-            country.SelectedIndexChanged += (s, e) => CurrentFlag.Country = repository.Countries[country.SelectedIndex];
+			
+
+			country.ItemsSource = (IList) repository.Countries;
+         //   country.SelectedItem = CurrentFlag.Country;
+          //  country.SelectedIndexChanged += (s, e) => CurrentFlag.Country = repository.Countries[country.SelectedIndex];
 
             flagImage.Source = CurrentFlag.GetImageSource();
 
-            adopted.Date = CurrentFlag.DateAdopted;
-            adopted.DateSelected += (s, e) => CurrentFlag.DateAdopted = e.NewDate;
+			BindingContext = CurrentFlag;
 
-            hasShield.IsToggled = CurrentFlag.IncludesShield;
-            hasShield.Toggled += (s, e) => CurrentFlag.IncludesShield = hasShield.IsToggled;
+			//adopted.Date = CurrentFlag.DateAdopted;
+			//  adopted.DateSelected += (s, e) => CurrentFlag.DateAdopted = e.NewDate;
 
-            description.Text = CurrentFlag.Description;
+			//var binding = new Binding
+			//{
+			//	Source = CurrentFlag,
+			//	Path = nameof(CurrentFlag.DateAdopted)
+			//};
+
+			//adopted.SetBinding(DatePicker.DateProperty, binding);
+
+		//	hasShield.IsToggled = CurrentFlag.IncludesShield;
+          //  hasShield.Toggled += (s, e) => CurrentFlag.IncludesShield = hasShield.IsToggled;
+
+          //  description.Text = CurrentFlag.Description;
 		}
 
 		private async void OnShow(object sender, EventArgs e)
 		{
-            await DisplayAlert(CurrentFlag.Country,
+			CurrentFlag.DateAdopted = CurrentFlag.DateAdopted.AddYears(1);
+
+			await DisplayAlert(CurrentFlag.Country,
 				$"{CurrentFlag.DateAdopted:D} - {CurrentFlag.IncludesShield}: {CurrentFlag.MoreInformationUrl}", 
 				"OK");
 		}
