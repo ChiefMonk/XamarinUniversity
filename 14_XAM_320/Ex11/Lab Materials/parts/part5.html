@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 5: Adding unit tests for View Models</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Model-View-ViewModel in Xamarin.Forms</header>
+
+    <section id="main">
+
+    <h1 id="page-title"></h1>
+    <h2>Duration</h2>
+    <p>15 minutes</p>
+        
+    <h2>Goals</h2>
+    <p>
+        This exercise will show how to begin providing unit tests to your View Models. If you are new to unit testing, then make sure to take the <a href="https://university.xamarin.com/classes/xtc101-intro-to-testing">XTC101 - Intro to Unit Testing</a> class.
+    </p>
+
+    <h2>Assets</h2>
+    <p>
+      This lab is a continuation of the previous exercise. You can your existing project or  the completed solution in the <b>Part 04 Resources</b> folder. 
+      There is a completed solution in the <b>Part 05 Resources</b> folder. <br><br>
+      <b>Note</b> - the provided completed solution uses <b>MSTest</b> as the test runner. As a result, the test project will only work in Visual Studio on Windows. You can follow the steps below using <b>NUnit</b> to run the tests on macOS.
+    </p>
+    
+    <h1>Steps</h1>
+
+    <h2>Create service abstractions</h2>
+    <p>
+      Our first step is to provide some abstractions over the coupled dependencies we are using in the classes we want to test. This means creating some interfaces so we can <em>mock</em> them out in our unit tests to control the behavior. In this case, we have to abstract out the static <code>DependencyService</code> class. The <code>IMessageVisualzer</code>, and <code>INavigationService</code> abstractions are already in our infrastructure library.
+    </p>
+
+    <p>
+    In this case, the <b>XamarinUniversity.Infrastructure</b> library has an <a href="https://github.com/xamarinhq/xamu-infrastructure/wiki/IDependencyService">abstraction for DependencyService</a> as well. It looks like this:
+    </p>
+
+<pre class="prettyprint codeblock indent-medium">
+public interface IDependencyService
+{
+    T Get<T>() where T : class;
+}
+</pre>
+
+	<p>
+	In addition, there is a <a href="https://github.com/xamarinhq/xamu-infrastructure/wiki/DependencyServiceWrapper">wrapper class</a> which uses <code>DependencyService</code> to provide the above implementation. It's very simple:
+	</p>
+
+<pre class="prettyprint codeblock indent-medium">
+public class DependencyServiceWrapper : IDependencyService
+{
+    public T Get<T>() where T : class
+    {
+        return DependencyService.Get&lt;T>();
+    }
+}
+</pre>
+
+	<p>
+	You could easily do this abstraction yourself - and you might want to if you decided to use a different Service Locator implementation. However, for simplicity, we'll use this version. You would need to do this same abstraction for each concrete type you need to be able to mock out or replace for testing purposes.
+	</p>
+
+    <h2>Change the code to use the abstractions</h2>
+    <p>
+      We have one step before we can start building unit tests - we need to use the <code>DependencyService</code> abstraction instead of the real implementation.
+    </p>
+    <ol>
+      <li>
+        Open the <b>MainViewModel.cs</b> file in <b>ViewModels</b>. It uses the Xamarin.Forms <code>DependencyService</code>, but to unit test it, we need it to use our <code>IDepdendencyService</code> instead. In addition, the unit test needs to <em>replace</em> the implementation so it has control of it.<br /><br/> 
+
+        Ideally, we'd pass in the <code>IDependencyService</code> into the constructor so we are using <em>dependency injection</em> to get the service but there's a problem with that. In this case, our <code>MainViewModel</code> is being <em>created</em> by the <code>DependencyService</code> class from our registration in <b>App.xaml.cs</b>. The problem is there's no way to customize that creation - the class <em>must</em> have a default constructor!<br/><br/>
+
+        This is a common problem when retrofitting classes for unit testing, and it turns out there's an easy solution. Create two constructors - one that takes the <code>IDependencyService</code> interface, and another, default one, that passes our <code>DependencyServiceWrapper</code> to the first.<br/><br/>
+
+        Our code will continue to use the default constructor to create the view model, and that constructor will then pass in a valid service to the parameterized form. Our unit tests will simply use the parametrized form directly. This is a fairly neat and elegant solution to the problem. Make sure to save the passed interface off in a field in the view model.
+      </li>
+  </ol>
+
+<p><a href="#" onclick="toggleCode(this,'newctor');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="newctor" style="display:none;">
+<pre class="prettyprint">
+public class MainViewModel
+{
+   	<mark>IDependencyService serviceLocator;</mark>
+
+	public MainViewModel() <mark>: this(new XamarinUniversity.Services.DependencyServiceWrapper())</mark>
+	{
+	}
+
+	public MainViewModel(<mark>IDependencyService serviceLocator</mark>)
+	{
+	    <mark>this.serviceLocator = serviceLocator;</mark>
+	    ...
+	}
+}
+</pre>
+</div></p> 
+
+	<ol start="2">
+      <li>
+        Go through the <code>MainViewModel</code> and replace the <code>DependencyService</code> usage with your new field.
+      </li>
+
+      <li>
+        We are using <code>DependencyService</code> in a few other places, but we don't have to change all of them. For example, the <b>App.xaml.cs</b> code uses it to wire everything up - we won't be unit testing that functionality (since it's Xamarin.Forms infrastructure pieces). But some places we will want to also fix - the other place we are using the <code>DependencyService</code> is in the <code>QuoteManager</code>. Open the source file (<b>QuoteManager.cs</b> in the <b>Data</b> folder) and change it to pass in the <code>IQuoteLoader</code> to the two methods.
+      </li>
+
+      <div class="hintblock">
+      <b>Note:</b> we could also pass in the <code>IDependencyService</code> here and have each method look up what it needs. However, this makes it a bit harder to see what the methods actually depend on, so when there is a limited number of dependencies, it's generally recommend to inject/pass in exactly what's really needed. But, it's certainly a valid approach.
+      </div>
+  </ol>
+
+<p><a href="#" onclick="toggleCode(this,'quoteMgr2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="quoteMgr2" style="display:none;">
+<pre class="prettyprint">
+public static class QuoteManager
+{
+	public static IEnumerable&lt;GreatQuote> Load(<mark>IQuoteLoader loader</mark>)
+	{
+		if (loader == null)
+			throw new Exception("Missing quote loader from platform.");
+
+		return loader.Load();
+	}
+
+	public static void Save(<mark>IQuoteLoader loader</mark>, IEnumerable&lt;GreatQuote> quotes)
+	{
+		if (loader == null)
+			throw new Exception("Missing quote loader from platform.");
+
+		loader.Save(quotes);
+	}
+}
+</pre>
+</div></p>
+
+
+  <ol start="4">
+      <li>
+        Modify the two spots where <b>QuoteManager.cs</b> is used to lookup the <code>IQuoteLoader</code> and pass it in. The first is in the <code>MainViewModel</code> constructor and the second is in the <b>App.xaml.cs</b> <code>OnSleep</code> method. In the latter case, you can just use the normal <code>DependencyService</code> since we won't test this method directly (it's protected and called by the framework).
+      </li>
+		<li>
+	        Build and run the application to make sure it's all still working with our abstractions in place. Once everything looks good, it's time to start writing some unit tests!
+		</li>
+	</ol>
+
+  <h2>Creating the Unit Test project and mocks</h2>
+    <p>
+      Now we are ready to start creating tests. Let's begin by creating the test project.
+    </p>
+    <ol>
+      <li>
+        If you are using Visual Studio for Mac, add a new <b>NUnit Library Project</b> to your solution. This is found under <b>Other > .NET > NUnit Library Project</b>. If you are using Visual Studio, then the default testing library is MSTest; you can use NUnit but it requires an <a href="https://visualstudiogallery.msdn.microsoft.com/6ab922d0-21c0-4f06-ab5f-4ecd1fe7175d">optional extension</a> and <a href="https://visualstudiogallery.msdn.microsoft.com/6cd55f79-4936-49e7-b81d-c40fcd81abc7">project templates</a>. For MSTest, add a new <b>Unit Test Project</b> to the solution - this is found under the <b>Visual C# > Test</b> category in Visual Studio.
+      </li>
+
+      <li>
+        Add a reference to the <b>GreatQuotes</b> assembly - this is the one we want to test as it has most of our code and logic in it.
+      </li>
+
+      <li>
+        Since that assembly depends on the <b>XamarinUniversity.Infrastructure</b> types, add a NuGet reference in the unit test project to that package. This will also drag in Xamarin.Forms, but we won't actually write any tests or use any types from that assembly.
+      </li>
+
+      <li>
+        Since we want to mock out out services, create a folder named <b>Stubs</b> in the test project. We'll place all our "mocks" here.
+      </li>
+
+      <li>
+        We want to work with some sample quotes - but not necessarily with the real database (unit tests shouldn't talk to a real database). So, let's start by mocking out the <code>IQuoteLoader</code>. Create a class named <b>QuoteLoaderStub</b> in the <b>Stubs</b> folder.
+      </li>
+
+      <li>
+        Have the class implement <code>IQuoteLoader</code>. We could just fill it in with some sample data in an internal list, but it's tedious to create sample data - especially when there are tools to do that for us.
+      </li>
+
+      <li>
+        Add a Nuget reference to the <b>AutoFixture</b> package. Then use the following implementation for your <b>QuoteLoaderStub</b>:
+      </li>
+
+<pre class="prettyprint codeblock">
+using GreatQuotes.Data;
+using System.Collections.Generic;
+using System.Linq;
+using Ploeh.AutoFixture;
+
+namespace GreatQuotes.Tests.Unit
+{
+  public class QuoteLoaderStub : IQuoteLoader
+  {
+    private IList&lt;GreatQuote> quotes;
+
+    public QuoteLoaderStub ()
+    {
+        quotes = new Fixture()
+            .CreateMany&lt;GreatQuote>(20)
+            .ToList();
+    }
+
+    public IEnumerable&lt;GreatQuote> Load()
+    {
+      return quotes;
+    }
+
+    public void Add (GreatQuote quote)
+    {
+      quotes.Add (quote);
+    }
+
+    public void Save (IEnumerable&lt;GreatQuote> quotes)
+    {
+    }
+  }
+}
+</pre>
+
+      <li>
+        Next, let's implement the <code>IDependencyService</code> stub. Create a new source file named <b>DependencyServiceStub</b> in the <b>Stubs</b> folder and use the following (simple) implementation to hold our services:
+      </li>
+
+<pre class="prettyprint codeblock">
+public class DependencyServiceStub : IDependencyService
+{
+  readonly Dictionary&lt;Type, object> registeredServices = new Dictionary&lt;Type, object>();
+
+  public void Register&lt;T>(object impl)
+  {
+    this.registeredServices[typeof(T)] = impl;
+  }
+    
+  public T Get&lt;T> () where T:class
+  {
+    return (T)registeredServices[typeof(T)];
+  }
+}
+</pre>
+
+      <li>
+        Next, implement the <code>IMessageVisualizerService</code> stub. In this case we want to know when the service is invoked (to be able to test that a message was displayed). We could make this as complex as we like, controlling setup and outcome, but for simplicity, let's start with this implementation:
+      </li>
+
+<pre class="prettyprint codeblock">
+public class MessageVisualizerServiceStub : IMessageVisualizerService
+{
+    public bool ShowMessageWasCalled { get; set; }
+    public Task&lt;bool> ShowMessage(string title, string message, 
+                            string ok, string cancel = null)
+    {
+        ShowMessageWasCalled = true;
+        return Task.FromResult(true);
+    }
+}
+</pre>
+      </li>
+
+      <li>
+        Using <code>Task.FromResult</code> allows us to conform to the async nature of the real service, but not actually use any additional threads (so we don't have to work about synchronizing it back to our unit test).
+      </li>
+
+      <li>
+        Finally, use the following implementation for the <code>INavigationService</code> stub:
+      </li>
+<pre class="prettyprint codeblock">
+public class NavigationServiceStub : INavigationService
+{
+  public object CurrentPage { get; set; }
+
+    public Task NavigateAsync(object pageKey, object viewModel = null)
+    {
+        this.CurrentPage = pageKey;
+        return Task.FromResult(0);
+    }
+
+    public bool CanGoBack { get; set; }
+
+    public Task GoBackAsync()
+    {
+        return Task.FromResult(0);
+    }
+
+    public Task PushModalAsync(object pageKey, object viewModel = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task PopModalAsync()
+    {
+        throw new NotImplementedException();
+    }
+}
+</pre>
+    </ol>
+
+    <h2>Setup the Test Environment</h2>
+    <p>
+      We're almost ready to start writing some tests! Before we do, let's setup our mock environment.
+    </p>
+
+      <div id="ide-selector" class="indent-medium">
+            Select the Unit Testing framework you want to work with:&nbsp;&nbsp;
+            <a href="#" data-name="xs">NUnit (XS or VS)</a> or&nbsp;&nbsp;
+            <a href="#" data-name="vs">MSTest (VS)</a>
+      </div>
+
+      <div class="hintblock">
+      <b>Note:</b> NUnit and MSTest are very similar in design; in fact so much so that you can often switch between them fairly easily by substituting the attributes that are used to identify the tests. The <b>Completed</b> solution has a nifty set of <code>using</code> statements which allow you to switch back and forth by defining a <code>#define</code> at the top of the file. Check that final solution out if you are interested in seeing how to support both testing frameworks with one codebase.
+      </div>
+
+   <ide name="xs">
+    <ol>
+      <li>
+        Open the single test file (or create a new source file if one was not included in your project). Rename or name the file "MainViewModelTests". Make sure your class is decorated with a <code>[TestFixture]</code> attribute.
+      </li>
+
+      <li>
+        Add a method named <code>Setup</code> to the class and decorate it with the <code>[OneTimeSetUp]</code> attribute. This will cause it to be run before any tests are executed.
+      </li>
+
+      <li>
+        Create a new <code>DependencyServiceStub</code> and register the three services we need (<code>IQuoteLoader</code>, <code>INavigationService</code> and <code>IMessageVisualizerService</code>). Make sure to use our stub implementations.
+      </li>
+
+      <li>
+        Save the <code>DependencyServiceStub</code> in an instance field of the class.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'testFixtureSetup1');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="testFixtureSetup1" style="display:none;">
+<pre class="prettyprint">
+[TestFixture]
+public class MainViewModelTests
+{
+  IDependencyService dependencyService;
+
+  [OneTimeSetUp]
+  public void Setup()
+  {
+    var ds = new DependencyServiceStub ();
+    ds.Register&lt;IQuoteLoader>(new QuoteLoaderStub());
+    ds.Register&lt;INavigationService>(new NavigationServiceStub());
+    ds.Register&lt;IMessageVisualizerService>(new MessageVisualizerServiceStub());
+
+    dependencyService = ds;
+  }
+}
+</pre>
+</div></p>
+
+    <h2>Write the first unit test</h2>
+    <p>
+      Let's start out by creating a simple unit test to verify that the <code>MainViewModel</code> loads 20 quotes from our dummy quote Loader. If the template included a sample method, you can replace or remove it.
+    </p>
+
+    <ol>
+      <li>
+        Create a new test method named <code>MainViewModel_Should_load_quotes_with_new_vm</code>. The long name ensures we know what's being tested when we look in the Unit Test runner window.
+      </li>
+      <li>Decorate the class with a <code>[Test]</code> attribute.</li>
+      <li>
+        Create a new <code>MainViewModel</code> and pass it our mocked out dependency service field.
+      </li>
+      <li>
+        Verify that we have 20 quotes in the <code>Quotes</code> collection. We don't care about the _contents_ of those quotes since they were randomly generated, all we are looking for here is the quantity.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'firstUnitTest1');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="firstUnitTest1" style="display:none;">
+<pre class="prettyprint">
+[Test]
+public void MainViewModel_Should_load_quotes_with_new_vm()
+{
+  var vm = new MainViewModel (dependencyService);
+  Assert.AreEqual (20, vm.Quotes.Count);
+}
+</pre>
+</div></p>    
+
+    <ol start="5">
+      <li>Run the test and verify that it passes.</li>
+    </ol>
+
+	</ide>
+
+	<ide name="vs">
+   <ol>
+      <li>
+        Open the single test file (or create a new source file if one was not included in your project). Rename or name the file "MainViewModelTests". Make sure your class is decorated with a <code>[TestClass]</code> attribute.
+      </li>
+
+      <li>
+        Add a static method named <code>Setup</code> that takes a <code>TestContext</code> to the class and decorate it with the <code>[AssemblyInitialize]</code> attribute. This will cause it to be run before any tests are executed.
+      </li>
+
+      <li>
+        Create a new <code>DependencyServiceStub</code> and register the three services we need (<code>IQuoteLoader</code>, <code>INavigationService</code> and <code>IMessageVisualizerService</code>). Make sure to use our stub implementations.
+      </li>
+
+      <li>
+        Save the <code>DependencyServiceStub</code> in an instance field of the class.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'testFixtureSetup2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="testFixtureSetup2" style="display:none;">
+<pre class="prettyprint">
+[TestClass]
+public class MainViewModelTests
+{
+    static IDependencyService dependencyService;
+
+    [AssemblyInitialize]
+    public static void Setup(TestContext context)
+    {
+        var ds = new DependencyServiceStub();
+        ds.Register &lt;IQuoteLoader>(new QuoteLoaderStub());
+        ds.Register &lt;INavigationService>(new NavigationServiceStub());
+        ds.Register &lt;IMessageVisualizerService>(new MessageVisualizerServiceStub());
+
+        dependencyService = ds;
+    }
+    ...
+}
+</pre>
+</div></p>
+
+    <h2>Write the first unit test</h2>
+    <p>
+      Let's start out by creating a simple unit test to verify that the <code>MainViewModel</code> loads 20 quotes from our dummy quote Loader. If the template included a sample method, you can replace or remove it.
+    </p>
+
+    <ol>
+      <li>
+        Create a new test method named <code>MainViewModel_Should_load_quotes_with_new_vm</code>. The long name ensures we know what's being tested when we look in the Unit Test runner window.
+      </li>
+      <li>Decorate the class with a <code>[TestMethod]</code> attribute.
+      <li>
+        Create a new <code>MainViewModel</code> and pass it our mocked out dependency service field.
+      </li>
+      <li>
+        Verify that we have 20 quotes in the <code>Quotes</code> collection. We don't care about the _contents_ of those quotes since they were randomly generated, all we are looking for here is the quantity.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'firstUnitTest2');return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="firstUnitTest2" style="display:none;">
+<pre class="prettyprint">
+[TestMethod]
+public void MainViewModel_Should_load_quotes_with_new_vm()
+{
+  var vm = new MainViewModel (dependencyService);
+  Assert.AreEqual (20, vm.Quotes.Count);
+}
+</pre>
+</div></p>  
+
+    <ol start="5">
+      <li>Run the test and verify that it passes.</li>
+    </ol>
+
+	</ide>
+
+    <h2>Add more tests</h2>
+    <p>
+      Here are some other tests we might add into the project -- the <b>Completed</b> project has all of these filled out:
+    </p>
+
+    <table class="grid indent-medium">
+      <tr>
+        <th>Method</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>MainViewModel_AddQuote<br/>_should_go_to_edit_page</td>
+        <td>This should execute the <code>AddQuote</code> command and verify that the navigation service stub is on the <code>AppPage.EditPage</code>.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_AddQuote<br/>_should_go_add_selected_quote</td>
+        <td>This should execute the <code>AddQuote</code> command and verify that it adds a new quote to the <code>Quotes</code> collection.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_EditQuote<br/>_should_go_to_edit_page</td>
+        <td>This should execute the <code>EditQuote</code> command and verify that the navigation service stub is on the <code>AppPage.EditPage</code>.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_EditQuote<br/>_should_go_to_edit_page</td>
+        <td>This should execute the <code>EditQuote</code> command and verify that the navigation service stub is on the <code>AppPage.EditPage</code>.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_DeleteQuote<br/>_should_show_message</td>
+        <td>This should execute the <code>DeleteQuote</code> command and verify that the message visualizer service mock was called.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_DeleteQuote<br/>_should_remove_quote</td>
+        <td>This should execute the <code>DeleteQuote</code> command and verify that the passed quote is removed from the <code>Quotes</code> collection.</td>
+      </tr>
+      <tr>
+        <td>MainViewModel_DeleteQuote<br/>_should_set_next_quote_as_selected</td>
+        <td>This should execute the <code>DeleteQuote</code> command, passing the first quote in the <code>Quotes</code> collection and verify that when it returns, the <code>SelectedQuote</code> property is set to the <em>next</em> quote in the list.</td>
+      </tr>      
+    </table>
+
+    <h2>(Optional) Dealing with asynchronous code</h2>
+    <p>
+      You might recall that the commands are all asynchronous because they rely on either the <code>INavigationService</code> and the <code>IMessageVisualizerService</code>. If we relied on the real services, this would be a problem because the test wouldn't know when these async tasks are completed. There are two ways to handle this:
+    </p>
+      <ol>
+        <li>
+          Remove the async nature from the command. This is essentially what we've done here - we mocked out the services to return a <code>Task</code> but not be async. That means the tasks are completing on the thread they are started on and when the calls to the command returns, the function itself was completely done. This is a guaranteed optimization of the <code>async/await</code> functionality in C# that we can take advantage of here.
+        </li>
+        <li>
+          Provide a way to access the <code>Task</code> being returned by the commanding methods. You could do this by testing the methods directly (instead of the commands), or by deriving from <code>Command</code> and providing another method that returns the <code>Task</code> which your unit tests would use - abstract it behind an interface for generalization. The <b>XamarinUniversity.Infrastructure</b> library has just an abstraction names <a href="https://github.com/xamarinhq/xamu-infrastructure/wiki/IAsyncDelegateCommand">IAsyncDelegateCommand</a> which looks like this:
+        </li>
+
+<pre class="prettyprint codeblock">
+public interface IAsyncDelegateCommand : ICommand
+{
+    Task ExecuteAsync(object parameter);
+}
+</pre>
+        <li>
+          It also has an implementation of this named <a href="https://github.com/xamarinhq/xamu-infrastructure/wiki/AsyncDelegateCommand">AsyncDelegateCommand</a> which provides the necessary method.
+        </li>
+        <li>
+          Your View Model code could use this abstraction and implementation to expose the commands and the unit test could then use the <code>IAsyncCommand</code> to get the returning <code>Task</code> and <code>await</code> on it so the test waits for the asynchronous operation to complete before continuing. You can try the above approach out by changing the message visualization service to have a <code>Task.Delay</code> in it to simulate a pause for user interaction. This will break all of the <b>DeleteQuote</b> unit tests because the command will return before the method is complete.
+        </li>
+      </ol>
+    <p>
+      The project in the <b>Final</b> directory has asynchronous support.</p>
+    </p>
+
+    <h2>(Optional) refactor our core code</h2>
+    <p>
+    Currently, we are running tests on the PCL associated with the Xamarin.Forms application. That means we are seeing other types we can't test such as XAML files and visual things. In addition, because the View Models are using the <code>Command</code> object, we have an inherent tie to Xamarin.Forms in each View Model. We can restructure the project to break these dependencies so that all the tested code lives in a "core" assembly and the Unit Test project tests all the elements in that project. This allows us to see full code coverage statistics because we have isolated the testable pieces. The project in the <b>Final</b> folder has a restructured version of the app.
+    </p>
+
+    <h1>Summary</h1>
+    <p>
+      In this demonstration, we've created some unit tests for our View Model by adding a new unit test library, creating abstractions for the code dependencies and then mocking out those abstractions in our unit tests. There is a completed version of the project in the <b>Part 05 Resources</b> folder. In addition, there is a <b>Final</b> project in <b>Part 05 Resources</b> which has the completely separated code into UI and Core using the approaches outlined above.
+    </p>
+        
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>
