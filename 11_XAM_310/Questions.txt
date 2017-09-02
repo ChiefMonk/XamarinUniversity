@@ -1,0 +1,1 @@
+1. Does the BindingContext always has to be set before the InitializeComponent? If yes, why? : Yes, efficient

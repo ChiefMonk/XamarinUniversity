@@ -3,8 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FunFlacts"
              xmlns:eff="clr-namespace:FunFlacts.Effects"
+             xmlns:converters="clr-namespace:FlagData.Converters;assembly=FlagData"
+             xmlns:data="clr-namespace:FlagData;assembly=FlagData"
              x:Class="FunFlacts.MainPage"
              Title="Fun with Flags">
+	
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<converters:ImageUrlConverter x:Key="irConverter" ResolvingAssemblyType="{x:Type data:Flag}"  />
+		</ResourceDictionary>
+	</ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Previous"
@@ -25,22 +33,22 @@
                 </OnPlatform>
             </StackLayout.Padding>
 
-            <Image x:Name="flagImage" HeightRequest="200" 
+			<Image x:Name="flagImage" HeightRequest="200" Source="{Binding CurrentFlag.ImageUrl, Converter={StaticResource irConverter}, Mode=OneWay}"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     Aspect="AspectFit" />
 
-            <Picker x:Name="country" SelectedItem="{Binding Country, Mode=TwoWay}" />
+            <Picker x:Name="country" SelectedItem="{Binding Countries, Mode=TwoWay}" />
 
             <Label Text="Current Design was Adopted on" FontAttributes="Bold" />
             <DatePicker MinimumDate="01/01/1700" HorizontalOptions="Start" 
-                        Date="{Binding DateAdopted, Mode=TwoWay}" />
+                        Date="{Binding CurrentFlag.DateAdopted, Mode=TwoWay}" />
 
             <Label Text="Has Shield" FontAttributes="Bold" />
-            <Switch IsToggled="{Binding IncludesShield, Mode=TwoWay}" />
+			<Switch IsToggled="{Binding CurrentFlag.IncludesShield, Mode=TwoWay}" />
 
             <Label Text="Fun Fact" FontAttributes="Bold" />
-            <Label Text="{Binding Description}" />
+			<Label Text="{Binding CurrentFlag.Description}" />
 
             <Label x:Name="moreInfo" Text="More Information" Margin="0,0,10,0"
                     TextColor="Blue" HorizontalOptions="End">

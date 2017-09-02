@@ -30,16 +30,16 @@
                     VerticalOptions="Center"
                     Aspect="AspectFit" />
 
-            <Picker x:Name="country" />
+			<Picker x:Name="country" Title="{Binding Country Mode=TwoWay}" />
 
             <Label Text="Current Design was Adopted on" FontAttributes="Bold" />
-            <DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start" />
+			<DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start" Date="{Binding DateAdopted, Mode=TwoWay}" />
 
             <Label Text="Has Shield" FontAttributes="Bold" />
-            <Switch x:Name="hasShield" />
+			<Switch x:Name="hasShield" IsToggled="{Binding IncludesShield, Mode=TwoWay}" />
 
             <Label Text="Fun Fact" FontAttributes="Bold" />
-            <Label x:Name="description" />
+            <Label x:Name="description" Text="{Binding Description}" />
 
             <Label x:Name="moreInfo" Text="More Information" Margin="0,0,10,0"
                     TextColor="Blue" HorizontalOptions="End">

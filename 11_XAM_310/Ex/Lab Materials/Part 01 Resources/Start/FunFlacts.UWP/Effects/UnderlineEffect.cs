@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.UI.Xaml.Controls;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.UWP;
 
@@ -35,14 +36,22 @@ namespace FunFlacts.UWP.Effects
             var label = Control as TextBlock;
             if (label != null)
             {
-                if (on)
-                {
-                    label.TextDecorations |= Windows.UI.Text.TextDecorations.Underline;
-                }
-                else
-                {
-                    label.TextDecorations &= ~Windows.UI.Text.TextDecorations.Underline;
-                }
+	            try
+	            {
+		            if (on)
+		            {
+			            label.TextDecorations |= Windows.UI.Text.TextDecorations.Underline;
+		            }
+		            else
+		            {
+			            label.TextDecorations &= ~Windows.UI.Text.TextDecorations.Underline;
+		            }
+				}
+	            catch (Exception e)
+	            {
+		           
+	            }
+                
             }
         }
     }

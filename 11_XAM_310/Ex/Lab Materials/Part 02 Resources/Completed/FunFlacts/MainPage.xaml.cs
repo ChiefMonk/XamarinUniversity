@@ -32,10 +32,10 @@ namespace FunFlacts
 		private void InitializeData()
 		{
 			country.ItemsSource = (IList) repository.Countries;
-			flagImage.Source = CurrentFlag.GetImageSource();
+		//	flagImage.Source = CurrentFlag.GetImageSource();
 
 			// Set the binding context
-			this.BindingContext = CurrentFlag;
+			this.BindingContext = new {Countries= repository.Countries, CurrentFlag };
 		}
 
 		private async void OnShow(object sender, EventArgs e)
