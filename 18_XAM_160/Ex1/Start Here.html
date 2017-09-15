@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>SQLite in Mobile Data</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+            This class uses labs based on Xamarin.Forms to demonstrate cross-platform mobile data capabilities on iOS, Android and Windows. To complete the coding exercises, you will need a Xamarin development environment with either a simulator/emulator or
+            a device to run the exercise on. Please read the <a href="https://university.xamarin.com/resources/setup-requirements">setup requirements</a> if you need help installing the Xamarin development environment.
+        </p>
+
+        <h2>Overview</h2>
+        <p>
+            This session shows how to use a local SQLite database within your Xamarin projects, targeting Android, iOS, and Windows with the help of Xamarin.Forms.
+        </p>
+
+        <h2>Objectives</h2>
+        <ol>
+            <li>Choose a data storage strategy</li>
+            <li>Store data locally with SQLite</li>
+            <li>Use SQLite asynchronously</li>
+        </ol>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">XAM160 - SQLite in Mobile</a></p>
+
+        <h2>Exercises</h2>
+        <ol>
+
+            <li>
+                <div class="objective">Determine your database file path</div>
+                <a href="./parts/part1.html">Exercise</a>
+                <br /> In this exercise, you will determine the location for a SQLite database file for each platform and then write code to create each of these paths. You will also practice a common pattern, passing platform-specific values from the
+                platform projects into a shared PCL.
+            </li>
+            <li>
+                <div class="objective">Add SQLite.Net to your projects</div>
+                <a href="./parts/part2.html">Exercise</a>
+                <br /> In this exercise, you will add the SQlite.Net component to your projects.
+            </li>
+            <li>
+                <div class="objective">Access a SQLite database with SQLite.Net</div>
+                <a href="./parts/part3.html">Exercise</a>
+                <br /> In this exercise, you you will create and connect to a SQLite database using SQLite.Net and perform some basic CRUD operations.
+            </li>
+
+            <li>
+                <div class="objective">Access a SQLite database using asynchronous methods</div>
+                <a href="./parts/part4.html">Exercise</a>
+                <br /> In this exercise, you will refactor your solution to make asynchronous calls to the SQLite database.
+            </li>
+        </ol>
+
+        <h2>Additional resources</h2>
+        <p>
+            Here are the <a target="_blank" href="https://university.xamarin.com/faq/xam160-data-in-mobile">Frequently Asked Questions</a> about using SQLite in Mobile.</p>
+
+        <h3>Other options</h3>
+        <p>
+            While we are focusing on SQLite.Net in this course, there are other ORM options available - including some preliminary support for Entity Framework Core. See <a href="https://blog.xamarin.com/building-android-apps-with-entity-framework/">this blog post</a>            for more information.
+        </p>
+
+        <h3>Working with the File System</h3>
+        <p>
+            In this class we will be utilizing SQLite.Net to store relational data, however we will be storing it locally on the device's file system. We aren't diving deep into the local file system itself, other than to show where the database file should be placed,
+            however you can check out other resources if you want to store other types of files.</p>
+
+        <strong class="indent-medium">Common</strong>
+        <div class="wslist">
+            <a href="http://arteksoftware.com/deploying-a-database-file-with-a-xamarin-forms-app">Deploying a database file with a Xamarin.Forms app</a>
+        </div>
+        <br />
+
+        <strong class="indent-medium">iOS</strong>
+        <div class="wslist">
+            <a href="http://developer.xamarin.com/Guides/ios/Application_Fundamentals/Working_with_the_File_System/">Working with the iOS File System (Xamarin)</a>
+            <a href="https://developer.apple.com/library/ios/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW2">iOS File System Basics (Apple Developer Documentation)</a>
+        </div>
+        <br />
+
+        <strong class="indent-medium">Android</strong>
+        <div class="wslist">
+            <a href="http://developer.xamarin.com/recipes/android/data/files/browse_files/">Browsing a File Browser in Android (Xamarin)</a>
+            <a href="http://developer.android.com/guide/topics/data/data-storage.html">Storage Options in Android (Google)</a>
+        </div>
+        <br />
+
+        <strong class="indent-medium">UWP</strong>
+        <div class="wslist">
+            <a href="https://docs.microsoft.com/en-us/windows/uwp/files/">Files, folders, and libraries (MSDN)</a>
+        </div>
+        <br />
+
+        <h3>Using SQLite-Net PCL</h3>
+        <p>
+            We will be using the <a href="http://www.nuget.org/packages/sqlite-net-pcl/">SQLite-Net PCL on Nuget</a> from <a href="https://twitter.com/praeclarum">Frank Krueger</a> to access SQLite databases on the device. Here are some additional resources
+            you might find valuable.
+        </p>
+        <div class="wslist">
+            <a href="https://www.sqlite.org/">SQLite home page</a>
+            <a href="https://github.com/praeclarum/sqlite-net">Source Code for SQLite-Net PCL</a>
+            <a href="https://bitbucket.org/twincoders/sqlite-net-extensions">Extensions for Foreign Key relationships</a>
+            <a href="http://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database">Efficiently inserting multiple records in SQLite</a>
+        </div>
+
+        <h3>Xamarin Documentation</h3>
+        <div class="wslist">
+            <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/">Cross-Platform Data Access</a>
+            <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_1_introduction/">Data Access: Introduction</a>
+            <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_2_configuration/">Data Access: Configuration</a>
+            <a href="http://developer.xamarin.com/guides/cross-platform/xamarin-forms/working-with/databases/">Working with a Local Database</a>
+        </div>
+
+        <h3>Tutorials and walkthroughs (for more experience)</h3>
+        <div class="wslist">
+            <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_3_using_sqlite_orm/">Data Access: Using SQLite.Net ORM</a>
+            <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/data/part_5_using_data_in_an_app/">Data Access: Using Data in an App</a>
+        </div>
+    </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+</body>
+
+</html>

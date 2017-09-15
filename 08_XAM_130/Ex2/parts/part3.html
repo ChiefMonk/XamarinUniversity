@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+	<title>Exercise 3: Cleanup the XAML code and tailor the UI to the platform</title>
+	<link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+	<link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+	<link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+	<!-- Use the same title as the StartHere -->
+	<header>XAML in Xamarin.Forms</header>
+
+	<section id="main">
+
+		<h1 id="page-title"></h1>
+		<h2>Duration</h2>
+		<p>15 minutes</p>
+
+		<h2>Goals</h2>
+		<p>
+			This exercise will continue modifying our <b>Calculator</b> application and consolidate the colors used into a shared resource,
+			and setup the <code>Padding</code> property to adjust for iOS vs. Android / Windows.
+		</p>
+
+		<h2>Challenge</h2>
+		<p>
+			This exercise takes our existing <b>Calculator</b> application and modifies the XAML to share some of the repeated values as static
+			properties - specifically the colors being used. It will then properly adjust the <code>Padding</code> so we keep the page below the
+			carrier bar on iOS. Finally, we will turn on XAMLC - the XAML compiler.
+		</p>
+
+		<div class="hintblock">
+			<b>Note:</b> we are going to use the <code>{x:Static}</code> markup extension to load property values from a C# class.
+			This technique can be useful when you need to load values that you calculate at runtime.
+			For static values like the colors we will load here you would use XAML resources instead.
+			XAML resources are covered in 
+			<a href="https://university.xamarin.com/classes/track/xamarin-forms#xam140-resources-and-styles">XAM140 - Resources and Styles in Xamarin.Forms</a>. 
+		</div>
+
+		<p>Here are the basic steps you will go through:</p>
+		<ol class="indent-medium">
+			<li>
+				Identify common resources we can potentially share and create a public static class in C# to define public, static properties. We will focus on a few colors in this case.
+			</li>
+			<li>
+				Apply the resource each place the value is used using a markup extension.
+			</li>
+
+			<p class="indent-none">
+				<a href="#" onclick="toggleBlock(this, 'whatIsMext', 'What is a Markup Extension?', 'Hide'); return false;" class="uiitem">What is a Markup Extension?</a>
+				<div class="indent-none wsblock" id="whatIsMext" style="display:none;">
+					<div class="wsitem">
+						<b>XAML Markup Extensions</b><br />
+			<p>
+				XAML allows for extension through the use of markup extensions, and Xamarin.Forms comes with <a href="http://developer.xamarin.com/guides/cross-platform/xamarin-forms/Xaml-for-Xamarin-forms/xaml_markup_extensions/">several useful built-in extensions</a> which mirror the ones available on Microsoft's platforms.
+			</p>
+			</div>
+			</div></p>
+
+			<li>
+				Set a platform-specific <code>Padding</code> property on the <code>ContentPage</code> so the app does not sit on top of the carrier bar in iOS.
+			</li>
+
+			<p class="indent-none">
+				<a href="#" onclick="toggleBlock(this, 'devExtensions', 'How do I specify platform-specific values in XAML?', 'Hide'); return false;" class="uiitem">How do I specify platform-specific values in XAML?</a>
+				<div class="indent-none wsblock" id="devExtensions" style="display:none;">
+					<div class="wsitem">
+						<b>Platform-Specific values</b><br />
+			<p>
+				In addition, you can supply platform-specific values in XAML using the <code>OnPlatform&lt;T&gt;</code> class. For example, you can set the <code>Padding</code> property for your page to be different on iOS vs. the other platforms like this:
+<pre class="prettyprint codeblock">
+&lt;ContentPage ...>
+   &lt;ContentPage.Padding>
+       &lt;OnPlatform x:TypeArguments="Thickness">
+         &lt;OnPlatform.iOS>
+           0, 20, 0, 0
+         &lt;/OnPlatform.iOS>
+         &lt;OnPlatform.Android>
+           0, 0, 0, 0
+         &lt;/OnPlatform.Android>
+         &lt;OnPlatform.WinPhone>
+           0, 0, 0, 0
+         &lt;/OnPlatform.WinPhone>
+       &lt;/OnPlatform>
+     &lt;/ContentPage.Padding>
+&lt;/ContentPage>
+</pre>
+			</p></div></div></p>
+
+			<li>
+				Activate the XAMLC compiler for the calculator assembly.
+			</li>
+		</ol>
+
+		<h1>Steps</h1>
+
+		<h2>Create a static C# resource class</h2>
+		<p>
+			As a first step, let's create a C# static class to place our shared values in.
+		</p>
+		<ol>
+			<li>
+				Add a new source file to the project - name it <b>SharedResources</b>.
+			</li>
+			<li>
+				Make the class <code>static</code> and remove the constructor if one was created for you (static classes cannot have instance constructors).
+			</li>
+		</ol>
+
+		<p>
+			<a href="#" onclick="toggleCode(this,'resourceClass');return false;" class="uiitem">Show Code</a><div class="indent-large" id="resourceClass" style="display:none;">
+<pre class="prettyprint">
+public static class SharedResources
+{
+}
+</pre>
+			</div>
+		</p>
+
+		<h2>Move duplicate values into the resource class</h2>
+		<ol>
+			<li>
+				Locate one of the operator buttons - these all have an orange <code>BackgroundColor</code> defined as a hex string.
+			</li>
+			<li>
+				Create a new <code>Color</code> public static property in the <code>SharedResources</code> class - name it <b>OpButtonBkColor</b> and set the value to the color defined in XAML (<code>Color.FromRgb(0xff, 0xa5, 0)</code>).
+			</li>
+			<li>
+				Use the <code>{x:Static}</code> markup extension to get the value from the property on each of the operator buttons.
+				<ul class="indent-none">
+					<li>
+						You will need to define the namespace for XAML to know where <code>SharedResources</code> is located. The lab solution has it in the namespace "Calculator", but check your C# source file to verify you are using the correct namespace.
+					</li>
+				</ul>
+			</li>
+		</ol>
+
+		<p>
+			<a href="#" onclick="toggleCode(this,'orangeColor');return false;" class="uiitem">Show Code</a><div class="indent-large" id="orangeColor" style="display:none;">
+<pre class="prettyprint">
+public static class SharedResources
+{
+   <span class="highlight">public static Color OpButtonBkColor
+   {
+      get { return Color.FromRgb(0xff, 0xa5, 0); }
+   }</span>
+}
+...
+&lt;Button Text="/" Grid.Row="1" Grid.Column="3"
+   <span class="highlight">BackgroundColor="{x:Static local:SharedResources.OpButtonBkColor}"</span>
+   TextColor="White" FontSize="36" BorderRadius="0" Clicked="OnSelectOperator" />
+...
+</pre>
+			</div>
+		</p>
+		<ol start="4">
+			<li>
+				Try moving some of the other values into your shared resource class - for example the <code>Font</code> or other colors.
+			</li>
+			<li>
+				Run the application on your platform of choice and make sure it is still working and displays properly.
+			</li>
+		</ol>
+
+		<h2>Create Platform-Specific values</h2>
+		<p>
+			If you run the application on iOS, you will notice it obscures the carrier bar so it is difficult to see the clock and battery level.
+			This can be fixed by adjusting the <code>Padding</code> property; however, we only want to do this for iOS - not for Android or Windows.
+		</p>
+		<ol>
+			<li>
+				Use the <code>OnPlatform&lt;T&gt;</code> tag to set the <code>ContentPage.Padding</code> property to a valid <code>Thickness</code>.
+				<ul type="square" class="indent-none">
+					<li>Set the &lt;T&gt; to a <code>Thickness</code> value using the <code>x:TypeArguments</code> property.</li>
+					<li>You can set the iOS specific value by setting the <code>OnPlatform.iOS</code> property, 
+					Android is <code>OnPlatform.Android</code> and Windows is <code>OnPlatform.WinPhone</code>.
+					If you don't need to change the value (i.e. you want a <em>default</em> value) then you don't need to supply that platform value.</li>
+				</ul>
+			<li>Run the application on iOS to see the carrier bar now be visible.</li>
+			<li>Run the application on Android or Windows to verify it <em>does not</em> include the padding.</li>
+		</ol>
+
+		<p>
+			<a href="#" onclick="toggleCode(this,'padding');return false;" class="uiitem">Show Code</a><div class="indent-large" id="padding" style="display:none;">
+<pre class="prettyprint">
+&lt;ContentPage.Padding>
+    &lt;OnPlatform x:TypeArguments="Thickness">
+        &lt;OnPlatform.iOS>0,20,0,0&lt;/OnPlatform.iOS>
+    &lt;/OnPlatform>
+&lt;/ContentPage.Padding>
+</pre>
+			</div>
+		</p>
+
+		<h2>Activate XAMLC to compile the XAML pages.</h2>
+		<p>
+			As a final step, let's turn on the XAMLC compiler. This requires that your Xamarin.Forms package is at least 2.0.			
+		</p>
+		<ol>
+			<li>
+				Add the <code>XamlCompilationAttribute</code> to the <b>App.cs</b> source file, pass in the <code>Compile</code> option.
+			</li>
+			<li>
+				Build and run the application to make sure it's still working.
+			</li>
+			<li>
+				You can use the <em>Navigate To</em> feature of XS and VS to look at the disassembled source for <code>InitializeComponent</code> if you are curious what it created.
+				<ul class="indent-none">
+					<li>Use <code>F12</code> on Windows (default key)</li>
+					<li>Use <code>&#8984;+D</code> on macOS (default key)</li>
+				</ul>
+			</li>
+		</ol>
+
+
+		<p>
+			<a href="#" onclick="toggleCode(this,'xamlc');return false;" class="uiitem">Show Code</a><div class="indent-large" id="xamlc" style="display:none;">
+<pre class="prettyprint">
+[assembly: XamlCompilationAttribute(XamlCompilationOptions.Compile)]
+</pre>
+			</div>
+		</p>
+
+		<h1>Summary</h1>
+		<p>
+			In this exercise, we moved shared values into resources and provided a platform-specific value to change the layout for one of the supported platform types.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+	<script src="./res/js/jquery.min.js"></script>
+	<script src="./res/js/prettify.js"></script>
+	<script src="./res/js/script.js"></script>
+
+	<footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

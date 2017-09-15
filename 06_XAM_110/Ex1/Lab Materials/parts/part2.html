@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Working with Portable Class Libraries</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Intro to Cross-Platform Mobile Development</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>20 minutes</p>
+
+        <h2>Lab Goals</h2>
+        <p>
+            We will work on the same project we did in <a href="./part1.html">Part 1</a>, but this time we will use a <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/pcl/introduction_to_portable_class_libraries/">Portable Class Library</a> to share our JSON data loading between the iOS, Android, and Windows projects. We will be starting <em>almost</em> where you left off in the last exercise, without the Shared Project implementation, but the code in the three platform projects has already been filled out.
+        </p>
+
+        <p>We will need to do the following steps</p>
+        <ol class="indent-medium">
+            <li>Create a new Portable Class Library Project</li>
+            <li>Add the 2 shared source files (<strong>Song.cs</strong> and <strong>SongLoader.cs</strong>) to the Portable Class Library project - these are the same files you started with in the last exercise.</li>
+            <li>Add a reference to the PCL to each of your target projects</li>
+            <li>Add a NuGet reference to <a href="https://www.nuget.org/packages/Newtonsoft.Json/">Newtonsoft's Json.NET parser</a> to the PCL (it is already in each of the target projects).</li>
+            <li>Create an abstraction to open a <code>Stream</code> and implement it for each of our platform projects.</li>
+            <li>Use the abstraction in the portable code. We will use <a href="http://msdn.microsoft.com/en-us/library/ff921152.aspx">Dependency Injection</a> to provide access to the unavailable API.</li>
+
+            <li>As a final optional step, we will move the data file into the PCL as a resource and then share the resource across all three projects.</li>
+
+<p>
+<a href="#" onclick="toggleBlock(this, 'embed_resource', 'How to use Embedded Resources', 'Hide'); return false;" class="uiitem">How to use Embedded Resources</a>
+<div class="indent-none wsblock" id="embed_resource" style="display:none;">
+<div class="wsitem">
+    <b>Embedded Resources</b><br />
+    Sharing resources in Portable Class Libraries requires a common way of accessing them across all target platforms.<br />
+    <a href="http://support.microsoft.com/kb/319292">How to Embed Resources in .NET</a>.<br />
+    <a href="http://www.codeproject.com/Articles/455565/How-to-access-Manifest-Embedded-resources-from-an">How to access an Embedded Resource in [Windows]</a>.
+</div>
+</div>
+</p>
+
+        </ol>
+
+
+        <div class="hintblock">
+            <b>Note for Visual Studio for Mac users:</b> You will only be able to load two of the projects - Windows is not a supported platform and you will get an error indicating the project cannot be loaded. It is safe to ignore this error; just work with the iOS and Android portions of the lab.
+        </div>
+
+        <h2>Required Assets</h2>
+        <p>
+        There are included resources in the <strong>Part 02 Resources</strong> folder which are needed to complete this exercise. These are included with the course materials, so make sure you have them available before starting.
+        </p>
+
+        <h2>Exercise Challenge</h2>
+        <p>
+        Using the above high-level instructions, try to accomplish the lab goals on your own. If you need some additional help, there are step-by-step instructions below which you can use if you get stuck or need a hint.
+        </p>
+
+        <h1 id="steps">Steps</h1>
+        
+        <div id="ide-selector">
+            Below are the step-by-step instructions to implement the exercise.
+            <br /><br />
+            Select the IDE environment you want to work with:&nbsp;&nbsp;
+            <a href="#" data-name="xs">Visual Studio for Mac</a> or
+            <a href="#" data-name="vs">Visual Studio for Windows</a>
+        </div>
+
+        <h2>Open the Starter Solution</h2>
+        <ol>
+            <li>Open the starting project <strong>MyTunes</strong> included in the <strong>Part 02 Resources</strong> folder.</li>
+            <li>The projects <u>will not build</u> currently as the required shared code has been removed.</li>
+        </ol>
+
+<ide name="xs">
+        <h2>Add the Portable Class Library</h2>
+
+        <ol>
+            <li>Right click on the solution node and add a new project.</li>
+            <li>Select <b>Portable Library</b> under <b>Multiplatform > Libary</b>.</li>
+            <li>Name the project &quot;MyTunes.Shared&quot;</li>
+            <li>
+                <div>The default profile is acceptable.</div>
+                <div><img src="./res/images/Create-PCL-XS.png" width="600" /></div>
+            </li>
+            <li>You can delete the empty class file added by default into the project.</li>
+        </ol>
+</ide>
+<ide name="vs">
+        <h2>Add the Portable Class Library</h2>
+
+        <ol>
+            <li>Right click on the solution node and add a new project.</li>
+            <li>
+                <div>Search for <b>"portable"</b> in the <b>Search Installed Templates</b> field at the top-right, then select the <b>Class Library (Portable)</b> C# project type.</div>
+                <div><img src="./res/images/Create-PCL-VS2017.png" style="max-width:600px;" /></div>
+            </li>
+            <li>Name the project &quot;MyTunes.Shared&quot;</li>
+            <li>You can delete the class file added by default into the project.</li>
+            <li>
+                <div>It will prompt you for the platforms to support. Select the choices as shown below:</div>
+                <img src="./res/images/PCL_targets-VS.png" style="max-width:600px;" />
+            </li>
+        </ol>
+</ide>
+
+        <h2>Add the code into the Portable Class Library</h2>
+        <ol>
+            <li>In the <strong>Part 02 Resources</strong> folder there is a <strong>Assets</strong> sub-folder with two C# source files:</li>
+            <ul class="indent-none">
+                <li><strong>Song.cs</strong> - this defines a class which provides information about a single song.</li>
+                <li><strong>SongLoader.cs</strong> - this is a class which can parse a JSON file off disk into a set of <code>Song</code> objects. It utilizes the Newtonsoft Json.NET parser.</li>
+            </ul>
+            <li>Add both C# files to your Portable Class Library project - you can add existing files to Portable Class Library projects in the normal fashion.</li>
+            <li>These are the same files you used in Part 2.</li>
+        </ol>
+
+        <h2>Add a NuGet reference to Json.NET</h2>
+        <ol>
+            <li>
+                Open the NuGet package manager for the Portable Class Library.
+            </li>
+            <li>
+                Find the Json.NET component - it should be one of the first packages displayed due to it's popularity.
+            </li>
+<ide name="xs">
+            <img src="./res/images/AddPackage-XS.png" style="max-width:600px;" />
+</ide>
+<ide name="vs">
+            <img src="./res/images/AddPackage-VS.png" style="max-width:600px;" />
+</ide>
+        </ol>
+
+        <h2>Add a Reference to the PCL</h2>
+        <ol>
+            <li>Add a reference to the PCL for each of the target projects you want to work with (iOS | Windows | Android).</li>
+            <li>The projects should now all build properly - however they will fail at runtime because we've not added the code to load the file.</li>
+        </ol>
+
+        <h2>Create the File abstraction</h2>
+        <p>The <strong>songs.json</strong> file is located in each of the platform projects - just as we had it in the Shared Project version of this exercise.</p>
+        <p>Since we've got the data file stored in a platform-specific way, we will need to use platform-specific code to get to our data.</p>
+        <p>Since this is a separate DLL, we can't just add the code into the library. In addition, because it's a Portable Library, file I/O is prohibited - we can only work with <code>Stream</code>s. So we need to create an abstraction. In this case, it's quite simple and we could just use an event - however, let's use an interface just to see the whole idea.</p>
+        <ol class="indent-medium">
+            <li>Create a new interface in the PCL. Name it <code>IStreamLoader</code>.</li>
+            <li>It should have a single method which takes a <code>filename</code> and returns a <code>Stream</code></li>
+            <li>Name the method <strong>GetStreamForFilename</strong>.</li>
+            <li>Next, we need to implement this interface in each of our platform projects.</li>
+        </ol>
+
+        <h2>Implement the abstraction</h2>
+        <p>Use each of the specific platform instructions to implement the <code>IStreamLoader</code> abstraction.</p>
+
+        <h3>iOS</h3>
+        <ol class="indent-medium">
+            <li>Use the <code>System.IO.File.OpenRead</code> method to open the filename.</li>
+            <li>Make sure the iOS project builds.</li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'openFile_ios');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="openFile_ios" style="display:none;">
+<pre class="prettyprint">
+class StreamLoader : IStreamLoader
+{
+    public Stream GetStreamForFilename(string filename)
+    {
+        return File.OpenRead(filename);
+    }
+}
+</pre>               
+            </div>
+        </p>
+
+        <h3>Android</h3>
+        <ol class="indent-medium">
+            <li>Android assets are loaded through an Android <code>Context</code> so pass in a <code>Context</code> to the constructor of your implementation and save it into a field, this will make it easy to get to assets. When we instantiate the <code>StreamLoader</code> we will pass in the <code>Activity</code> as the parameter.</li>
+            <li>Use the passed context's <code>Assets.Open</code> method to open the filename.</li>
+            <li>Make sure the Android project builds, check the below code if you have any trouble.</li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'openFile_droid');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="openFile_droid" style="display:none;">
+<pre class="prettyprint">
+public class StreamLoader : IStreamLoader
+{
+    private readonly Context context;
+
+    public StreamLoader(Context context)
+    {
+        this.context = context;
+    }
+    public Stream GetStreamForFilename(string filename)
+    {
+        return context.Assets.Open(filename);
+    }
+}
+</pre>               
+            </div>
+        </p>
+
+        <h3>Windows</h3>
+        <ol class="indent-medium">
+            <li>Use the <code>Windows.ApplicationModel.Package.Current.InstalledLocation.GetFileAsync</code> method to open the filename. This returns a <code>StorageFile</code>.</li>
+            <li>Because it's async, we would normally use <code>async</code> and <code>await</code> like we did in the last exercise. However, that would change our interface contract - which we don't want to do. So, in this case, use the <code>AsTask()</code> extension method and then get the <code>Result</code> property to get the <code>StorageFile</code> - this will cause the call to be synchronous.</li>
+            <li>Call <code>OpenStreamForRead().Result</code> on the <code>StorageFile</code> to retrieve a <code>Stream</code>.</li>
+            <li>Make sure the Windows project builds.</li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'openFile_wp8');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="openFile_wp8" style="display:none;">
+<pre class="prettyprint">
+public class StreamLoader : IStreamLoader
+{
+    public Stream GetStreamForFilename(string filename)
+    {
+        return Package.Current.InstalledLocation.GetFileAsync(filename)
+            .AsTask().Result
+            .OpenStreamForReadAsync().Result;
+    }
+}
+</pre>
+            </div>
+        </p>
+
+        <h2>Inject the abstraction</h2>
+        <p>Next, we need to provide the abstraction to the PCL. Again, we could use a variety of techniques here, and you are encouraged to try different variations if you have time. In this case, we will add a static property to the <code>SongLoader</code> class and set it prior to calling <code>Load</code>. We could also pass it into the <code>Load</code> method, or change the class to be non-static and then pass it into a constructor. Any of these would be valid - with the constructor form probably the most ideal since we really do need the abstraction to execute.</p>
+        <ol>
+            <li>Open the <strong>SongLoader.cs</strong> file and add a public static property named <strong>Loader</strong> of type <code>IStreamLoader</code>.</li>
+            <li>Edit the <code>OpenData</code> method to test the property for <code>null</code> and then use it to open the filename.</li>
+        </ol>
+        <p><a href="#" onclick="toggleCode(this,'use_interface');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="use_interface" style="display:none;">
+<pre class="prettyprint">
+public static class SongLoader
+{
+    const string Filename = "songs.json";
+    ...
+    <span class="highlight">public static IStreamLoader Loader { get; set; }</span>
+
+    private static Stream OpenData()
+    {
+<span class="highlight">        if (Loader == null)
+            throw new Exception("Must set platform Loader before calling Load.");
+
+        return Loader.GetStreamForFilename(Filename);
+</span>
+    }
+}
+</pre>               
+            </div>
+        </p>
+        <ol start="3">
+            <li>Next, set the property in each of your platforms to your implementation, this should be done just before  call to the async <code>SongLoader.Load</code> method. Remember that on Android you will need to pass the running Activity to supply the context parameter for the constructor.</li>
+        </ol>
+
+<p>
+<div class="indent-large">
+<a href="#" onclick="toggleBlock(this,'ios_impl', 'iOS', 'Hide iOS');return false;" class="uiitem">iOS</a>
+<div id="ios_impl" style="display:none;">
+<pre class="prettyprint">
+public async override void ViewDidLoad()
+{
+   base.ViewDidLoad();
+
+   // Load the data
+   <span class="highlight">SongLoader.Loader = new StreamLoader();</span>
+   var data = await SongLoader.Load();
+   ...
+}
+</pre></div>
+
+<a href="#" onclick="toggleBlock(this,'droid_impl', 'Android', 'Hide Android');return false;" class="uiitem">Android</a>
+<div class="indent-none" id="droid_impl" style="display:none;">
+<pre class="prettyprint">
+protected async override void OnCreate(Bundle bundle)
+{
+    base.OnCreate(bundle);
+
+    <span class="highlight">SongLoader.Loader = new StreamLoader(this);</span>
+    var data = await SongLoader.Load();
+    ...
+}
+</pre></div>
+
+<a href="#" onclick="toggleBlock(this,'win_impl', 'Windows', 'Hide Windows');return false;" class="uiitem">Windows</a>
+<div id="win_impl" style="display:none;">
+<pre class="prettyprint">
+protected async override void OnNavigatedTo(NavigationEventArgs e)
+{
+    <span class="highlight">SongLoader.Loader = new StreamLoader();</span>
+    this.DataContext = await SongLoader.Load();
+}
+</pre></div>
+</div>
+</p> 
+
+        <h2>Test the applications</h2>
+        <ol>
+            <li>Run each of the platforms - they should all display the song list.</li>
+        </ol>
+        <table>
+            <tr>
+                <td><img src="./res/images/android-final.png" /></td>
+                <td><img src="./res/images/ios-final.png" /></td>
+            </tr>
+            <tr>
+                <td><img src="./res/images/uwp-final.png" /></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <h2>Share the data file (Optional)</h2>
+        <p>It turns out there's a way to structure this code where we don't need any platform support at all. This isn't always possible, but in this case we can add the file to the shared PCL assembly and then load it directly from our code.</p>
+        <p>The secret to this is to use the <strong>EmbeddedResource</strong> build action. This is a .NET build action that is supported for all variants of .NET and we can then use <code>Assembly.GetManifestResourceStream</code> to read the data from our PCL assembly. We could have used this same approach for the Shared Project as well.</p>
+        <ol>
+            <li>Add the <strong>songs.json</strong> file to the PCL - there is a copy in the <strong>Part 02 Resources/data</strong> folder.</li>
+            <li>Change the build action to <strong>EmbeddedResource</strong>.</li>
+            <li>Get the PCL assembly using <code>typeof(SongLoader).GetTypeInfo().Assembly</code>. This works in all targets, unlike <code>Assembly.GetExecutingAssembly</code> which is not available in the PCL.</li>
+            <li>use the <code>Assembly.GetManifestResourceStream</code> method to get the stream - the name of the resource will be &quot;MyTunes.Shared.songs.json&quot; (assuming the namespace for the assembly is <code>MyTunes.Shared</code>).</li>
+            <li>You can then create a <code>StreamReader</code> from the given stream.</li>
+            <li>If it fails to find the resource at runtime, check the name you are using. You can also load the PCL assembly into <strong>ILDasm</strong>, <strong>Reflector</strong>, or <strong>ILSpy</strong> to see what the actual resource name is for the file.</li>
+            <li>Test the final code for all three platform variations - it should still run properly, but now you can remove the <strong>songs.json</strong> from each platform!</li>
+        </ol>
+
+<p><a href="#" onclick="toggleCode(this,'improved_code');return false;" class="uiitem">Show Code</a>
+            <div class="indent-large" id="improved_code" style="display:none;">
+<pre class="prettyprint">
+const string ResourceName = "MyTunes.Shared.songs.json";
+public static async Task&lt;IEnumerable&lt;Song>> ImprovedLoad()
+{
+    var assembly = typeof(SongLoader).GetTypeInfo().Assembly;
+    using (var stream = assembly.GetManifestResourceStream(ResourceName))
+    using (var reader = new StreamReader(stream))
+    {
+        return JsonConvert.DeserializeObject&lt;List&lt;Song>>(await reader.ReadToEndAsync());
+    }
+}
+</pre>               
+            </div>
+        </p>
+
+        <h1>Summary</h1>
+        <p>
+        In this exercise, we have created a Portable Class Library and used it in an iOS, Android, and Windows application. The library had both platform-agnostic code, as well as some platform-specific code executed through an interface.
+        </p>
+        
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

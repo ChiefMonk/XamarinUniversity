@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 4: Access a SQLite database using asynchronous methods</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>SQLite in Mobile Data</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<h2>Duration</h2>
+		<p>10 minutes</p>
+
+		<!-- - - - - - - - - Goals - - - - - - - - -->
+
+		<h2 id="goals">Lab goals</h2>
+
+		<p>
+			The goal of this exerice is to modify the database calls in your project to use their asynchronous counterparts from the SQLite.net library. Here are the basic steps we will perform:
+		</p>
+
+		<ol>
+			<li>
+				Modify the <code>SQLiteConnection</code> initialization code in the <code>PersonRepository</code> class to create a <code>SQLiteAsyncConnection</code>, and to create the table using an async call. 			
+			</li>
+			<li>
+				Modify the <b>Insert</b>, and <b>Get</b> methods in the <code>PersonRepository</code> class to use their async counterparts. Since we are using the <code>Task</code>-based methods, we can utilize the C# <code>async</code> and <code>await</code> keywords to simplify our code.</li>
+
+<p class="indent-none">
+<a href="#" onclick="toggleBlock(this, 'asyncAwait', 'How do I use async/await?', 'Hide'); return false;" class="uiitem">How do I use async/await?</a>
+<div class="indent-none wsblock" id="asyncAwait" style="display:none;">
+<div class="wsitem">
+<b>How do I use async/await?</b>
+	<p class="indent-none">
+	To improve responsiveness within your application, you will want to move long running tasks to the background thread. In the past, <code>BackgroundWorker</code> was used to achieve this. </p>
+	<p class="indent-none">
+	With C# 5, Microsoft introduced a new approach to asynchronous programming, using the keywords <code>async</code> and <code>await</code>. The implementation of this approach is much easier to use than the old <code>BackgroundWorker</code>, and is the recommended approach for asynchronous programming going forward.
+	</p>
+	<p class="indent-none">
+	To ensure your methods run asynchronously, mark them with the <code>async</code> keyword in the method declaration. Any calls within your method that must wait for a response before
+	continuing (ie. any other asynchronous method calls), must be preceded with the word <code>await</code>. This will suspend any further code execution within the method itself until a result is returned. However, any code outside of the async method itself will continue execution on a separate thread. An async method can have one or more awaited calls within it, but if there are no awaited method calls within your async method, it will simply run synchronously.</p> 
+	<p class="indent-none">
+	Shown below is a simple example of an async method containing a single awaited call.
+	
+<pre class="prettyprint codeblock">
+public <span class="highlight">async</span> Task&lt;List&lt;Person&gt;&gt; GetAllPeopleAsync()
+{
+    List&lt;Person> people = <span class="highlight">await</span> conn.Table&lt;Person&gt;().ToListAsync();
+    // This line is executed once the awaited call completes execution
+    return people;
+}
+</pre>
+	For more information, refer to the MSDN article <a href="http://msdn.microsoft.com/en-us/library/hh191443.aspx">Asynchronous Programming with Async and Await</a>.</p>
+</div>
+</div>
+</p>
+
+			<li>
+				Rename the <code>AddNewPerson</code> and <code>GetAllPeople</code> methods to include the term Async in the method names.
+			</li>	
+			<li>
+				Modify the calls in the <code>MainPage.xaml.cs</code> file to call the new asynchronous methods.
+			</li>
+		</ol>
+
+		<!-- - - - - - - - - Supplied resources - - - - - - - - -->
+
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Lab.Completed</strong> with a solution you can use to check your work.
+
+            This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use the <strong>Lab.Completed</strong> solution from the previous part as starter code for this part.
+        </p>
+
+		<!-- - - - - - - - - Challenge - - - - - - - - -->
+
+      <h2>Exercise challenge</h2>
+      <p>
+      Follow the above goals to complete the exercise. You can refer to the step-by-step instructions below to get more detailed information on each goal.
+      </p>
+
+      <div class="hintblock">
+         <strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor, they are online to answer any questions you have!
+      </div>
+
+
+		<!-- - - - - - - - - Steps - - - - - - - - -->
+
+		<h1>Steps</h1>
+
+		<p>
+			Below are the step-by-step instructions to implement the exercise.
+		</p>
+
+		<h2>Create a SQLiteAsyncConnection</h2>
+		<ol>
+			<li>
+				Open the <b>PersonRepository.cs</b> file within the <strong>People</strong> Portable Class Library.
+			</li>
+			<li>
+				Modify the <code>SQLiteConnection</code> initialization code in the <code>PersonRepository</code> class to create a <code>SQLiteAsyncConnection</code>.
+				
+            <div class="hintblock">
+				  <strong>Hint:</strong> The <code>SQLiteAsyncConnection</code> class uses the same constructor syntax so it's just a direct type replacement. Remember to modify the variable declaration for <code>conn</code> to SQLiteAsyncConnection.
+           </div>
+			</li>
+
+			<li>
+            Modify the <code>CreateTable</code> call to use its async counterpart (<code>CreateTableAsync</code>). Notice that this returns a <code>Task</code>, however we cannot <em>await</em> it here because we are in a constructor. There are several options we could take:
+            <ul class="indent-none">
+               <li>
+                  Ignore the result and just assume the table creation will complete <em>before</em> any operations are performed.
+               </li>
+               <li> 
+                  Issue a <code>Wait</code> on the returning <code>Task</code> - this makes the UI thread block until the creation is completed, essentially the same as a synchronous call in this case.
+               </li>
+               <li>
+                  Create an initialize method (which can then use <code>async</code> and <code>await</code>) call it before we perform any operations.
+               </li>
+               <li>
+                  Cache off the returned <code>Task</code> and issue an <code>await</code> in all the methods which need the table to be created.
+               </li>
+            </ul>
+            In this particular case, just add a <code>Wait</code> call to block and ensure the table is created - if you have time at the end (or after class), you can try playing with the other approaches listed here.
+         </li>
+<p class="indent-none">
+<a href="#" onclick="toggleCode(this, 'asyncConnectionCode'); return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="asyncConnectionCode" style="display:none;">
+<pre class="prettyprint">
+private readonly SQLite<span class="highlight">Async</span>Connection conn;
+
+public PersonRepository(string dbPath)
+{
+   conn = new SQLite<span class="highlight">Async</span>Connection(dbPath);
+   conn.CreateTable<span class="highlight">Async</span>&lt;Person>()<span class="highlight">.Wait()</span>;
+}
+</pre>
+</div>
+</a>
+</p>
+			</li>	
+		</ol>
+
+      <h2>Refactor to use Asynchronous database calls</h2>
+		<ol>		
+			<li>
+				Modify the <code>AddNewPerson</code> method to insert a new <code>Person</code> using an asynchronous call.
+            <ul class="indent-none">
+               <li>
+                  Refactor the method to use async/await.
+               </li>
+               <li>
+                  Change the return type to be a <code>Task</code> so we can see exceptions that might happen in the method from the caller.
+               </li>
+               <li>
+                  You will need a new namespace: <code>System.Threading.Tasks</code> to return a <code>Task</code> type.
+               </li>               
+               <li>
+                  Rename the method to append the term <strong>Async</strong> to the end of the method name.
+               </li>
+            </ul>
+
+<p class="indent-none">
+<a href="#" onclick="toggleCode(this, 'asyncInsertCode'); return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="asyncInsertCode" style="display:none;">
+<pre class="prettyprint">
+public <span class="highlight">async</span> <span class="highlight">Task</span> AddNewPersonAsync(string name)
+{
+    try
+    {
+      //basic validation to ensure a name was entered
+      if (string.IsNullOrEmpty(name))
+         throw new Exception("Valid name required");
+
+      //insert a new person into the Person table
+      var result = <span class="highlight">await</span> conn.Insert<span class="highlight">Async</span>(new Person { Name = name });
+      StatusMessage = string.Format("{0} record(s) added [Name: {1})", result, name);
+   }
+   catch (Exception ex)
+   {
+      StatusMessage = string.Format("Failed to add {0}. Error: {1}", name, ex.Message);
+   }
+}
+</pre>
+</div>
+</a>
+</p>
+			</li>			
+			<li>
+				Modify the <code>GetAllPeople</code> method to return the results using an asynchronous call.
+            <ul class="indent-none">
+               <li>
+                  Refactor the method to use async/await.
+               </li>
+               <li>
+                  Rename the method to append the term <strong>Async</strong> to the end of the method name.
+               </li>
+               <li>
+                  The returning result from the method will need to be modified to return a <code>Task&lt;List&lt;Person>></code>.
+               </li>
+            </ul>
+<p class="indent-none">
+<a href="#" onclick="toggleCode(this, 'asyncGetAllCode'); return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="asyncGetAllCode" style="display:none;">
+<pre class="prettyprint">
+public <span class="highlight">async</span> <span class="highlight">Task&lt;List&lt;Person>></span> GetAllPeople<span class="highlight">Async</span>()
+{
+   //return a list of people saved to the Person table in the database
+   return <span class="highlight">await</span> conn.Table&lt;Person>().ToList<span class="highlight">Async</span>();
+}
+     
+</pre>
+</div>
+</a>
+</p>
+			</li>			
+			<li>
+				In the <code>MainPage.xaml.cs</code> file, modify both of the <code>Button.Click</code> event handlers to use the async methods from the <code>PersonRepository</code> class, making use of the <code>async</code> and <code>await</code> keywords.
+
+<p class="indent-none">
+<a href="#" onclick="toggleCode(this, 'asyncMainPageCode'); return false;" class="uiitem">Show Code</a>
+<div class="indent-none" id="asyncMainPageCode" style="display:none;">
+<pre class="prettyprint">
+public <span class="highlight">async</span> void OnNewButtonClicked(object sender, EventArgs args)
+{
+   statusMessage.Text = "";
+               
+   <span class="highlight">await</span> App.PersonRepo.AddNewPerson<span class="highlight">Async</span>(newPerson.Text);
+   statusMessage.Text = App.PersonRepo.StatusMessage;
+}
+
+public <span class="highlight">async</span> void OnGetButtonClicked(object sender, EventArgs args)
+{
+   statusMessage.Text = "";
+
+
+   ObservableCollection&lt;Person> people = 
+       new ObservableCollection&lt;Person>(
+           <span class="highlight">await</span> App.PersonRepo.GetAllPeople<span class="highlight">Async</span>());
+   peopleList.ItemsSource = people;
+}
+</pre>
+</div>
+</a>
+</p>
+			</li>			
+			<li>
+				Build the solution and run the app to verify it still works properly. 
+			</li>			
+		</ol>
+
+
+      <p class="indent-none"> We can make our code even more optimized for async methods with some more revisions. There are two reasons why we would want to do this:
+      <ul class="indent-none" > 
+      <li>
+      Adding persons does not required context capturing
+      </li>
+      <li>
+      Getting all persons does not need to be async ( it creates a state machine for nothing)
+      </li>
+      </ul> Try following the steps below on optimizing your existing Async functions.</p>
+
+      <h2><b>Optional:</b> Optimize the Async Operations </h2>
+      <p>
+         We can make the <code>AddNewPersonAsync</code> method even more efficient by changing the behavior of the <code>await</code> keyword to not marshal back to the UI thread. Recall from the lecture that we can use the <code>ConfigureAwait</code> method to force the remainder of the method to continue on the worker (background) thread if the processing of the data does not require UI interaction. This is true for the <code>AddNewPersonAsync</code> method which only updates some data-bound values (Xamarin.Forms will do the UI marshalling automatically).
+      </p>
+      <ol>	
+         <li>
+         Change the <code>InsertAsync</code> method which is currently <code>await</code>'d to use <code>ConfigureAwait</code> with a <code>false</code> value so it stays on the UI thread. Here's the minor change to make:
+         </li>
+<pre class="prettyprint codeblock">
+var result = await conn.InsertAsync(new Person { Name = name })<span class="highlight">.ConfigureAwait(continueOnCapturedContext: false)</span>;
+</pre>
+         <li>
+            We can also simplify our <code>GetAllPeopleAsync</code> method slightly - since we aren't processing the data in this method, but simply returning it back to the caller, there's no need to <code>await</code> the call.
+            <ul class="indent-none">
+               <li>
+                  Remove the <code>async</code> keyword from the method signature.
+               </li>
+               <li> 
+                  Remove the <code>await</code> keyword from the <code>return</code> statement.
+               </li>
+            </ul>
+         </li>
+         <li> 
+            Build and run the application and verify everything works properly.
+         </li>
+      </ol>
+
+		<!-- - - - - - - - - Summary - - - - - - - - -->
+
+		<h1>Summary</h1>
+		<p>
+		    In this lab, you refactored your existing project to utilize the asynchronous versions of the SQLite-net methods so that your UI thread isn't tied up when I/O is being performed.
+      </p>
+      <p>
+         If you have time, try adding some filters into the query, adding support to edit records and delete records through new buttons in the UI.
+      </p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

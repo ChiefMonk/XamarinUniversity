@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 5: Get Activity results</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Activities and Intents</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<div class="hintblock">
+			<strong>Tip:</strong> If you are doing this exercise live in a session, make sure to make good use of the instructor,
+			they are online to answer any questions you have!
+		</div>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Goals</h2>
+
+		<p>
+			This lab shows you how to retrieve results from an Activity. You will see how to load the results in the target Activity and how
+			to retrieve them in the source Activity. The red line in the image below indicates the part of the app you will be working on here.
+		</p>
+
+		<img src="./res/images/Finish.png" />
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Required assets</h2>
+
+		<p>
+			The provided <strong>Resources</strong> folder for this part contains a subfolder named <strong>Completed</strong> with a solution you
+			can use to check your work. This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use
+			the <strong>Completed</strong> solution from the previous part as starter code for this part.
+		</p>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h2>Challenge</h2>
+		<p>
+			Use the guidelines here to work through the exercise on your own. Alternatively, you can use the step-by-step instructions given below.
+		</p>
+
+		<ol>
+			<li>Open <strong>AddItemActivity.cs</strong>.</li>
+			<li>Inside <code>OnSaveClick</code>, create an Intent and load the <code>name</code> and <code>count</code> values into the Extras.</li>
+			<li>Call <code>SetResult</code> and pass the Intent and a result code.</li>
+			<li>Call <code>Finish</code>.</li>
+
+			<li>Open <strong>MainActivity.cs</strong>.</li>
+			<li>Modify the <code>OnAddItemClick</code> method to use <code>StartActivityForResult</code> instead of <code>StartActivity</code>.</li>
+			<li>Inside <code>OnActivityResult</code> add some error checking to ensure the result code is <code>Ok</code> and the request code matches the one you passed to <code>StartActivityForResult</code>.</li>
+			<li>Retrieve the item name and count from the Intent Extras.</li>
+			<li>Create a new Item using the name and count values. Add it to the collection of Items.</li>
+
+			<li>Run the app to test your work.</li>
+		</ol>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to implement the exercise.
+		</p>
+
+		<h2>
+			Load Results
+		</h2>
+
+		<ol>
+			<li>
+				Open <strong>AddItemActivity.cs</strong>.
+			</li>
+			
+			<li>
+				Inside <code>OnSaveClick</code>, create an Intent that you will use to hold the return values.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Intent', 'Intent', 'Hide'); return false;" class="uiitem">Intent</a>
+<div class="wsblock" id="Intent" style="display:none;">
+<pre class="prettyprint codeblock">
+var intent = new Intent();
+</pre>
+</div>
+</p>
+			</li>
+
+			<li>
+				Load the values the for <code>name</code> and <code>count</code> into the Intent Extras.
+				Use "ItemName" and "ItemCount" for keys when you load the Extras.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Load', 'Load', 'Hide'); return false;" class="uiitem">Load</a>
+<div class="wsblock" id="Load" style="display:none;">
+<pre class="prettyprint codeblock">
+void OnSaveClick(object sender, EventArgs e)
+{
+  string name  = FindViewById&lt;EditText&gt;(Resource.Id.nameInput).Text;
+  int    count = int.Parse(FindViewById&lt;EditText&gt;(Resource.Id.countInput).Text);
+
+  var intent = new Intent();
+
+  intent.PutExtra("ItemName",  name );
+  intent.PutExtra("ItemCount", count);
+  ...
+}
+</pre>
+</div>
+</p>
+			</li>
+			
+			<li>
+				Call the version of <code>SetResult</code> that takes 2 parameters. Pass <code>Result.Ok</code> and the Intent.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'SetResult', 'SetResult', 'Hide'); return false;" class="uiitem">SetResult</a>
+<div class="wsblock" id="SetResult" style="display:none;">
+<pre class="prettyprint codeblock">
+void OnSaveClick(object sender, EventArgs e)
+{
+  ...
+  SetResult(Result.Ok, intent);
+  ...
+}
+</pre>
+</div>
+</p>
+			</li>
+			
+			<li>
+				Calling <code>SetResult</code> loads the data you want to return, but it does not end the current Activity.
+				Call the <code>Finish</code> method to end the Add Item Activity and return the user to the Main Activity.
+			</li>
+
+		</ol>
+
+		<h2>
+			Retrieve Results
+		</h2>
+
+		<ol>
+			<li>
+				Open <strong>MainActivity.cs</strong>.
+			</li>
+			
+			<li>
+				Modify the <code>OnAddItemClick</code> method to use <code>StartActivityForResult</code> instead of <code>StartActivity</code>.
+				Pass the Intent as before but add a second parameter with the integer value 100 to serve as the request code.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Start', 'Start', 'Hide'); return false;" class="uiitem">Start</a>
+<div class="wsblock" id="Start" style="display:none;">
+<pre class="prettyprint codeblock">
+void OnAddItemClick(object sender, EventArgs e)
+{
+  var intent = new Intent(this, typeof(AddItemActivity));
+  StartActivityForResult(intent, 100);
+}
+</pre>
+</div>
+</p>
+			</li>
+			
+			<li>
+				Locate the <code>OnActivityResult</code> method.
+			</li>
+
+			<li>
+				Add an <code>if</code> statement to <code>OnActivityResult</code> that verifies that the <code>requestCode</code> parameter is 100
+				and the <code>resultCode</code> parameter is <code>Result.Ok</code>.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'If', 'If', 'Hide'); return false;" class="uiitem">If</a>
+<div class="wsblock" id="If" style="display:none;">
+<pre class="prettyprint codeblock">
+if (requestCode == 100 && resultCode == Result.Ok)
+{
+  ...
+}
+</pre>
+</div>
+</p>
+			</li>
+			
+			<li>
+				Retrieve the item name and count from the Intent Extras.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Retrieve', 'Retrieve', 'Hide'); return false;" class="uiitem">Retrieve</a>
+<div class="wsblock" id="Retrieve" style="display:none;">
+<pre class="prettyprint codeblock">
+string name  = data.GetStringExtra("ItemName");
+int    count = data.GetIntExtra   ("ItemCount", -1);
+</pre>
+</div>
+</p>
+			</li>
+			
+			<li>
+				Create a new Item using the name and count values. Add it to the collection of Items.
+				The code is provided below, hidden behind a button.
+<p>
+<a href="#" onclick="toggleBlock(this, 'Create', 'Create', 'Hide'); return false;" class="uiitem">Create</a>
+<div class="wsblock" id="Create" style="display:none;">
+<pre class="prettyprint codeblock">
+Items.Add(new Item(name, count));
+</pre>
+</div>
+</p>
+			</li>
+		</ol>
+
+		<h2>
+			Test the App
+		</h2>
+
+		<ol>
+			<li>
+				Run the app.
+			</li>
+
+			<li>
+				Navigate to the Add Item Activity.
+			</li>
+
+			<li>
+				Enter values for Name and Count, then touch the Save button. This should return you to the Main Activity.
+			</li>
+
+			<li>
+				Navigate to the Items Activity and verify your new item is now in the list.
+			</li>
+		</ol>
+
+		<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+		<h1>Summary</h1>
+		<p>
+			In this section, you returned data and a success/failure indicator from an Activity. 
+			Notice that you passed a string and an integer instead of an object - this is common in Android since object references cannot
+			be passed between Activities.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 3: Use the native platform network stack</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Consuming RESTful Web Services</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <h2>Goals</h2>
+        <p>
+            In this final group exercise, we will add support to our Book client to use native networking handlers. It should behave and run exactly as before, but be optimized to each platform.
+        </p>
+
+        <h2>Exercise Overview</h2>
+        <p>
+            We will perform the following steps together:
+            <ol>
+                <li>Turn on the platform networking stack for iOS and Android (it's not necessary for Windows since that's using .NET directly and it already leverages the Windows networking stack).</li>
+                <li>Add the proper exclusions for App Transport Security to allow the app to work with iOS9.</li>
+            </ol>
+        </p>
+
+        <h1>Steps</h1>
+        <h2>Use the native platform network stack</h2>
+        <p>
+            We will modify the iOS and Android projects to use the proper HTTP message handler. You can either continue from the prior exercise, or use the completed project from the prior exercise if you'd like to start fresh.
+        </p>
+        <p>
+            Recall from the lecture that there are two ways we could do this.
+            <ol>
+                <li>We could pass in the platform-specific message handler into the <code>HttpClient</code> constructor for iOS and Android. Since we are using a PCL to create the client, we'd have to pass (inject) in the proper implementation from each of our platform head projects.</li>
+                <li>We can use the IDE switch in iOS and Android to set the default message handler - by default it uses the Mono networking stack, but we can change the default handler supplied to the default <code>HttpClient</code> constructor to alter this behavior.</li>
+            </ol>
+        </p>
+        <p>
+        Feel free to experiment with both approaches if you have time. The instructions for (#2) are given below.
+        </p>
+
+        <ol>
+            <li>
+                Let's start with the iOS project. Open the project properties for <b>BookClient.iOS</b>. Go to the <b>iOS Build</b> properties and locate the <b>HttpClient implementation</b> dropdown. On Visual Studio, it's located in the <b>Advanced</b> section.
+            </li>
+            <li>
+                Change the <b>HttpClient implementation</b> to be <b>NSUrlSession</b>, and change the <b>TLS implementation</b> to be Apple's TLS as shown below:
+            </li>
+            
+            <img src="./res/images/lab3-vs-ios-props.png" />
+            <img src="./res/images/lab3-xs-ios-props.png" />
+
+            <li>
+                Next, let's setup the Android project. Open the Project Options and locate the "HttpClient Implementation" setting
+                in the Android Options - it is in the General settings on macOS and the Advanced settings on Windows.
+                Select "AndroidClientHandler" as the implementation.
+            </li>
+            <img src="./res/images/lab3-vs-droid-environment.png" />            
+            
+            <li>
+                Run both applications. The Android project should run just as it did before, but the iOS project might now throw an exception because we are using an untrusted/insecure endpoint. This will only happen if you happen to be using iOS9 or later. We could fix this by switching to an <b>https</b> endpoint, or by adding an ATS exclusion.
+            </li>
+        </ol>
+
+        <h2>(Optional) Add ATS policy exceptions for our endpoint for iOS9</h2>
+        <p>
+            In this final step, we will add keys into the <b>info.plist</b> for our iOS host application to allow the app to communicate with the book server even though it's not using TLS.
+        </p>
+        <ol>
+            <li>
+                Using an XML editor, open the <b>info.plist</b> file in the <b>BookClient.iOS</b> project. You can also use the GUI editor, but because this key is new, it may be difficult to add it in as a custom key until support is in the GUI.
+            </li>
+            <li>
+                At the end of the XML file, just before the final <code>&lt;/dict></code>, add a <code>&lt;key></code> for <code>NSAppTransportSecurity</code> with a child <code>&lt;dict></code> section. Fill it with the following code to setup the exclusion for <code>xam150.azurewebsites.net</code>.
+            </li>
+        </ol>
+
+<pre class="prettyprint codeblock">
+    ...
+    &lt;key>UILaunchStoryboardName&lt;/key>
+    &lt;string>LaunchScreen&lt;/string>
+    &lt;key>CFBundleShortVersionString&lt;/key>
+    &lt;string>1.0&lt;/string>
+    <span class="highlight">&lt;key>NSAppTransportSecurity&lt;/key>
+    &lt;dict>
+        &lt;key>NSExceptionDomains&lt;/key>
+        &lt;dict>
+           &lt;key>xam150.azurewebsites.net&lt;/key>
+           &lt;dict>
+              &lt;key>NSExceptionMinimumTLSVersion&lt;/key>
+              &lt;string>TLSv1.0&lt;/string>
+              &lt;key>NSExceptionRequiresForwardSecrecy&lt;/key>
+              &lt;false/>
+              &lt;key>NSExceptionAllowsInsecureHTTPLoads&lt;/key>
+              &lt;true/>
+              &lt;key>NSIncludesSubdomains&lt;/key>
+              &lt;true/>
+           &lt;/dict>
+        &lt;/dict>
+    &lt;/dict></span>
+&lt;/dict>
+&lt;/plist>
+</pre>
+        <ol start="3">
+            <li>Run the application a final time and verify that it is now capable of pulling data for the iOS app with the native handler enabled.</li>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            Congratulations! We are now using an optimized, platform-specific web client implementation to access our REST based services. Make sure to ask any questions you have and take advantage of the live instructor!
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

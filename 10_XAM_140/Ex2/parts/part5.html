@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 5: Use Style inheritance to refactor repeated code</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Resources and Styles</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<h2>Goals</h2>
+		<p>
+			You will use Style inheritance to avoid repeated Setters in Styles that target the same type of control.
+		</p>
+
+		<h2>Required assets</h2>
+		<p>
+			The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Complete</strong> with a solution you can use to check your work.
+		</p>
+		<p>
+			This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use the <strong>Completed</strong> solution from the previous exercise as starter code for this exercise.
+		</p>
+
+		<h2>Challenge</h2>
+		<p>
+			You can use the high-level description here to work through the lab on your own. Alternatively, you can use	the instructions below if you would like step-by-step guidance.
+		</p>
+
+		<ul>
+			<li>Open the <strong>StandardTipPage.xaml</strong> file in the <strong>TipCalculator</strong> project.</li>
+			<li>Define a Style for a <code>Label</code> that sets the <code>FontSize</code> to 22.</li>
+			<li>Apply the new Style to the two labels on the page that use a font size of 22.</li>
+			<li>Use Style inheritance to refactor your two Styles and eliminate the repeated Setter.</li>
+		</ul>
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to complete the exercise.
+		</p>
+
+		<h2>Repeated Setters</h2>
+		<p>
+			Here you will define a new Style that will overlap the one you wrote for the previous exercise. The goal here is to motivate the use of Style inheritance by showing how Setters can end up as repeated code.
+		</p>
+
+		<ol>
+			<li>
+				Open the <strong>TipCalculator</strong> project.
+			</li>
+
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>
+
+			<li>
+				Add a <code>Style</code> to the page's resource dictionary. Use a <code>Key</code> of <code>baseLabelStyle</code> and a <code>TargetType</code> of <code>Label</code>. 
+			</li>
+
+			<li>
+				Add a <code>Setter</code> to your style that sets the <code>FontSize</code> property to <code>22</code>. Notice how this Setter also appears in your other Style.
+			</li>
+
+			<li>
+				Apply the <code>baseLabelStyle</code> to the two labels on the page that display the output (i.e. that display the calculated amounts for the tip and the total). Remove the explicit <code>FontSize</code> setting from these labels.
+			</li>
+
+			<li>
+				Run the app on a platform of your choice. Verify that the UI looks the same as it did before	you replaced the property settings with a Style.
+			</li>
+		</ol>
+
+		<h2>Use Style inheritance</h2>
+		<p>
+			This part asks you to refactor your two Styles into an inheritance hierarchy in order to eliminate	the repeated Setter.
+		</p>
+
+		<ol>
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>
+
+			<li>
+				Locate the <code>infoLabelStyle</code> Style in the page's resource dictionary.
+				Set the <code>BasedOn</code> property of this style to your <code>baseLabelStyle</code>.
+			</li>
+<p><a href="#" onclick="toggleCode(this,'InheritStyle');return false;" class="uiitem">Show Code</a>
+<div id="InheritStyle" style="display:none;">
+<pre class="prettyprint">
+&lt;Style x:Key="infoLabelStyle" <span class="highlight">BasedOn="{StaticResource baseLabelStyle}"</span> TargetType="Label"&gt;
+  ...
+&lt;/Style&gt;
+</pre></div></p>
+
+			<li>
+				Remove the Setter for <code>FontSize</code> from the <code>infoLabelStyle</code>. It is no longer needed because this Style now inherits the <code>FontSize</code> setting from its base Style.
+			</li>
+
+			<li>
+				Run the app on a platform of your choice. Verify that the UI looks the same.
+			</li>
+		</ol>
+
+		<h1>Summary</h1>
+		<p>
+			Here you used Style inheritance to eliminate repeated code from two Styles. This example was intentionally minimal so you could concentrate on the new syntax; however, the benefits become even greater in complex cases where you can use this technique to eliminate multiple repeated Setters.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

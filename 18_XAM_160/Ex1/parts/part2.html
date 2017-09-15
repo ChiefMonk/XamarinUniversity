@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Add SQLite.Net to your projects</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>SQLite in Mobile Data</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+
+		<h2>Duration</h2>
+		<p>5 minutes</p>
+
+		<!-- - - - - - - - - Goals - - - - - - - - -->
+
+		<h2 id="goals">Lab goals</h2>
+
+		<p>
+			The goal of the exercise is to add the SQLite.NET component to each project in your solution using Nuget.  
+		</p>
+
+<p>
+<a href="#" onclick="toggleBlock(this, 'nuget', 'What is NuGet?', 'Hide'); return false;" class="uiitem">What is NuGet?</a>
+<div class="wsblock" id="nuget" style="display:none;">
+<div class="wsitem">
+	<b>What is NuGet?</b>
+	<br />
+	NuGet allows developers to easily download, install, update, and remove 
+	3<sup>rd</sup>-party libraries within a Visual Studio project. These libraries are made available through the <a href="http://www.nuget.org">NuGet Gallery</a>, which is an online repository managed by Microsoft. NuGet was created by Microsoft and is available in Visual Studio through the <a href="http://docs.nuget.org/docs/start-here/installing-nuget">NuGet Package Manager</a> which is built into Visual Studio.
+</div>
+</div>
+</p>
+
+		<!-- - - - - - - - - Supplied resources - - - - - - - - -->
+
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Lab.Completed</strong> with a solution you can use to check your work.
+
+            This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use the <strong>Lab.Completed</strong> solution from the previous part as starter code for this part.
+        </p>
+
+		<!-- - - - - - - - - Challenge - - - - - - - - -->
+
+      <h2>Exercise challenge</h2>
+      <p>
+      Follow the above <a href="#goals">goals</a> to complete the exercise. You can refer to the step-by-step instructions below to get more detailed information on each goal.
+      </p>
+
+		<!-- - - - - - - - - Steps - - - - - - - - -->
+
+		<h1>Steps</h1>
+		
+		<h2>Add the SQLite.Net PCL Nuget package</h2>
+		<p>
+			Let's add the Nuget package which will allow us to use SQLite-Net. Make sure you add the correct package - the <b>id</b> is <b>sqlite-net pcl</b>, there are other packages with very similar names so check the entry carefully before you install it!
+		</p>
+		<ol>
+			<li>
+				If you are using <b>Visual Studio for Mac</b>, right-click the <strong>Packages</strong> folder in the <strong>People</strong> Portable Class Library project and select <strong>Add Packages...</strong> from the popup menu. </li>
+			<li>
+				In the Search field, enter <strong>sqlite-net pcl</strong>. 
+			</li>
+			<li>
+				Select <b>SQLite-net PCL</b> from the list of search results and then press the <b>Add Package</b> button in the lower right.
+			</li>
+				
+			<img src="./res/images/Part2_XS_AddPackages.png" width="640" />
+
+			<li value="1">
+				If you are using <b>Visual Studio on Windows</b>, right-click on the <strong>People</strong> Portable Class Library project name within Solution Explorer, select <strong>Manage Nuget Packages...</strong>.
+			</li>
+			<li value="2">
+				 Select the <b>Browse</b> tab and enter <code>sqlite-net pcl</code> in the Search field. 
+			</li>
+			</li value="3">
+				<li>Select <b>sqlite-net-pcl</b> in the list of search results and press the <b>Install</b> button. 
+			</li>
+
+            <img src="./res/images/Part2_VS15_ManageNugetPkg.png" width="640" />
+
+			</li>
+			<li value="4">
+				Repeat the steps to add the SQLite.NET PCL nuget package for the other projects (iOS, Android, and Windows).
+			</li>
+		</ol>
+
+      
+		
+		<!-- - - - - - - - - Summary - - - - - - - - -->
+
+		<h1>Summary</h1>
+		<p>
+		In this lab, you added <b>SQLite.Net</b> support to each project by adding the SQLite.Net PCL Nuget package. You're now ready to work with a SQLite database.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

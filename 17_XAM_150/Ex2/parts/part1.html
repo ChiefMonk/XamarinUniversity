@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Determine the network connectivity</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Consuming RESTful Web Services</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>10 minutes</p>
+
+        <h2>Goals</h2>
+        <p>The primary goal of this lab will be to create a new Xamarin.Forms application and utilize the <a href="https://github.com/jamesmontemagno/Xamarin.Plugins/tree/master/Connectivity">Xam.Plugin.Connectivity</a> component to detect the network availability and state. You will display the current network status on two pages as shown in the screenshots below.
+        </p>
+
+        <img class="ident-none" src="./res/images/lab1-final.png" />
+
+        <div class="hintblock">
+            <strong>Try to test on a real device</strong>
+            <div class="indent-small" style="margin-top:.1in;">
+            This lab requires that you switch your network connectivity on and off - most simulators use the active <em>machine's</em> network connection and if you turn that off, you will drop off the live class! It is <em>highly</em> recommended that you either run the lab exercise on a second machine or VM, or use a physical device for testing where you can switch between WiFi, Cellular and no network.
+            </div>
+        </div>
+
+        <h2>Exercise Overview</h2>
+        <p>
+            The basic steps you will perform in this lab include:
+            <ol>
+                <li>
+                    Create a new Xamarin.Forms application named <b>NetStatus</b>.
+                </li>
+                <li>
+                    Add a reference to the <b>Xam.Plugin.Connectivity</b> Nuget package.
+                </li>
+                <li>
+                    Create two pages - one which displays the text &quot;No network available&quot; and a second page which displays the <em>type</em> of network availability we have, as well as an optional part to add the ability to ping an address with an activity indicator which is shown while the network activity is performed.
+                </li>
+                <li>
+                    Using the <code>CrossConnectivity.Current.ConnectivityChanged</code> event (which is part of the <b>Xam.Plugin.Connectivity</b> component), you will flip between the <code>NoNetworkPage</code> and the <code>NetworkViewPage</code> views by changing the <code>Application.Current.MainPage</code> property. 
+                </li>
+            </ol>
+        </p>
+
+        <h1>Steps</h1>
+        <h2>Create the NetStatus Xamarin.Forms application</h2>
+        <p>
+            We need to first create a new Xamarin.Forms application.
+        </p>
+
+        <ol>
+            <li>
+                Create a new Xamarin.Forms application.
+            </li>
+            <li>
+                Next, add the Nuget package <b>Xam.Plugin.Connectivity</b> to all of your projects. This adds an abstractions for iOS, Android and Windows to detect the network state of the device at runtime. 
+                It uses the exact same code we discussed in class; you can examine the source code available in <a href="https://github.com/jamesmontemagno/Xamarin.Plugins/tree/master/Connectivity">Github</a>.
+            </li>
+        </ol>
+
+        <img class="ident-none" src="./res/images/nuget-connectivity.png" />
+
+        <ol start="5">
+            <li>
+                Android requires some special permissions. If you plan to run the application on an Android device then go ahead and add the <code>ACCESS_NETWORK_STATE</code> and <code>ACCESS_WIFI_STATE</code> permissions to the Android manifest (accessible through the project properties, or by opening the <b>Properties/AndroidManifest.xml</b> file).
+            </li>
+        </ol>
+
+        <img class="ident-none" src="./res/images/android-permissions.png" />
+
+        <ol start="6">
+            <li>
+                Windows 10 requires the Private Networks (Client &amp; Server) capability and Internet (Client &amp; Server) capability checked in the app manifest (<b>Package.appxmanifest</b>). 
+                Open the manifest, switch to the <b>Capabilities</b> tab and check these two options.
+            </li>
+        </ol>
+        <img class="ident-none" src="./res/images/win8-permissions.png" />
+
+        <h2>Create the initial pages</h2>
+        <p>
+            Next, we will add two pages to the common NetworkStatus PCL project to display our two screens - one for when we are connected to a network, and another to display a &quot;No connection available&quot; view.
+        </p>
+
+        <ol>
+            <li>
+                Let's start with the &quot;No connection available&quot; page. Add a new <code>ContentPage</code> to the project named <b>NoNetworkPage</b>.
+            </li>
+            <li>
+                In the constructor for the class, set the <code>Content</code> property to a <code>Label</code> which is centered and displays the text &quot;No Network Connection Available&quot;. Set the text color to the RGB value (0x40,0x40,0x40) to make it a dark gray color.
+            </li>
+            <li>
+                Set the <code>BackgroundColor</code> for the page to be RGB (0xf0,0xf0,0xf0) to make it a light gray color.
+            </li>
+        </ol>
+
+<p><a href="#" onclick="toggleCode(this,'NNP_1');return false;" class="uiitem">Show Code</a>
+<div class="indent-large" id="NNP_1" style="display:none;">
+<pre class="prettyprint">
+public class NoNetworkPage : ContentPage
+{
+    public NoNetworkPage()
+    {
+        BackgroundColor = Color.FromRgb(0xf0, 0xf0, 0xf0);
+        Content = new Label() { 
+            Text = "No Network Connection Available",
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center,
+            TextColor = Color.FromRgb(0x40,0x40,0x40),
+        };
+    }
+}
+</pre></div></p>
+
+        <ol start="4">
+            <li>
+                Go ahead and set the <code>MainPage</code> property in the <b>App.cs</b> file to the new <code>NoNetworkPage</code> and run the application to verify that it is displayed properly.
+            </li>
+            <li>
+                Add a second page named <code>NetworkViewPage</code>, you can use either C# code or a mix of XAML and code. This will be the page where we display the network type (WiFi vs. Cellular) and provide a way to ping a host or IP address (a feature included in the connectivity library we added earlier).
+            </li>
+            <li>
+                Add the following UI element to the page, feel free to use whatever sizing / spacing you prefer. You can also deviate from the names if you like - they are provided just for comparison to the provided lab solution.
+                <ul class="indent-none">
+                    <li>
+                        A <code>Label</code> to hold the connection type, named <code>ConnectionDetails</code>.
+                    </li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Detect the network connectivity</h2>
+        <p>
+            Now we will get to the meat of the lab - detecting the current network state and switching between the two pages. We want to use the <code>CrossConnectivity.Current.ConnectivityChanged</code> static event to detect network changes - this is raised anytime the network state is altered and passes a <code>ConnectivityChangedEventArgs</code> which includes a boolean indicating whether there is an active connection. There is also a static property <code>CrossConnectivity.Current.IsConnected</code> which returns the <em>current</em> state of the network.
+        </p>
+
+        <ol>
+            <li>
+                Let's start with the <code>App</code> class and launch either our &quot;No network&quot; screen or the network view page based on the connection status. Open up the <b>App.cs</b> file.
+            </li>
+            <li>
+                Using the <code>CrossConnectivity.Current.IsConnected</code> static property, either set the <code>MainPage</code> property to one of the two pages.
+            </li>
+            <li>
+                Run the application with the network disabled on the device and verify that it displays the correct page on launch.
+            </li>
+            <li>
+                Close and kill the application and turn on the network on the device and run it again - verify that it launches the other page.
+            </li>
+            <li>
+                Next, let's add some code to switch between the pages when the network status changes. To do this, we will need to subscribe to the static <code>CrossConnectivity.Current.ConnectivityChanged</code> event. Override the <code>Application.OnStart</code> method in your <b>App.cs</b> class.
+            </li>
+            <li>
+                Subscribe to the <code>CrossConnectivity.Current.ConnectivityChanged</code> event in the <code>OnStart</code> method.
+            </li>
+            <li>
+                In the handler for the event, check the connected state (it's passed as a field in the event arguments) and change the <code>MainPage</code> property to reflect the connection state. You can take the current page type into account if you would like to optimize the logic.
+            </li>
+            <li>
+                Try your logic out by changing the network availability while the app is running - it should now switch pages dynamically as you enable and disable the network connectivity.
+            </li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'SwitchPage');return false;" class="uiitem">Show Code</a>
+<div class="indent-large" id="SwitchPage" style="display:none;">
+<pre class="prettyprint">
+protected override void OnStart()
+{
+    base.OnStart();
+    CrossConnectivity.Current.ConnectivityChanged += HandleConnectivityChanged;
+}
+
+void HandleConnectivityChanged (object sender, ConnectivityChangedEventArgs e)
+{
+    Type currentPage = this.MainPage.GetType();
+    if (e.IsConnected &amp;&amp; currentPage != typeof(NetworkViewPage))
+        this.MainPage = new NetworkViewPage();
+    else if (!e.IsConnected &amp;&amp; currentPage != typeof(NoNetworkPage))
+        this.MainPage = new NoNetworkPage();
+}
+</pre></div></p>
+
+        <h2>Display the network type</h2>
+        <p>
+            In this step, we will display the current network type when we have a connection.
+			We might want to know this to determine if we should download a large amount of content
+			or perform some type of network activity only when WiFi is active.
+        </p>
+        <ol>
+			<li>
+	        	Open the <code>NetworkViewPage</code> code file.
+			</li>
+
+			<li>
+				Override the <code>OnAppearing</code> method.
+			</li>
+
+			<li>
+				In <code>OnAppearing</code>, set the <code>ConnectionDetails</code> label to show the type of the first connection in the
+				<code>CrossConnectivity.Current.ConnectionTypes</code> list.
+			</li>
+
+			<li>
+				Still in <code>OnAppearing</code>, subscribe a handler to the <code>ConnectivityChanged</code> event.
+			</li>
+
+			<li>
+				In your handler, set the <code>ConnectionDetails</code> label to the current network type just as you did in
+				<code>OnAppearing</code> (feel free to refactor to avoid duplicate code if you would like to).
+			</li>
+
+			<li>
+				Override the <code>OnDisappearing</code> method and unsubscribe from the event. This will ensure we don't have a memory leak since the event is static.
+			</li>
+				
+			<li>
+                Run the app and try switching between WiFi and Cellular (you will need a physical phone device to test this
+				as none of the simulators support this capability).
+            </li>
+        </ol>
+
+<p><a href="#" onclick="toggleCode(this,'ShowNetState');return false;" class="uiitem">Show Code</a>
+<div class="indent-large" id="ShowNetState" style="display:none;">
+<pre class="prettyprint">
+protected override void OnAppearing()
+{
+    base.OnAppearing();
+    ConnectionDetails.Text = CrossConnectivity.Current
+        .ConnectionTypes.First().ToString();
+
+    CrossConnectivity.Current.ConnectivityChanged += UpdateNetworkInfo;
+}
+
+protected override void OnDisappearing()
+{
+    base.OnDisappearing();
+    CrossConnectivity.Current.ConnectivityChanged -= UpdateNetworkInfo;
+}
+
+private void UpdateNetworkInfo(object sender, ConnectivityChangedEventArgs e)
+{
+    if (CrossConnectivity.Current != null 
+        &amp;&amp; CrossConnectivity.Current.ConnectionTypes != null) {
+		var connectionType = CrossConnectivity.Current
+            .ConnectionTypes.FirstOrDefault ();
+		ConnectionDetails.Text = connectionType.ToString ();
+	}
+}
+</pre></div></p>
+
+<!--
+
+        <h2>Ping an address (OPTIONAL)</h2>
+        <p>
+            In this final, optional step (if you have time), we will add in a few new UI elements to enter a URL and then <em>ping</em> it for network connectivity. We will also use an <em>activity indicator</em> to display that we are doing network communication.
+        </p>
+
+         <div class="hintblock">
+         <b>Note:</b> This example is going to use an ICMP (ping) on all the platforms. This approach does not always work - sometimes devices don't support that protocol, or a firewall or router may block ping requests. So, if it is successful then the server is likely reachable, but if the API fails, then it doesn't necessarily mean the server is not reachable. Instead, you should try a more in-depth approach - attempt a simple HTTP request for example. Just keep in mind that ICMP is a quick test, but is not 100% accurate.
+         </div>
+
+        <ol>
+            <li>Open the <code>NetworkViewPage</code> and add the following UI elements to the page, feel free to use whatever sizing / spacing you prefer. You can also deviate from the names if you like - they are provided just for comparison to the provided lab solution.
+                <ul class="indent-none">
+                    <li>
+                        An <code>Entry</code> named <code>RemoteUrl</code> which allows you to enter a web address.
+                    </li>
+                    <li>
+                        A <code>Button</code> to trigger the ping, with a code-behind handler (named <code>OnTestUrl</code> in the lab solution).
+                    </li>
+                    <li>
+                        A <code>Label</code> named <code>PingResultText</code> which will be populated with the result of the ping test.
+                    </li>
+                    <li>
+                        Finally, a <code>ActivityIndicator</code> which will we use when we are doing network activity. Name it <code>NetworkActivity</code>.
+                    </li>
+                    <li>
+                        Try changing the main page to this new page and running the application to make sure you get the UI you want. When you are ready to proceed, move onto the next step where we will hook up the network connectivity.
+                    </li>
+                </ul>
+            </li>
+            <li>
+                In the <code>OnTestUrl</code> handler, read the entered URL from the entry control, and if it's not blank, perform the following steps:
+                    <ul class="indent-none">
+                        <li>
+                            Turn on your activity indicator (<b>hint:</b> use the <code>IsRunning</code> property).
+                        </li>
+                        <li>
+                            Do a 3 second wait (just to pretend we are doing some work) using <code>Task.Delay</code>, use the <code>async / await</code> keywords to continue working on the UI thread.
+                        </li>
+                        <li>
+                            Use the <code>CrossConnectivity.Current.IsReachable</code> method to <em>ping</em> the URL. This returns a <code>Task&lt;bool></code> so you will need to use <code>async / await</code> with this as well.
+                        </li>
+                        <li>
+                            Change the <code>PingResultText</code> label based on the returning result from <code>IsReachable</code>. The completed solution will change the color and display either &quot;Available&quot; or &quot;Unavailable&quot;.
+                        </li>
+                        <li>
+                            Make sure to turn off the activity indicator when it's all done. The completed solution will also remove the result label text after 2 seconds just for fun. Check the code below if you'd like to see how to do that easily!
+                        </li>
+                    </ul>
+            </li>
+            <li>
+                Run the application a final time and try out your ping logic!
+            </li>
+        </ol>
+<p><a href="#" onclick="toggleCode(this,'Ping');return false;" class="uiitem">Show Code</a>
+<div class="indent-large" id="Ping" style="display:none;">
+<pre class="prettyprint">
+private async void OnTestUrl(object sender, EventArgs e)
+{
+    string url = RemoteUrl.Text;
+    if (string.IsNullOrWhiteSpace(url))
+        return;
+
+    NetworkActivity.IsRunning = true;
+    bool isAvailable = false;
+
+    try {
+
+        // Pretend we are doing something here..
+        await Task.Delay(3000);
+
+        // Try to connect.
+        isAvailable = await CrossConnectivity.Current.IsReachable(url);
+    }
+    finally {
+        NetworkActivity.IsRunning = false;
+    }
+
+    if (isAvailable == true) {
+        PingResultText.Text = "Available";
+        PingResultText.TextColor = Color.Green;
+    } else {
+        PingResultText.Text = "Unavailable";
+        PingResultText.TextColor = Color.Red;
+    }
+
+    await Task.Delay(2000);
+    PingResultText.Text = string.Empty;
+}
+</pre></div></p>
+-->
+
+        <h1>Summary</h1>
+        <p>
+            Congratulations! In this exercise, you have successfully detected the network state and transitioned your application to and from different screens based on the connectivity available.
+        </p>
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

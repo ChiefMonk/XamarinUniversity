@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NetStatus.NoNetworkPage">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center">
+			<Label x:Name="LblNetworkStatus" 
+				   Text="Not Network Connection Available!" 
+				   TextColor="#404040"
+				   BackgroundColor="#f0f0f0"				   
+				   VerticalOptions="Center"
+				   HorizontalOptions="Center" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

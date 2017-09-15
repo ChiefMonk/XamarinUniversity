@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="Tasky.UWP.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Tasky.UWP"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.TopAppBar>
+        <CommandBar>
+            <AppBarButton Icon="Add" Label="Add" Click="HandleAdd" />
+        </CommandBar>
+    </Page.TopAppBar>
+
+    <Grid x:Name="LayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Task List:" Margin="5" Style="{ThemeResource SubtitleTextBlockStyle}" />
+
+        <ListView Grid.Row="1" 
+                  Tapped="HandleTaskTap"
+                  ItemsSource="{Binding Items}"
+                  Visibility="{Binding ListVisibility}">
+           <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel >
+                        <TextBlock Foreground="{ThemeResource TextBoxForegroundThemeBrush}" Text="{Binding Name}" />
+                        <TextBlock Foreground="DarkGray" Text="{Binding Notes}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

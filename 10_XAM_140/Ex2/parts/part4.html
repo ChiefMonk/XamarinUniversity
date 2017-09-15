@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 4: Create and apply a Style</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Resources and Styles</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<h2>Goals</h2>
+		<p>
+			In this lab, you will define and apply a page-level Style.
+		</p>
+
+		<h2>Required assets</h2>
+		<p>
+			The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Complete</strong> with a solution you can use to check your work.
+		</p>
+		<p>
+			This lab is a continuation of the previous one. If you did not complete the previous exercise, you can use the <strong>Completed</strong> solution from the previous exercise as starter code for this exercise.
+		</p>
+
+		<h2>Challenge</h2>
+		<p>
+			You can use the high-level description here to work through the lab on your own. Alternatively, you can use more detailed instructions below if you would like step-by-step guidance.
+		</p>
+
+		<ul>
+			<li>Open the <strong>StandardTipPage.xaml</strong> file in the <strong>TipCalculator</strong> project.</li>
+			<li>Define a Style for a <code>Label</code> that sets the <code>FontSize</code> to <code>22</code> and the <code>FontAttributes</code> to <code>Bold</code>.</li>
+			<li>Apply the Style to all Labels on the page that use the combination 22/Bold.</li>
+		</ul>
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to complete the exercise.
+		</p>
+
+		<h2>Define a Style</h2>
+		<p>
+			Here you will implement a Style and store it in a page-level dictionary.
+		</p>
+
+		<ol>
+			<li>
+				Open the <strong>TipCalculator</strong> project.
+			</li>
+
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>	
+
+			<li>
+				Add a <code>Style</code> to the page's resource dictionary. Use a <code>Key</code> of <code>infoLabelStyle</code> and a <code>TargetType</code> of <code>Label</code>.
+			</li>
+<p><a href="#" onclick="toggleCode(this,'DefineStyle');return false;" class="uiitem">Show Code</a>
+<div id="DefineStyle" style="display:none;">
+<pre class="prettyprint">
+&lt;Style x:Key="infoLabelStyle" TargetType="Label"&gt;
+&lt;/Style&gt;
+</pre></div></p>
+
+			<li>
+				Add a <code>Setter</code> to your style that sets the <code>FontSize</code> property to <code>22</code>.
+			</li>
+<p><a href="#" onclick="toggleCode(this,'AddSetter');return false;" class="uiitem">Show Code</a>
+<div id="AddSetter" style="display:none;">
+<pre class="prettyprint">
+&lt;Setter Property="FontSize" Value="22" /&gt;
+</pre></div></p>
+
+			<li>
+				Add a <code>Setter</code> to your style that sets the <code>FontAttributes</code> property to <code>Bold</code>.
+			</li>
+		</ol>
+
+		<h2>Apply a Style</h2>
+		<p>
+			Here, you will apply your Style to a few XAML elements.
+		</p>
+
+		<ol>
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>
+
+			<li>
+				Locate the three <code>Label</code>s that use <code>TextSize</code> of <code>22</code> and <code>FontAttributes</code> of <code>Bold</code>. Remove those property assignments from the labels.
+			</li>
+
+			<li>
+				Use the <code>StaticResource</code> markup extension to assign the Style you just defined to the <code>Style</code> property of the three <code>Label</code>s.
+				The sample code for one Label is provided below if you need it.
+			</li>
+<p><a href="#" onclick="toggleCode(this,'ApplyStyle');return false;" class="uiitem">Show Code</a>
+<div id="ApplyStyle" style="display:none;">
+<pre class="prettyprint">
+&lt;Label Style="{StaticResource infoLabelStyle}" ... /&gt;
+</pre></div></p>
+			</li>
+
+			<li>
+				Run the app on a platform of your choice. Verify that the UI looks the same as it did before you replaced the property settings with a Style.
+			</li>
+		</ol>
+
+		<h1>Summary</h1>
+		<p>
+			Here you replaced individual property settings with a Style. This reduced the clutter of multiple property settings on each control and made the XAML easier to read. It also made it easier to achieve consistency across your UI since property settings are grouped together in a central location.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title> Consuming REST-based Web Services</title>
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/prettify.css">
+    <link rel="stylesheet" type="text/css" href="./parts/res/styles/styles.css">
+</head>
+
+<body>
+    <!-- This will be filled in at runtime -->
+    <header role="course-title"></header>
+
+    <section id="main">
+
+        <h2>Before you begin</h2>
+        <p>
+            This class uses labs based on Xamarin.Forms to demonstrate cross-platform capabilities on iOS, Android and Windows. To complete the coding exercises, you will need a Xamarin development environment with either a simulator/emulator or a device to run the exercise on. Please read the <a href="https://university.xamarin.com/resources/setup-requirements">setup requirements</a> if you need help installing the Xamarin development environment.
+        </p>
+
+        <h2>Overview</h2>
+        <p>
+        This is the first of two classes on consuming web services in your mobile applications. This class covers the available network types and how to detect which ones are available to your application and then dives into consuming REST services with <code>HttpClient</code>.
+        </p>
+
+        <h2>Lecture</h2>
+        <p><a href="./parts/slides.pdf">XAM150 - Consuming REST-based Web Services</a>.</p>
+
+        <h2>Objectives</h2>
+        <ol>
+           <li>Obtain the device's network capabilities</li>
+           <li>Introduce REST</li>
+           <li>Consume REST services with Xamarin</li>
+           <li>Integrate with platform-specific network features</li>
+        </ol>
+
+        <h2>Exercises</h2>
+        <ol>
+            <li><div class="objective">Determine the network connectivity</div>
+            <a href="./parts/part1.html">Exercise</a>
+            <br />
+            In this exercise, you will create a Xamarin.Forms application to detect the current network state for iOS, Android or Windows and display relevant detals about the connection.
+            </li>
+
+            <li><div class="objective">Communicating with a Book Service</div>
+            <a href="./parts/part2.html">Exercise</a>
+            <br />
+            Next, you will create a Xamarin.Forms application to consume an existing REST service which manages a library of books. You will authenticate with the service, retrieve existing books, add new books, update books and delete books from your bookshelf.
+            </li>
+
+            <li><div class="objective">Use the native platform network stack</div>
+            <a href="./parts/part3.html">Exercise</a>
+            <br />
+            In this final group exercise, we will modify the bookshelf client to use the native platform's networking stack to improve the performance of the network activity and allow us to integrate tighter to the platform.
+            </li>
+        </ol>
+
+        <h2>Additional resources</h2>
+        <p>
+        Here are the <a target="_blank" href="https://university.xamarin.com/faq/xam150-cross-platform-web-services">Frequently Asked Questions</a> about REST-based web services.
+        </p>
+
+        <div class="wslist">
+            <a target="_blank" href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/web_services/">Introduction to Web Services</a>        
+            <a target="_blank" href="http://www.asp.net/web-api/overview/advanced/calling-a-web-api-from-a-net-client">Calling a REST API From a .NET Client</a>
+            <a target="_blank" href="https://github.com/Microsoft/api-guidelines">Microsoft REST API Guidelines</a>
+            <a target="_blank" href="https://code.msdn.microsoft.com/Extending-HttpClient-with-8739f267">Extending HttpClient with OAuth to Access Twitter</a>
+            <a target="_blank" href="https://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf">Architectural Styles and the Design of Network-based Software Architectures</a>        
+            <a target="_blank" href="http://restcookbook.com">The RESTful cookbook</a>
+            <a target="_blank" href="http://www.thomashanning.com/network-link-conditioner/">Simulating network failure on a Mac with the Network Link Conditioner</a>
+        </div>
+        
+     </section>
+
+    <script src="./parts/res/js/jquery.min.js"></script>
+    <script src="./parts/res/js/prettify.js"></script>
+    <script src="./parts/res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin<br><a target="_blank" href="http://university.xamarin.com">Visit Xamarin University for more classes and content</a></footer>
+</body>
+</html>
+
