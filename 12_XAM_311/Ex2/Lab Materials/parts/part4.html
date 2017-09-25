@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 4: Add Pull to Refresh support</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Using ListView in Xamarin.Forms</header>
+
+    <section id="main">
+
+    <h1 id="page-title"></h1>
+    <h2>Duration</h2>
+    <p>5 minutes</p>
+        
+    <h2>Goals</h2>
+    <p>
+    This exercise will continue modifying our <strong>FunFlacts</strong> application and simulate a "pull-to-refresh" action with our data. This feature is only supported on iOS and Android currently - you will need to run it on one of those platforms to try it out.
+    </p>
+
+    <h2>Assets</h2>
+       <p>
+        We will continue from the prior exercise. You may use your existing solution or start with the <b>Completed</b> solution in the <b>Part 03 Resources</b> folder.
+        In addition, there is a completed version of this exercise in the <b>Part 04 Resources</b> folder that you can use to check your work.
+      </p>
+
+
+    <h2>Challenge</h2>
+    <p>
+    This exercise takes our existing application and adds "pull to refresh". We don't have new data to supply, so we'll reverse the order of the data in the list.
+    </p>
+
+    <p>Here are the basic steps:</p>
+    <ol class="indent-medium">
+      <li>
+        Turn on support for "pull-to-refresh" on our <code>ListView</code>.
+      </li>
+      <li>
+        Handle the request to refresh the data by reversing the order of the data in our <code>Flags</code> collection. We will use the LINQ <code>OrderBy</code> and <code>OrderByDescending</code> functions.
+      </li>
+      <li>
+        Once the list has been reversed, turn off the refresh flag to re-display the UI.
+      </li>
+    </ol>
+
+    <h1>Steps</h1>
+
+    <h2>Enable Pull-to-Refresh support</h2>
+    <p>
+      In order to support "pull-to-refresh", we need to set a property and subscribe to an event on the <code>ListView</code>.
+    </p>
+    <ol>
+      <li>
+        Open the <strong>AllFlags</strong> page and find the <code>ListView</code> definition.
+      </li>
+      <li>
+        Set <code>IsPullToRefreshEnabled</code> to <code>true</code>.
+      </li>
+      <li>
+        Add an event handler for the <code>Refreshing</code> event. This has a traditional <code>EventHandler</code> syntax <code>(object sender, EventArgs e)</code>.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'refresh');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="refresh" style="display:none;">
+<pre class="prettyprint">&lt;ListView ItemsSource="{Binding Flags}" 
+    SelectedItem="{Binding CurrentFlag, Mode=TwoWay}"
+    ItemTapped="OnItemTapped"
+    IsPullToRefreshEnabled="True"
+    Refreshing="OnRefreshing" /&gt;
+</pre></div></p>    
+
+    <h2>Implement the Refresh logic</h2>
+    <p>
+      Normally, in the refresh handler, we would initiate a background refresh of our data and, once it's complete, refresh the collection with new data. Since we only have local data to work with, we will simulate this by reversing the order of our collection data.
+    </p>
+
+    <ol>
+      <li>
+        In the Refresh handler, reverse the items in the <code>Flag</code> collection. You can get access to it using the following statement:
+      </li>
+
+      <pre class="prettyprint">var collection = DependencyService.Get&lt;FunFlactsViewModel>().Flags;</pre>
+
+      <li>
+        You can reverse the collection in-place, or use LINQ to create a new collection, clear the old one and replace all the items. Either approach is fine for a small number of items. If you have a lot of changes to make, it can be helpful to use a collection type that supports turning off notification such as the XamU <a href="https://github.com/xamarinhq/xamu-infrastructure/blob/master/src/XamU.Core/Collections/OptimizedObservableCollection.cs">OptimizedObservableCollection</a>. The sample code below will do the reverse in-place by swapping the elements around.
+      </li>
+
+      <li>
+        It might be helpful to put a delay into your method so the operation takes a second or two to finish. Use <code>System.Threading.Tasks.Task.Delay</code> with <code>async</code> and <code>await</code> to make sure you don't impact the UI thread. An example is in the below code.
+      </li>
+
+      <li>
+        Set the <code>IsRefreshing</code> property on the <code>ListView</code> to <code>false</code> to indicate we are done refreshing the data. You can case the <strong>sender</strong> parameter to get to the <code>ListView</code>. Do this in a <code>finally</code> clause to make sure it gets executed.
+      </li>
+
+      <li>
+        Run the application on either iOS or Android and "pull" the <code>ListView</code> down to activate the gesture. It should show an activity indicator and then reverse the list.
+      </li>
+    </ol>
+
+<p><a href="#" onclick="toggleCode(this,'sortData');return false;" class="uiitem">Show Code</a><div class="indent-medium" id="sortData" style="display:none;">
+<pre class="prettyprint">
+private async void OnRefreshing(object sender, EventArgs e)
+{
+    try
+    {
+        var collection = DependencyService.Get&lt;FunFlactsViewModel>().Flags;
+        int i = collection.Count - 1, j = 0;
+        while (i &gt; j)
+        {
+            var temp = collection[i];
+            collection[i] = collection[j];
+            collection[j] = temp;
+            i--; j++;
+            await System.Threading.Tasks.Task.Delay(200); // make it take some time.
+        }
+    }
+    finally
+    {
+        // Turn off the refresh.
+        ((ListView)sender).IsRefreshing = false;
+    }
+}</pre></div></p>
+
+    <h1>Summary</h1>
+    <p>
+    In this exercise, you added support for the "pull-to-refresh" gesture.
+    </p>
+        
+    <div class="align-right">
+        <a href="../Start%20Here.html">Go Back</a>
+    </div>
+  </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

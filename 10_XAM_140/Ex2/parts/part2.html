@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 2: Use page-level Resources</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Resources and Styles</header>
+
+   	<section id="main">
+
+		<h1 id="page-title"></h1>
+		<h2>Duration</h2>
+		<p>
+			10 minutes
+		</p>
+
+		<h2>Goals</h2>
+		<p>
+			In this exercise, you will use page-level Resources to eliminate repeated values in XAML.
+		</p>
+
+		<h2>Required assets</h2>
+		<p>
+			Please use the provided solution in the <strong>Part 01 Resources/Start</strong> folder as starter code for this exercise (i.e. the starter code for this exercise is in the folder for the previous one). The <strong>Part 02 Resources/Completed</strong> folder contains a solution you can use to check your work.
+		</p>
+
+		<h2>Challenge</h2>
+		<p>
+			You can use the high-level description here to work through the lab on your own. Alternatively, you can use the more detailed instructions below if you would like step-by-step guidance.
+		</p>
+
+		<ul>
+			<li>
+				Open the <strong>StandardTipPage.xaml</strong> file in the <strong>TipCalculator</strong> project.
+			</li>
+			<li>
+				Define two <code>Color</code> resources in the page's <code>Resources</code> dictionary:
+				<ul class="indent-none">
+					<li>One for the background color (<code>#c0c0c0</code>).</li>
+					<li>Another for the foreground color (<code>#606060</code>).</li>
+				</ul>
+				You can pick whatever colors you like, just make sure they are contrasting. You should avoid using Black and White directly as some operating systems (particularly Windows) uses these for hover effects and will make your elements disappear.
+			</li>
+			<li>
+				Use the <code>StaticResource</code> markup extension to apply the resources every place on the XAML page where those colors are used.
+			</li>
+		</ul>
+
+		<h1>Steps</h1>
+		<p>
+			Below are the step-by-step instructions to complete the exercise.
+		</p>
+
+		<h2>Define Resources</h2>
+		<p>
+			Here you will define two Resources for use on a XAML page.
+		</p>
+		<ol>
+			<li>
+				Open the <strong>TipCalculator</strong> project.
+			</li>
+
+			<li>
+				Open <strong>StandardTipPage.xaml</strong>.
+			</li>
+
+			<li>
+				Create a <code>ResourceDictionary</code> object in the page's <code>Resources</code> property. The code is provided below if you need it.
+				<p>
+			</li>
+
+<p><a href="#" onclick="toggleCode(this,'ResourceDictionary');return false;" class="uiitem">Show Code</a><div id="ResourceDictionary" style="display:none;">
+<pre class="prettyprint">
+&lt;Page.Resources&gt;
+  &lt;ResourceDictionary&gt;
+  &lt;/ResourceDictionary&gt;
+&lt;/Page.Resources&gt;
+</pre></div></p>
+
+			<li>
+				Define a <code>Color</code> resource inside the resource dictionary. Give it an <code>x:Key</code> of "<code>bgColor</code>" and a value of <code>#c0c0c0</code>. The code is provided below if you need it.
+			</li>
+
+<p><a href="#" onclick="toggleCode(this,'ResourceDefinition');return false;" class="uiitem">Show Code</a><div id="ResourceDefinition" style="display:none;">
+<pre class="prettyprint">
+&lt;Color x:Key="bgColor"&gt;#c0c0c0&lt;/Color&gt;
+</pre></div></p>
+
+			<li>
+				Define a second <code>Color</code> resource inside the resource dictionary. Give it an <code>x:Key</code> of "<code>fgColor</code>" and a value of <code>#606060</code>.
+			</li>
+		</ol>
+
+		<h2>Use Resources</h2>
+		<p>
+			Here, you will apply the Resources you defined in the last section.
+		</p>
+		<ol>
+			<li>
+				Use the <code>StaticResource</code> markup extension to apply the <code>bgColor</code> resource to the <code>Background</code> property of the page's root <code>Grid</code>. 
+			</li>
+<p><a href="#" onclick="toggleCode(this,'ResourceUse');return false;" class="uiitem">Show Code</a><div id="ResourceUse" style="display:none;">
+<pre class="prettyprint">
+&lt;Grid x:Name ="LayoutRoot" <mark>BackgroundColor="{StaticResource bgColor}"</mark> Padding="10"&gt;
+</pre></div></p>
+
+			<li>
+				Use the <code>StaticResource</code> markup extension to apply the <code>fgColor</code> resource to the <code>TextColor</code> property of all the <code>Label</code>s that use a <code>TextColor</code> of <code>Navy</code>.
+			</li>
+
+			<li>
+				Run the application on a platform of your choice and verify that the <strong>StandardTipPage</strong> displays dark text on a light background at startup.
+			</li>
+		</ol>
+
+		<h1>Summary</h1>
+		<p>
+			Here you replaced the hard coded colors in a XAML page with Resources. The colors are now defined in one place instead of being repeated so they are easier to update when needed.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

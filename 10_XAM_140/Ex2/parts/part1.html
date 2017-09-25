@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+    <title>Exercise 1: Examine an app containing repeated XAML values</title>
+    <link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+    <link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+    <link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+    <!-- Use the same title as the StartHere -->
+    <header>Resources and Styles</header>
+
+    <section id="main">
+
+        <h1 id="page-title"></h1>
+        <h2>Duration</h2>
+        <p>
+            10 minutes
+        </p>
+
+        <h2>Goals</h2>
+        <p>
+            This lab will motivate the use of Resources and Styles. You will examine a pre-written app and find examples of repeated XAML and C# code.
+        </p>
+
+        <p>
+            The provided app implements a Tip Calculator you might use at a restaurant. It has two pages: a standard calculator that always produces a 15% tip and a custom calculator that lets you control the calculation. The screen shots below show the two pages of the app running on iOS (the colors shown here represent the final app, after you have adjusted the colors in a subsequent exercise).
+        </p>
+
+        <img src="./res/images/TipCalculatorPages.png" />
+        
+        <h2>Required assets</h2>
+        <p>
+            The provided <strong>Resources</strong> folder for this exercise contains a subfolder named <strong>Start</strong> that contains the starting code for the app you will be working with.
+        </p>
+
+        <h2>Challenge</h2>
+        <p>
+			You can use the high-level description here to work through the lab on your own. Alternatively, you can use the instructions below if you would like step-by-step guidance.
+        </p>
+
+        <ul>
+            <li>
+                Open the provided <strong>TipCalculator</strong> project.
+            </li>
+            <li>
+                Locate at least three places in the XAML where hard coded values for colors and fonts are used.
+                Find at least two examples where these hard coded values are repeated.
+            </li>
+            <li>
+                Examine the code-behind in <strong>StandardTipPage.xaml.cs</strong> and note the repeated code used to switch between the "light" and "dark" color schemes.
+            </li>
+        </ul>
+             
+        <h1>Steps</h1>
+        <p>
+            Below are the step-by-step instructions to complete the exercise.
+            You will inspect the source code of a provided project. There is no code to write in this exercise.
+        </p>
+
+        <h2>Find examples of repeated XAML</h2>
+        <p>
+            Here you will locate several places where repeated XAML values are used. The goal is to motivate why Resources and Styles are useful (since they let you refactor your XAML to eliminate repeated values). 
+        </p>
+        
+        <ol>
+            <li>Open the provided <strong>TipCalculator</strong> project.</li>
+            <li>Run the app on any platform you prefer. Take a few minutes to work with the app so you understand how it behaves.</li>
+            <li>Open <strong>StandardTipPage.xaml</strong>.</li>
+            <li>Find the code that sets the background color of the root grid. Notice that a hard coded value is used.</li>
+            <li>Find the code that sets the "left column" labels to navy/22/bold. Notice that these same values are used on three labels.</li>
+            <li>Find the code that sets the "right column" labels to navy/22. Notice that these same values are used on two labels.</li>
+            <li>Notice that some of the property settings seem to form a logical group. For example, the combination of navy/22 is used on multiple labels.</li>
+            <li>Consider the difficulty of modifying the <code>FontSize</code> value. You would need to change it in five places which is error prone.</li>
+        </ol>
+
+        <h2>Find examples of repeated code</h2>
+
+        <p>
+            The provided project implements a simplified version of "light" and "dark" color schemes for the <strong>StandardTipPage</strong>.
+            Here, you will examine how this is coded.
+        </p>
+
+        <ol>
+            <li>Open <strong>StandardTipPage.xaml.cs</strong>.</li>
+            <li>Locate the two click handlers that update the UI colors.</li>
+            <li>Notice how the code must update the colors for each control individually resulting in repeated code.</li>
+        </ol>
+
+        <h1>Summary</h1>
+        <p>
+            Here you observed how difficult it is to maintain an app that contains repeated code. Subsequent exercises will use Resources and Styles to eliminate much of the repeated XAML.
+        </p>
+
+        <div class="align-right">
+            <a href="../Start%20Here.html">Go Back</a>
+        </div>
+    </section>
+
+    <script src="./res/js/jquery.min.js"></script>
+    <script src="./res/js/prettify.js"></script>
+    <script src="./res/js/script.js"></script>
+
+    <footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

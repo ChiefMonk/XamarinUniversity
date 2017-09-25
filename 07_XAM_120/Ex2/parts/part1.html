@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+	<title>Exercise 1: Creating our first Xamarin.Forms application</title>
+	<link rel="stylesheet" type="text/css" href="./res/styles/normalize.css">
+	<link rel="stylesheet" type="text/css" href="./res/styles/prettify.css" />
+	<link rel="stylesheet" type="text/css" href="./res/styles/styles.css">
+</head>
+
+<body>
+	<!-- Use the same title as the StartHere -->
+	<header>Introduction to Xamarin.Forms</header>
+
+	<section id="main">
+
+		<h1 id="page-title"></h1>
+		<h2>Duration</h2>
+		<p>15 minutes</p>
+
+		<h2>Goals</h2>
+		<p>
+			The primary goal is to create a new Xamarin.Forms application using the provided project templates in Visual Studio.
+			We will then walk through the project and explore all the parts.
+		</p>
+
+		<p>
+			A secondary goal is to see how to share code between platform-specific projects
+			(for more information, see <a href="http://developer.xamarin.com/guides/cross-platform/application_fundamentals/building_cross_platform_applications/sharing_code_options/">Sharing Code with Shared Projects and Portable Class Libraries</a>).
+		</p>
+
+		<p>
+			<span id="ide-selector" style="margin-left:0px;">
+				Please select your development platform:&nbsp;
+				<a href="#" data-name="xs">Visual Studio for Mac</a>&nbsp;or&nbsp;
+				<a href="#" data-name="vs">Visual Studio on Windows</a>.
+			</span>
+		</p>
+
+		<ide name="vs">
+			<h2>Create the Xamarin.Forms project (Visual Studio on Windows)</h2>
+			<ol>
+				<li>
+					Open Visual Studio and create a New Solution.
+				</li>
+				<li>
+					In Visual Studio 2017, select <b>Visual C# > Cross-Platform > Cross Platform App</b> which will then open a second dialog allowing you
+					to create a <b>BlankApp</b> Xamarin.Forms solution with either a PCL or Shared Project.<br />
+					For older Visual Studio installations where there are multiple Xamarin.Forms solution templates, in the New Project dialog,
+					select <b>Visual C# > Cross-Platform</b>. You should see several project types in the right-hand pane, three of them are for
+					Xamarin.Forms: <b>Blank App (Xamarin.Forms Portable)</b> for a Xamarin.Forms app backed by a shared Portable Class Library (PCL),
+					<b>Blank App (Xamarin.Forms Shared)</b> for a Xamarin.Forms project backed by a Shared Project, and
+					<b>Class Library (Xamarin.Forms Portable)</b> for a PCL you can use with existing Xamarin.Forms applications.
+				</li>
+				<li>
+					We will want to go through both variations of the <b>Blank App</b> templates, and ultimately, they will generate the same basic code
+					structure - the difference is only in the library packaging (PCL vs. Shared Project). Select the Shared Project to start with,
+					go through the structure (below) and then do the same for the PCL variation.
+				</li>
+				<li>
+					The lab instructions assume you have named the project "FirstApp", but you can use whatever name you prefer.
+				</li>
+			</ol>
+
+			<h2>Walk through the solution structure</h2>
+			<p>
+				Next, let's go through the created project and identify all the pieces that make up the application.
+			</p>
+
+			<ol>
+				<li>
+					You will have multiple projects in the solution:
+					<ul class="indent-none">
+						<li>
+							<b>FirstApp</b> - this is the shared project or PCL which has the platform-agnostic Xamarin.Forms code in it.
+							This is where you will add the majority of your UI and logic.
+						</li>
+						<li>
+							<b>FirstApp.iOS</b> - this is the iOS platform-specific project which will create the iOS application.
+						</li>
+						<li>
+							<b>FirstApp.Droid</b> - this is the Android-specific project which will create the Android application.
+						</li>
+						<li>
+							<b>FirstApp.UWP</b> - this is the Universal Windows Platform project which will generate the app for deployment
+							to the UWP device families.
+						</li>
+					</ul>
+				</li>
+				<li>
+					<ide name="vs">
+						Explore the shared code first - depending on your Visual Studio version, it will either have your <code>Application</code>
+						derived class declared in XAML with a C# backing file or just a single C# class used to identify your main screen.
+
+						If you only have <b>App.cs</b>, open that source file and skip the remainder of this step.
+
+						If you have the <b>App.xaml</b> file, expand the node in the Solution Explorer and open <b>App.xaml.cs</b>.
+						We want to proceed with a code-based UI for simplicity. (We learn more about XAML in XAM130.)
+						Since the template generated a UI using XAML, we will remove it.
+
+						<ul class="indent-none">
+							<li>Delete <b>MainPage.xaml</b> and <b>MainPage.xaml.cs</b> files.</li>
+							<li>
+								Inside <b>App.xaml.cs</b>, swap out the existing <code>public App()</code> constructor for this one containing a code-based UI:
+
+<pre class="codeblock prettyprint">
+public App()
+{
+   // The root page of your application
+   MainPage = new ContentPage {
+      Content = new StackLayout {
+         VerticalOptions = LayoutOptions.Center,
+         Children = {
+            new Label {
+               HorizontalTextAlignment = TextAlignment.Center,
+               Text = "Welcome to Xamarin Forms!"
+            }
+         }
+      }
+   };
+}
+</pre>
+							</li>
+						</ul>
+
+						Inside the <b>Application</b> source file, you will find that it creates a single <code>ContentPage</code> and assigns it to
+						the <code>MainPage</code> property. This property identifies the first page shown in the application.
+					</ide>
+					<ide name="xs">
+						Explore the shared code library first - it should have a single source file in it, this is the <code>Application</code>
+						derived class which is used to identify your main screen. If you open the source file, you will find that it creates a
+						single <code>ContentPage</code> and assigns it to the <code>MainPage</code> property. This property identifies the first
+						page shown in the application, and if you change it while the application is running, the displayed screen will change in response.
+					</ide>
+				</li>
+				<li>
+					The platform-specific projects all have code unique to their platform, but there are some things in common as well.
+					<ul class="indent-none">
+						<li>
+							All of them have references to at least two Xamarin.Forms assemblies. <b>Xamarin.Forms.Core</b> defines all the
+							shared types across all platforms. This assembly is also referenced by any PCLs you use. Then you will see a
+							<b>Xamarin.Forms.Platform.xxx</b> assembly which defines the unique platform-specific types for this platform.
+							This reference will change based on iOS vs. Android vs. Windows. In addition, all of them have a reference to
+							<b>Xamarin.Forms.Xaml</b> which defines all the XAML parser types - we aren't using this here, but we'll look at that in the next class.
+						</li>
+						<li>
+							All projects have some standard initialization code. First, they all must call <code>Xamarin.Forms.Init</code>.
+							This is a platform-specific method that is defined in all the platform assemblies (e.g. it is always the same name
+							even though it's implemented differently per-platform). Each one takes slightly different parameters - Android passes
+							in the application bundle for example so that Xamarin.Forms can locate resources.
+							Next, there will be a call to <code>LoadApplication</code> which is passed a new instance of the <code>Application</code>
+							derived class defined in the shared code. This is what creates the initial screen specific to the technology.
+						</li>
+						<li>
+							These platform-specific projects are very minimal - they contain resources, manifests, and the boilerplate setup you
+							always have in that project style.
+						</li>
+					</ul>
+				</li>
+			</ol>
+		</ide>
+
+		<ide name="xs">
+			<h2>Create the Xamarin.Forms project (Visual Studio for Mac)</h2>
+			<ol>
+				<li>
+					Open Visual Studio and create a new Project/Solution.
+				</li>
+				<li>
+					In the New Project wizard, select <b>Multiplatform &gt; App &gt; Blank Forms App</b>.
+				</li>
+				<li>
+					The Shared Code option on the dialog decides how code will be shared for the app.<br />
+					You can share the code using either a Portable Class Library (PCL) or Shared Library (sometimes called a "Shared Project").
+					We will try both in the live class, starting with the Shared Library so select that first.
+				</li>
+				<li>
+					Deselect the &quot;Use XAML for the user interface files&quot; checkbox so your project will match the details below.
+				</li>
+				<li>
+					The lab instructions assume you have named the project "FirstApp", but you can use whatever name you prefer.
+					Click <b>Next</b> to continue.
+				</li>
+				<li>
+					Uncheck <b>Version Control</b> and <b>Xamarin Test Cloud</b> if either of them are checked.
+					Click <b>Create</b> to create the projects.
+				</li>
+			</ol>
+
+			<h2>Walk through the solution structure</h2>
+			<p>
+				Next, let's go through the created project and identify all the pieces that make up the application.
+			</p>
+
+			<ol>
+				<li>
+					You will have multiple projects in the solution:
+					<ul class="indent-none">
+						<li>
+							<b>FirstApp</b> - this is the shared project or PCL which has the platform-agnostic Xamarin.Forms code in it.
+							This is where you will add the majority of your UI and logic.
+						</li>
+						<li>
+							<b>FirstApp.iOS</b> - this is the iOS platform-specific project which will create the iOS application.
+						</li>
+						<li>
+							<b>FirstApp.Droid</b> - this is the Android-specific project which will generate the Android application.
+						</li>
+					</ul>
+				</li>
+				<li>
+					Explore the shared code first - it should have a single source file in it, this is the <code>Application</code> derived class which is
+					used to identify your main screen. If you open the source file, you will find that it creates a single <code>ContentPage</code> and assigns it
+					to the <code>MainPage</code> property. This property identifies the first page shown in the application.
+				</li>
+				<li>
+					The platform-specific projects all have code unique to their platform, but there are some things in common as well.
+					<ul class="indent-none">
+						<li>
+							All of them have references to at least two Xamarin.Forms assemblies. <b>Xamarin.Forms.Core</b> defines all the shared types
+							across all platforms. This assembly is also referenced by any PCLs you use. Then you will see a <b>Xamarin.Forms.Platform.xxx</b>
+							assembly which defines the unique platform-specific types for this platform. This reference will change based on iOS vs. Android vs. Windows.
+							In addition, all of them have a reference to <b>Xamarin.Forms.Xaml</b> which defines all the XAML parser types - we aren't using this here,
+							but we'll look at that in the next class.
+						</li>
+						<li>
+							All projects have some standard initialization code. First, they all must call <code>Xamarin.Forms.Init</code>. This is a platform-specific method that is defined in all the platform assemblies (e.g. it is always the same name even though it's implemented differently per-platform). Each one takes slightly different parameters - Android passes in the application bundle for example so that Xamarin.Forms can locate resources. Next, there will be a call to <code>LoadApplication</code> which is passed a new instance of the <code>Application</code> derived class defined in the shared code. This is what creates the initial screen specific to the technology.
+						</li>
+						<li>
+							These platform-specific projects are very minimal - they contain resources, manifests, and the boilerplate setup you always have in that project style.
+						</li>
+					</ul>
+				</li>
+			</ol>
+		</ide>
+
+		<h2>Run the application</h2>
+		<p>
+			Let's run the application to see how it works.
+		</p>
+
+		<div class="hintblock">
+			Depending on which device platform you are running on, the build type (Debug+iPhoneSimulator, Debug+ARM, Debug+AnyCPU, etc.) may
+			restrict the places you can deploy to, and even the projects which are built. If you have trouble setting a project as active,
+			or you get deployment errors, then check the build type <em>and</em> the solution configuration to see which projects are being built.
+		</div>
+
+		<ol>
+			<li>
+				Select an environment you have configured and make the platform-specific project associated with that environment the startup
+				project in your IDE. You cannot start the shared code project - you can only run the platform projects.
+			</li>
+
+			<li>
+				Run the application on a device or in a simulator/emulator. It will display a single piece of text that is centered on the screen.
+				If you go back to the shared code and open the <code>Application</code> class, you will find that same text is the value for
+				the <code>Label</code> being created there.
+			</li>
+
+			<li>
+				Try running the application in a second environment. You should see the same text label - but the style of the application should
+				be unique to the platform.
+			</li>
+		</ol>
+
+		<h2>Optional - explore the architecture</h2>
+		<p>
+			Let's add a <code>Button</code> to the single page. We will then wire up an event handler to the <code>Clicked</code> event and use
+			a breakpoint to stop the application to see how events are bubbled from the platform into the shared code.
+		</p>
+		<ol>
+			<li>
+				Open the shared application class implementation and add a <code>Button</code> into the UI - here's an example to guide you,
+				we are reorganizing it slightly:
+			</li>
+		</ol>
+<pre class="codeblock prettyprint">
+public App()
+{
+    // The root page of your application
+    var layout = new StackLayout
+    {
+        VerticalOptions = LayoutOptions.Center,
+        Children = {
+            new Label {
+                HorizontalTextAlignment = TextAlignment.Center,
+                Text = "Welcome to Xamarin Forms!"
+            }
+        }
+    };
+
+    MainPage = new ContentPage {
+        Content = layout
+    };
+
+    Button button = new Button {
+        Text = "Click Me"
+    };
+
+    button.Clicked += async (s, e) => {
+            await MainPage.DisplayAlert("Alert", "You clicked me", "OK");
+        };
+
+    layout.Children.Add(button);            
+}    
+</pre>
+
+		<ol start="2">
+			<li>
+				Run the application again - you should now see a button in the UI, just under the label. Tap the button to generate a UI message.
+			</li>
+
+			<li>
+				Set a breakpoint in the button <code>Clicked</code> handler and tap the button again. While the debugger is stopped, examine the call
+				stack - notice that at the bottom you find native handlers - in Android, it will clearly come from java.widgets, in UWP, you will see
+				a XAML button and in iOS you will see some native iOS code methods. This is bubbled up through a view <em>renderer</em> which is what
+				translates the platform-agnostic <code>Button</code> type we created into a native, platform-specific button.
+			</li>
+		</ol>
+
+		<h2>Summary</h2>
+		<p>
+			In this exercise, we have created a new Xamarin.Forms application and gone through the project structure to get a sense of what's included
+			and the basics of how it executes.
+		</p>
+
+		<div class="align-right">
+			<a href="../Start%20Here.html">Go Back</a>
+		</div>
+	</section>
+
+	<script src="./res/js/jquery.min.js"></script>
+	<script src="./res/js/prettify.js"></script>
+	<script src="./res/js/script.js"></script>
+
+	<footer>Copyright (C) 2017 Xamarin</footer>
+</body>
+</html>

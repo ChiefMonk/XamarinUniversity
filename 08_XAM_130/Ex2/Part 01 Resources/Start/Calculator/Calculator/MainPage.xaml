@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:local="clr-namespace:Calculator;assemply=Calculator"
+             x:Class="Calculator.MainPage">
+	<ContentPage.Padding>
+		<OnPlatform x:TypeArguments="Thickness">
+			<OnPlatform.iOS>
+				0, 20, 0, 0
+			</OnPlatform.iOS>
+		</OnPlatform> 						
+	</ContentPage.Padding>
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style x:Key="BtnStyle" TargetType="Button">
+				<Setter Property="FontSize" Value="36" />
+				<Setter Property="TextColor" Value="Black" />
+				<Setter Property="BackgroundColor" Value="White" />
+				<Setter Property="BorderRadius" Value="0" />
+			</Style>
+			<Style x:Key="BtnStyleExtra" BasedOn="BtnStyle" TargetType="Button">
+				<Setter Property="FontSize" Value="40" />
+				<Setter Property="BackgroundColor" Value="{x:Static local:SharedResources.OpButtonBkColor}" />
+				<Setter Property="TextColor" Value="{x:Static local:SharedResources.OpButtonTextColor}" />
+			</Style>
+			<Style x:Key="BtnStyleCancel" BasedOn="BtnStyleExtra" TargetType="Button">
+				<Setter Property="BackgroundColor" Value="{x:Static local:SharedResources.ClearButtonBkColor}" />
+				<Setter Property="TextColor" Value="{x:Static local:SharedResources.OpButtonTextColor}" />
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<ContentPage.Style>
+
+	</ContentPage.Style>
+
+	<ContentPage.Content>
+
+		<Grid Padding="5,0"
+			RowSpacing="1"
+			ColumnSpacing="1"
+			BackgroundColor="Black">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="2*"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+				<RowDefinition Height="*"></RowDefinition>
+			</Grid.RowDefinitions>
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+
+			<!-- ROW 0 !-->
+			<Label x:Name="LblResultText"  
+				   Grid.Column="0"
+				   Grid.Row="0" 				  
+				   Grid.ColumnSpan="4"
+				   FontAttributes="Bold"
+				   FontSize="48"
+				   BackgroundColor="Black"
+				   Text="0"
+				   TextColor="White"
+				   HorizontalTextAlignment="End"
+				   VerticalTextAlignment="Center"
+				   LineBreakMode="NoWrap"/>
+
+			<!-- ROW 1 !-->
+			<Button x:Name="Btn7"
+					Grid.Column="0"
+					Grid.Row="1"
+					Text="7" Style="{DynamicResource BtnStyle}"				
+					Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn8"
+			        Grid.Column="1"
+			        Grid.Row="1"
+			        Text="8" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn9"
+			        Grid.Column="2"
+			        Grid.Row="1"
+			        Text="9" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="BtnDevide"
+			        Grid.Column="3"
+			        Grid.Row="1"
+			        Text="/" Style="{DynamicResource BtnStyleExtra}"				
+			        Clicked="OnSelectOperator"/>
+
+			<!-- ROW 2 !-->
+			<Button x:Name="Btn4"
+			        Grid.Column="0"
+			        Grid.Row="2"
+			        Text="4" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn5"
+			        Grid.Column="1"
+			        Grid.Row="2"
+			        Text="5" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn6"
+			        Grid.Column="2"
+			        Grid.Row="2"
+			        Text="6" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="BtnMultiply"
+			        Grid.Column="3"
+			        Grid.Row="2"
+			        Text="X" Style="{DynamicResource BtnStyleExtra}"				
+			        Clicked="OnSelectOperator"/>
+
+
+			<!-- ROW 3 !-->
+
+			<Button x:Name="Btn1"
+			        Grid.Column="0"
+			        Grid.Row="3"
+			        Text="1" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn2"
+			        Grid.Column="1"
+			        Grid.Row="3"
+			        Text="2" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="Btn3"
+			        Grid.Column="2"
+			        Grid.Row="3"
+			        Text="3" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="BtnMinus"
+			        Grid.Column="3"
+			        Grid.Row="3"
+			        Text="-" Style="{DynamicResource BtnStyleExtra}"				
+			        Clicked="OnSelectOperator"/>
+
+			<!-- ROW 4 !-->
+			<Button x:Name="Btn0"
+			        Grid.Column="0"
+			        Grid.Row="4"
+					Grid.ColumnSpan="3"
+			        Text="0" Style="{DynamicResource BtnStyle}"				
+			        Clicked="OnSelectNumber"/>
+
+			<Button x:Name="BtnPlus"
+			        Grid.Column="3"
+			        Grid.Row="4"
+			        Text="+" Style="{DynamicResource BtnStyleExtra}"				
+			        Clicked="OnSelectOperator"/>
+
+			<!-- ROW 5 !-->
+			<Button x:Name="BtnClear"
+			        Grid.Column="0"
+			        Grid.Row="5"			       
+			        Text="C" Style="{DynamicResource BtnStyleCancel}"				
+			        Clicked="OnClear"/>
+
+			<Button x:Name="BtnEquals"
+			        Grid.Column="1"
+			        Grid.Row="5"
+			        Grid.ColumnSpan="3"
+			        Text="=" Style="{DynamicResource BtnStyleExtra}"				
+			        Clicked="OnCalculate"/>
+
+		</Grid>
+
+	</ContentPage.Content>
+
+</ContentPage>
